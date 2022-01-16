@@ -12,11 +12,16 @@
 
 
 <div class="section">
+
+	
+	
+	
+	
 	<!-- 왼쪽 메뉴list -->
 	<div class="absolute-left">
 		<ul>
 			<li>
-				<a href=""></a>
+				<a href="">요소보기</a>
 				<a href=""></a>
 				<a href=""></a>
 				<a href=""></a>
@@ -25,7 +30,7 @@
 		</ul>
 		<!-- 메뉴리스트 하단 작게 -->
 		<div class="out">
-			<a href="">회원탈퇴</a>
+			<a href=""></a>
 		</div>
 		
 	</div>
