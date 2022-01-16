@@ -133,18 +133,25 @@ input[type=checkbox]{
 					<!-- 아래 span에서 동적으로 메시지 갯수다르게 처리하기 필요 -->
 					<!-- 클릭하면 알림창이 나오게 하는 ui는 답이없음. -->
 					<span>
-						<a href="${pageContext.request.contextPath}/member/memberDetail.do">
+						<a href="${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=myPage">
 							안녕하세요, <sec:authentication property="principal.nickname"/>님
 						</a>
 					</span>
-					<button id="profile" type="button" class="btn btn-primary position-relative bg-light border-light rounded-circle">
-						  <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32"data-view-component="true" class="octicon octicon-mark-github">
-						    <path fill-rule="evenodd"d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
-						  </svg> 
-						  <span id="bg-alarm" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-							9
-						  </span>
-					</button>
+					<div class="profile-wrap">
+						<button id="profile" type="button" class="btn btn-primary position-relative bg-light border-light rounded-circle">
+						    <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32"data-view-component="true" class="octicon octicon-mark-github">
+							    <path fill-rule="evenodd"d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+							</svg> 
+						    <span id="bg-alarm" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+							    9
+						    </span>
+						</button>
+					    <div class="alarm-list">
+					        <a class="dropdown-item" href="#">Action</a>
+					  	    <a class="dropdown-item" href="#">Another action</a>
+					  	    <a class="dropdown-item" href="#">Something else here</a>
+					    </div>
+					</div>
 
 					<ul class="navbar-nav justify-content-end">
 						<li class="nav-item">
@@ -196,6 +203,7 @@ input[type=checkbox]{
 							</button>
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 				    	</form>
+						
 						</li>	
 					</ul>
 				</div>
@@ -218,13 +226,17 @@ input[type=checkbox]{
 				alert("나중에 우리 포털 메인으로!");
 			});
 			
-
-			
+						
 			/*실제 넣을 코드 : 알람 영역 있을때 클릭시 알람표시 사라짐*/
+			const $alarmList = $(".alarm-list");
+			$alarmList.hide();
+			$("#profile").click((e) => {
+				$alarmList.show();
+			});
 			
  			$("#profile").click(function(){
 				$("#bg-alarm").css("display","none");
-				let alarm_num = 5;
+				
 				
 				$("#bg-alarm").text(alarm_num);
 			}); 

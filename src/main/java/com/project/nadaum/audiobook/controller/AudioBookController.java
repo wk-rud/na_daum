@@ -28,20 +28,20 @@ public class AudioBookController {
 	//public String urlGetter(@RequestBody UrlParser url) {}
 	
 	@GetMapping("/parser/parsedata")
-	public String urlGetter() {
-		log.info("/parser/parsedata가 호출됨");
-		try {		
-			String url= "https://www.welaaa.com/audio/list?ccode=058";
-			Document doc =  Jsoup.connect(url).get();
-			String title = doc.title();
-			 		
-			System.out.println(doc.html());					
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
-		
-		return "audiobook/api_test";
-	}
+//	public String urlGetter() {
+//		log.info("/parser/parsedata가 호출됨");
+//		try {		
+//			String url= "https://www.welaaa.com/audio/list?ccode=058";
+//			Document doc =  Jsoup.connect(url).get();
+//			String title = doc.title();
+//			 		
+//			System.out.println(doc.html());					
+//		} catch (IOException e) {
+//			log.error(e.getMessage(), e);
+//		}
+//		
+//		return "audiobook/api_test";
+//	}
 	
 	
 	

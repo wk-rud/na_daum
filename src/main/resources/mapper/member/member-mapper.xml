@@ -13,6 +13,11 @@
 		values(#{id}, #{password}, #{name}, #{email}, #{address}, #{nickname}, #{authKey})
 	</insert>
 	
+	<insert id="insertKakaoMember">
+		insert into member(id, password, nickname, enabled, profile, login_type)
+		values(#{id}, #{password}, #{nickname}, 1, #{profile_image}, #{loginType})
+	</insert>
+	
 	<update id="confirmMember">
 		update member set enabled = 1 where email = #{email} and auth_key = #{authKey}
 	</update>
@@ -20,6 +25,58 @@
 	<insert id="insertRole">
 		insert into authority values(#{id}, 'ROLE_USER')
 	</insert>
+	
+	<update id="updateMember">
+		update member set nickname = #{nickname} where id = #{id}
+	</update>
+	
+	<select id="selectAllAlarm" resultMap="alarm">
+		select
+			*
+		from
+			alarm a
+				left join schedule s
+					on a.code = s.code
+		where
+			a.id = #{id}
+	</select>
+	
+	<resultMap type="map" id="alarm">
+		<id column="no" property="no"/>
+		<result column="code" property="code"/>
+		<result column="status" property="status"/>
+		<result column="id" property="id"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="no" property="no"/>
+		<result column="friend_id" property="friendId"/>
+		<result column="accept" property="accpet"/>
+		<result column="code" property="code"/>
+		<result column="c_code" property="cCode"/>
+		<result column="all_day" property="allDay"/>
+		<result column="id" property="id"/>
+	</resultMap>
+	
+	<select id="selectAllMyQuestions" resultMap="myQ">
+		select * from help where id = #{id}
+	</select>
+	
+	<select id="selectAllMembersQuestions" resultMap="myQ">
+		select * from help order by status desc
+	</select>
+	
+	<resultMap type="map" id="myQ">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="category" property="category"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="status" property="status"/>
+		<result column="a_code" property="a_code"/>
+		<result column="a_title" property="a_title"/>
+		<result column="a_content" property="a_content"/>
+		<result column="a_reg_date" property="aRegDate"/>
+	</resultMap>
 	
 </mapper>
 

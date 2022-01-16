@@ -28,6 +28,8 @@
 		<!-- <result column="hobby" property="hobby"/> -->
 		<result column="birthday" property="birthday"/>
 		<result column="enabled" property="enabled"/>
+		<result column="profile" property="profile"/>
+		<result column="login_type" property="loginType"/>
 		<collection property="authorities" ofType="org.springframework.security.core.authority.SimpleGrantedAuthority">
 			<constructor>
 				<arg column="authority" javaType="string"/>

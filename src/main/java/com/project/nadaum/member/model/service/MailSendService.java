@@ -44,7 +44,7 @@ public class MailSendService {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 		String mailContent = "<h1>회원가입 이메일 인증</h1><br/><p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>"
 						   + "<a href='http://localhost:9090/nadaum/member/memberConfirm.do?email=" + email
-						   + "&authKey=" + authKey + "'>이메일 인증 확인</a>";
+						   + "&authKey=" + authKey + "'>이메일 인증 확인하고 로그인하기</a>";
 		
 		try {
 			mimeMessage.setSubject("회원가입 이메일 인증 ", "utf-8");
@@ -54,7 +54,7 @@ public class MailSendService {
 		} catch (MessagingException e) {
 			e.printStackTrace();
 		}
-		
+				
 		return authKey;
 	}
 	

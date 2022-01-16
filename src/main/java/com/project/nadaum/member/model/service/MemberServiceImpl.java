@@ -1,5 +1,6 @@
 package com.project.nadaum.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,31 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.insertRole(member);
 	}
 
+	@Override
+	public int updateMember(Member member) {
+		return memberDao.updateMember(member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllAlarm(Member member) {
+		return memberDao.selectAllAlarm(member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllMyQuestions(Member member) {
+		return memberDao.selectAllMyQuestions(member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllMembersQuestions() {
+		return memberDao.selectAllMembersQuestions();
+	}
+
+	@Override
+	public int insertKakaoMember(Map<String, Object> map) {
+		return memberDao.insertKakaoMember(map);
+	}
+
+	
 	
 }

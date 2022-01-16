@@ -31,5 +31,7 @@ public class MemberEntity implements Serializable {
 	private Date birthday;
 	private String authKey;
 	private boolean enabled;
+	private String profile;
+	private String loginType;
 
 }

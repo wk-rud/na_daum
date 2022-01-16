@@ -1,5 +1,6 @@
 package com.project.nadaum.member.model.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -34,5 +35,31 @@ public class MemberDaoImpl implements MemberDao {
 		return session.insert("member.insertRole", member);
 	}
 
+	@Override
+	public int updateMember(Member member) {
+		return session.update("member.updateMember", member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllAlarm(Member member) {
+		return session.selectList("member.selectAllAlarm", member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllMyQuestions(Member member) {
+		return session.selectList("member.selectAllMyQuestions", member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllMembersQuestions() {
+		return session.selectList("member.selectAllMembersQuestions");
+	}
+
+	@Override
+	public int insertKakaoMember(Map<String, Object> map) {
+		return session.insert("member.insertKakaoMember", map);
+	}
+
+	
 
 }
