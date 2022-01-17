@@ -8,6 +8,18 @@
 		select * from member where id = #{id}
 	</select>
 	
+	<select id="selectOneMemberNickname" resultType="member">
+		select * from member where nickname = #{nickname}
+	</select>
+	
+	<select id="selectAllAnnouncement" resultMap="announcementMap">
+		select * from announcement order by reg_date desc
+	</select>
+	
+	<select id="countAllAnnouncementList" resultType="_int">
+		select count(*) from announcement
+	</select>
+	
 	<insert id="insertMember">
 		insert into member(id, password, name, email, address, nickname, auth_key)
 		values(#{id}, #{password}, #{name}, #{email}, #{address}, #{nickname}, #{authKey})
@@ -76,6 +88,15 @@
 		<result column="a_title" property="a_title"/>
 		<result column="a_content" property="a_content"/>
 		<result column="a_reg_date" property="aRegDate"/>
+	</resultMap>
+	
+	<resultMap type="map" id="announcementMap">
+		<id column="code" property="code"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="read_count" property="readCount"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="id" property="id"/>
 	</resultMap>
 	
 </mapper>

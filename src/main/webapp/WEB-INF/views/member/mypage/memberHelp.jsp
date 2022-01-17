@@ -22,7 +22,7 @@
 		</div>
 	</div>
 	<div class="question-list-body">
-		<c:forEach items="${allList}" var="help">
+		<c:forEach items="${helpList}" var="help">
 			<c:if test="${help.category eq 'me'}">
 				<div class="me"><ul class="list-group list-group-flush"><li class="list-group-item">${help.title}</li></ul></div>
 			</c:if>

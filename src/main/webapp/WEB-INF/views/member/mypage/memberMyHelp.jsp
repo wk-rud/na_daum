@@ -21,7 +21,7 @@
 			</div>
 			<hr />
 			<div class="modal-body myQ">
-				<c:forEach items="${qMap}" var="help">
+				<c:forEach items="${myHelpList}" var="help">
 					<ul class="list-group list-group-flush">${help.title}</ul>
 				</c:forEach>
 				

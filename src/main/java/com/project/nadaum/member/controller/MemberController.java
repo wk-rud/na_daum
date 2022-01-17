@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.project.nadaum.common.NadaumUtils;
 import com.project.nadaum.member.model.service.KakaoService;
 import com.project.nadaum.member.model.service.MailSendService;
 import com.project.nadaum.member.model.service.MemberService;
@@ -67,6 +70,18 @@ public class MemberController {
 		return ResponseEntity.ok(map);
 	}
 	
+	@GetMapping("/checkNicknameDuplicate.do")
+	public ResponseEntity<Map<String, Object>> checkNicknameDuplicate(@RequestParam String nickname){
+		Member member = memberService.selectOneMemberNickname(nickname);
+		boolean available = member == null;
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("nickname", nickname);
+		map.put("available", available);		
+		
+		return ResponseEntity.ok(map);
+	}
+	
 	@PostMapping("/memberEnroll.do")
 	public String memberEnroll(Member member, RedirectAttributes redirectAttr) {
 		log.debug("member = {}", member);
@@ -84,8 +99,9 @@ public class MemberController {
 		return "redirect:/";
 	}
 	
-	@GetMapping("/memberKakaoLogin.do")
+	@RequestMapping("/memberKakaoLogin.do")
 	public String memberKakaoLogin(@RequestParam(value = "code", required = false) String code, RedirectAttributes redirectAttr) {
+
 		log.debug("code = {}", code);
 		String access_Token = kakaoService.getAccessToken(code);
 		Map<String, Object> map = kakaoService.getUserInfo(access_Token);
@@ -129,18 +145,18 @@ public class MemberController {
 	
 	@GetMapping("/mypage/memberMyHelp.do")
 	public void memberMyHelp(@AuthenticationPrincipal Member member, Model model){
-		List<Map<String, Object>> qMap = memberService.selectAllMyQuestions(member);
-		log.debug("qMap = {}", qMap);
+		List<Map<String, Object>> myHelpList = memberService.selectAllMyQuestions(member);
+		log.debug("myHelpList = {}", myHelpList);
 		
-		model.addAttribute("qMap", qMap);
+		model.addAttribute("myHelpList", myHelpList);
 	}
 	
 	@GetMapping("/mypage/memberHelp.do")
 	public void memberHelp(Model model){
-		List<Map<String, Object>> allList = memberService.selectAllMembersQuestions();
-		log.debug("allList = {}", allList);
+		List<Map<String, Object>> helpList = memberService.selectAllMembersQuestions();
+		log.debug("helpList = {}", helpList);
 		
-		model.addAttribute("allList", allList);		
+		model.addAttribute("helpList", helpList);		
 	}
 	
 	@GetMapping("/mypage/memberFriends.do")
@@ -149,8 +165,23 @@ public class MemberController {
 	}
 	
 	@GetMapping("/mypage/memberAnnouncement.do")
-	public void memberAnnouncement() {
+	public void memberAnnouncement(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
+		int limit = 10;
+		int offset = (cPage - 1) * limit;
+		Map<String, Object> param = new HashMap<>();
+		param.put("limit", limit);
+		param.put("offset", offset);
+		List<Map<String, Object>> announceList = memberService.selectAllAnnouncement(param);
+		log.debug("announceList = {}", announceList);
 		
+		int totalContent = memberService.countAllAnnouncementList();
+		log.debug("totalContent = {}", totalContent);
+		
+		String url = request.getRequestURI();
+		String pagebar = NadaumUtils.getPagebar(cPage, limit, totalContent, url);
+			
+		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("announceList", announceList);
 	}
 	
 	@PostMapping("/memberUpdate.do")

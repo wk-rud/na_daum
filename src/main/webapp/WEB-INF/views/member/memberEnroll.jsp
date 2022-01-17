@@ -58,69 +58,71 @@ $(() => {
 								<div class="carousel-item active">
 									<label for="id">아이디</label>						
 									<input
-										type="text" class="form-control" name="id" id="id" value="sinsa"
-										placeholder="영문으로 시작하고 숫자포함 4자리 이상 20자리 이하만 사용 가능합니다." required>
+										type="text" class="form-control" name="id" id="id" value="testid"
+										placeholder="영문으로 시작하고 숫자포함 4~20글자 입니다." required>
 									<span class="text-success guide ok">이 아이디는 사용가능합니다.</span>
 									<span class="text-danger guide error">이 아이디는 사용불가능합니다.</span>
 									<input type="hidden" id="idValid" value="0" />
 									<br /> 
 									<label for="password">비밀번호</label>
 									<input
-										type="password" class="form-control" name="password" id="password" value="1234"
-										placeholder="비밀번호는 숫자, 영어포함 8 ~ 15자리 사이 입니다." required>
+										type="password" class="form-control" name="password" id="password" value="qwer1234"
+										placeholder="비밀번호는 숫자, 영어포함 8 ~ 15자리 사이 입니다." required>									
 									<br /> 
 									<label for="passwordCheck">비밀번호 확인</label>
 									<input
-										type="password" class="form-control" id="passwordCheck" value="1234"
+										type="password" class="form-control" id="passwordCheck" value="qwer1234"
 										placeholder="비밀번호 확인" required>
-									<span class="text-danger pw-error">비밀번호가 일치하지 않습니다.</span>
 									<br /> 
 									<label for="nickname">별명</label>
-									<input
-										type="text" class="form-control" name="nickname" id="nickname" value="신사"
-										placeholder="별명" required>
-									<span class="text-danger nickname-error">한글과 영어 숫자만 사용 가능합니다.</span>
+									<input type="text" class="form-control" name="nickname" id="nickname" value="qwer1234"
+										placeholder="한글과 영어 숫자만 사용 가능합니다." required>
+									<span class="text-success guide n-ok">사용가능한 별명입니다.</span>
+									<span class="text-danger guide n-error">사용할 수 없는 별명입니다.</span>
+									<input type="hidden" id="nValid" value="0" />
 								</div>
 								<div class="carousel-item">
 									<label for="name">이름</label>
 									<input
-										type="text" class="form-control" name="name" id="name" value="신사임당"
-										placeholder="이름" required>
-									<span class="text-danger name-error">한글만 입력 가능합니다.</span>									
+										type="text" class="form-control" name="name" id="name" value="dlfma"
+										placeholder="이름" required>									
 									<br /> 
 									<label for="birthday">생일</label>
-									<input
-										type="date" class="form-control" name="birthday" id="birthday">
+									<input type="date" class="form-control" name="birthday" id="birthday">
+									<br />
+									<label for="phone">핸드폰</label>
+									<input type="tel" class="form-control" name="phone" id="phone" value="01051515151">
 									<br />
 									<label for="email">이메일</label>
 									<input
-										type="text" id="email" value="jae6140"
+										type="text" id="email" value="testid"
 										placeholder="이메일" required>@
 									<input type="text" id="selfWrite" />
 									<input type="hidden" name="email" id="addEmail" required/>
 									<select id="siteSelect">
 										<option value="">선택</option>
 										<option value="self">직접입력</option>
-										<option value="naver.com">네이버</option>
+										<option value="naver.com" selected>네이버</option>
 										<option value="gmail.com">구글</option>
 									</select>
 									<br /> 
 									<!-- <div class="phone-wrap">
 										<input type="text" />
-									</div> -->
-									<div class="address-wrap">
-										<input type="text" id="postcode" readonly="readonly"/>
-										<input type="button" class="address_button" onclick="findAddress()" value="주소검색"><br />
-										<input type="text" id="allAddress" class="form-control" readonly="readonly"/><br />
-										<input type="text" id="detailAddress" class="form-control" readonly="readonly"/>
-										<input type="hidden" name="address" class="form-control addAddress" required />
-									</div>
+									</div> -->									
 								</div>
 								<div class="carousel-item">									
 									<div>
+										<div class="address-wrap">
+											<input type="text" id="postcode" readonly="readonly"/>
+											<input type="button" class="address_button" onclick="findAddress()" value="주소검색"><br />											
+											<input type="text" id="allAddress" class="form-control" readonly="readonly"/><br />
+											<input type="text" id="detailAddress" class="form-control" readonly="readonly"/>
+											<input type="hidden" name="address" class="form-control addAddress" required />
+										</div>
 										<input type="submit" class="btn btn-outline-success enroll" value="회원가입">
 										<button type="button" class="btn btn-outline-danger" data-dismiss="modal">닫기</button>
-									</div>									
+									</div>
+									<br />									
 								</div>
 								<div class="modal-footer space-between">
 									<button type="button" id="prev-page" class="btn btn-info">
@@ -156,17 +158,6 @@ $("#next-page").on("click", () => {
 	$(".carousel").carousel('next');
 });
 
-$(memberEnrollFrm).submit((e) => {
-	
-	if($(addEmail).val() == ''){
-		return false;
-	}
-	
-	if($(".addAddress").val() == ''){
-		$(".address_button").focus();
-		return false;
-	}
-});
 
 // 이메일
 $(selfWrite).hide();
@@ -187,16 +178,108 @@ $(selfWrite).blur(() => {
 });
 
 
-// 비밀번호 검사
-const $pwError = $(".pw-error");
-$pwError.hide();
-$(passwordCheck).blur((e) => {
+// 유효성 검사
+$("#memberEnrollFrm").submit((e) => {
 	const $password = $(password);
 	const $passwordCheck = $(passwordCheck);
-	
-	if($password.val() != $passwordCheck.val()){
-		$pwError.show();
+	const $nickname = $(nickname);
+	const $name = $(name);
+	const $phone = $(phone);
+	let $email = $(addEmail).val();
+
+	// 아이디
+	if($(idValid) == '0'){
+		alert("사용할 수 없는 아이디 입니다.");
+        return false;
 	}
+	
+	// 별명
+	if($(nValid) == '0'){
+		alert("사용할 수 없는 아이디 입니다.");
+        return false;
+	}
+	
+	// 비밀번호
+	if($password.val() == ''){
+		alert("비밀번호를 입력해 주세요");
+        return false;
+	}
+	if(!/^.{8,15}$/.test($password.val())){
+		alert("비밀번호는 8~15자리 입니다.");
+        return false;
+    }
+    if(!/[0-9]/.test($password.val()) || !/[a-zA-Z]/.test($password.val())){
+        alert("비밀번호는 숫자와 영문이 포함되야 합니다.");
+        return false;
+    }
+    if($password.val() != $passwordCheck.val()){
+    	alert("비밀번호가 일치하지 않습니다.");
+		return false;
+	}
+    
+    // 이름
+    if($name.val() == ''){
+    	alert("이름을 입력해 주세요.");
+        return false;
+    }
+    /* if(!/^[가-힣]{2,5}$/.test($name.val())){
+    	alert("이름은 한글로만 이루어져야 합니다.");
+    	return false;
+    } */
+    
+    // 핸드폰 번호
+    if(!/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/.test($phone.val())){
+    	alert("잘못된 번호입니다.");
+    	return false;
+    }
+    
+    // 이메일
+    if($email == ''){
+    	alert("이메일을 입력해 주세요.");
+    	return false;
+    }
+    
+    return true
+	
+});
+
+
+// 별명 중복 검사
+const $nError = $(".guide.n-error");
+const $nOk = $(".guide.n-ok");
+$nError.hide();
+$nOk.hide();
+$(nickname).keyup((e) => {
+	const nVal = $(e.target).val();	
+	const $nValid = $(nValid);
+	
+	if(nVal.length < 2){
+		$nError.hide();
+		$nOk.hide();
+		$nValid.val(0);
+		return;
+	}
+	
+	$.ajax({
+		url: "${pageContext.request.contextPath}/member/checkNicknameDuplicate.do",
+		data:{
+			nickname: nVal 
+		},
+		success(resp){
+			console.log(resp);
+			const {available} = resp;
+			if(available){
+				$nError.hide();
+				$nOk.show();
+				$nValid.val(1);
+			}else{
+				$nError.show();
+				$nOk.hide();
+				$nValid.val(0);
+			}
+		},
+		error: console.log
+	});
 });
 
 // 아이디 중복 검사
@@ -209,7 +292,8 @@ $(id).keyup((e) => {
 	const $idValid = $(idValid);
 	
 	if(idVal.length < 4){
-		$(".guide").hide();
+		$idError.hide();
+		$idOk.hide();
 		$idValid.val(0);
 		return;
 	}
@@ -217,7 +301,7 @@ $(id).keyup((e) => {
 	$.ajax({
 		url: "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
 		data:{
-			id: idVal
+			id: idVal 
 		},
 		success(resp){
 			console.log(resp);
@@ -235,6 +319,8 @@ $(id).keyup((e) => {
 		error: console.log
 	});
 });
+
+
 
 // 주소 합치기
 $(detailAddress).blur((e) => {
