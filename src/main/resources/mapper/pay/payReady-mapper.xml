@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="payReady">
+	
+	<!-- payReady 결제 준비-->
+	<select id="selectPayReady" resultType="payReady">
+		select * from purchase_ready where cid = #{cid}
+	</select>
+	
+	<!-- 페이징으로 반드시 일정부분만 불러올것 -->
+	<select id="selectPayReadyList" resultType="payReady">
+		select * from purchase_ready where row_num = #{page}
+	</select>
+	
+	<insert id="insertPayReady">
+		insert into purchase_ready(cid,partnerOrderId,partnerUserId,itemName,quantity,totalAmount
+									,taxFreeAmount,approvalUrl,cancelUrl,failUrl)
+		values(#{cid},#{partnerOrderId},#{partnerUserId},#{itemName},#{quantity},#{totalAmount},#{taxFreeAmount},#{approvalUrl},#{cancelUrl},#{failUrl})
+	</insert>
+	
+	<!-- 수량 변경 및 총액만 변경가능 -->
+	<update id="updatePayReady">
+		update purchase_ready 
+		<set>
+			<if test= "quantity!=null and quantity gt 0" > quantity = #{quantity},</if>
+			<if test= "totalAmount!=null and totalAmount gt 0 " > totalAmount = #{totalAmount},</if>
+		</set> 
+	</update>
+	
+	<!-- 결제취소 -->
+	<delete id="deletePayReady">
+		delete purchase_ready where partner_order_id = #{partnerOrderId}
+	</delete>
+	
+	<!-- payAuth 결제 인증-->
+	<select id="selectOnePayAuth" resultType="payAuth">
+		select * from purchaseAuth where no = #{no}
+	</select>
+	
+	<insert id="insertPayAuth">
+		insert into purchase_auth(no,tid,pg_token,cid)
+		values(seq_pay_auth_no.nextval,#{tid},#{pg_token},#{cid})
+	</insert>
+	
+	<delete id="deletePayAuth">
+		delete purchase_auth where no = #{no}
+	</delete>
+
+	
+	
+</mapper>
+

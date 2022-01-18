@@ -1,5 +1,6 @@
 package com.project.nadaum.kakaopay.ready.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,10 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.project.nadaum.kakaopay.ready.model.service.PayReadyService;
 import com.project.nadaum.kakaopay.ready.model.vo.PayAuth;
@@ -29,28 +36,125 @@ public class PayReadyController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
-	@PostMapping("/payRequest")
-	@ResponseBody
-	public ResponseEntity<?> payRequest(@RequestBody PayReady payReady) {
-		log.debug("payReady = {}",payReady);
+	// 테스트용url : payready/api/payIndex
+	@GetMapping("api/payIndex")
+	public String payIndex(RedirectAttributes redirectAttr) {
+		redirectAttr.addFlashAttribute("msg", "요청확인");
+		return "/pay/api/payApiIndex";
+	}
+	@GetMapping("api/payEnroll")
+	public String payEnroll() {
+		return "pay/api/payEnroll";
+	}
+	@PostMapping("api/payEnroll")
+	public String payEnroll(PayReady payReady,
+							RedirectAttributes redirectAttr,Model model) {
+		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid() + payReady.getPartnerOrderId());
+		String tid = String.valueOf(System.currentTimeMillis());
+		PayAuth payAuth = new PayAuth(payReady.getPartnerOrderId(),tid,pgToken,new Date());
+		model.addAttribute("payReady",payReady);
+		model.addAttribute("payAuth",payAuth);
+		model.addAttribute("msg","토큰발행완료!");
+		return "pay/api/payReadyResult";
+	}
+	
+	
+	//Rest요청 처리
+	@GetMapping("/payRequest")
+	public String payReady() {
 		
-		int result = payReadyService.insertPayReady(payReady);
+		return "pay/payRequest";
+	}
+	
+	@ResponseBody
+	@PostMapping("/payRequest")
+	public Map<String,Object> payReady(@RequestBody PayReady payReady) {
+		
+		
+		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid() + payReady.getPartnerOrderId());
+		String tid = String.valueOf(System.currentTimeMillis());
+		PayAuth payAuth = new PayAuth(payReady.getPartnerOrderId(),tid,pgToken,new Date());
+		
+		Map<String,Object> map = new HashMap<>();
+		map.put("payReady", payReady);
+		map.put("payAuth",payAuth);
+		
+		return map;
+	}
+	
+	
+	
+//	@PostMapping("/payRequest")
+//	@ResponseBody
+//	public ResponseEntity<?> payRequest(@RequestParam String cid, @RequestParam String partner_order_id) {
+//		//log.debug("payReady = {}",payReady);
+//		log.debug(partner_order_id);
+//		
+//		//int result = payReadyService.insertPayReady(payReady);
+//		int result =1; //테스트용
+//		
+//		//tid, pg_token생성 
+//		String pgToken = bcryptPasswordEncoder.encode(cid+partner_order_id);
+//		String tid =String.valueOf(System.currentTimeMillis()); // 난수대신 사용.
+//		
+//		//인증 요소 저장
+//		//int resultAuth = payReadyService.insertPayAuth(new PayAuth(tid, pgToken));
+//		int resultAuth=1; //테스트용
+//		
+//		Map<String,Object> map = new HashMap<>();
+//		
+//		//결제 승인에 필요한 자료형 반환
+//		if(result !=0 && resultAuth!=0) {
+////			map.put("cid",payReady.getCid());
+////			map.put("partner_order_id", payReady.getPartnerOrderId());
+////			map.put("partner_user_id", payReady.getPartnerUserId());
+//			map.put("pg_token",pgToken);
+//			map.put("tid", tid);
+//			map.put("msg", "다음단계를 진행합니다.");
+//			return ResponseEntity.ok(map);
+//		} else {
+//			map.put("msg", "잘못된 요청입니다!");
+//			return ResponseEntity.ok(map);    //.ok(map).badRequest().build();
+//		}		
+//	}
+	
+	@PostMapping("/payRequestReal")
+	@ResponseBody
+	public String payRequest(@RequestParam String cid, 
+						@RequestParam String partner_order_id, RedirectAttributes redirectAttr) {
+		
+		log.debug(partner_order_id);
+		
+		//int result = payReadyService.insertPayReady(payReady);
+		int result =1; //테스트용
 		
 		//tid, pg_token생성 
-		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid()+payReady.getPartnerUserId());
+		String pgToken = bcryptPasswordEncoder.encode(cid+partner_order_id);
 		String tid =String.valueOf(System.currentTimeMillis()); // 난수대신 사용.
 		
 		//인증 요소 저장
-		int resultAuth = payReadyService.insertPayAuth(new PayAuth(tid, pgToken));
+		//int resultAuth = payReadyService.insertPayAuth(new PayAuth(tid, pgToken));
+		int resultAuth=1; //테스트용
 		
 		Map<String,Object> map = new HashMap<>();
-		if(result !=0) {
-			map.put("pgToken",pgToken);
+		
+		//결제 승인에 필요한 자료형 반환
+		if(result !=0 && resultAuth!=0) {
+//			model.addAttribute("cid",payReady.getCid());
+//			model.addAttribute("partner_order_id", payReady.getPartnerOrderId());
+//			model.addAttribute("partner_user_id", payReady.getPartnerUserId());
+			map.put("pg_token",pgToken);
 			map.put("tid", tid);
 			map.put("msg", "다음단계를 진행합니다.");
-			return ResponseEntity.ok(map);
+			map.put("map",map);
+			//return map;
 		} else {
-			return ResponseEntity.badRequest().build();
+			map.put("msg", "잘못된 요청입니다!");
+			//return map;   
 		}	
-	}
+		redirectAttr.addFlashAttribute("msg", result > 0 ? "회원 가입 성공!" : "회원 가입 실패!");
+		
+		return "redirect:/";
+	}	
+	
 }

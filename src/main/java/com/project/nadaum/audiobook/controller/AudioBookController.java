@@ -2,9 +2,6 @@ package com.project.nadaum.audiobook.controller;
 
 import java.io.IOException;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +24,7 @@ public class AudioBookController {
 	//사용자가 크롤링할 url을 post나 get으로 받아서 html요소를 받아오기
 	//public String urlGetter(@RequestBody UrlParser url) {}
 	
-	@GetMapping("/parser/parsedata")
+//	@GetMapping("/parser/parsedata")
 //	public String urlGetter() {
 //		log.info("/parser/parsedata가 호출됨");
 //		try {		
