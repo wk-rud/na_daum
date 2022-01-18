@@ -120,6 +120,16 @@ public class MemberDaoImpl implements MemberDao {
 		return session.delete("member.deleteFriend", param);
 	}
 
+	@Override
+	public int updateMemberProfile(Member member) {
+		return session.update("member.updateMemberProfile", member);
+	}
+
+	@Override
+	public Map<String, Object> selectOneRequestFriendForCheck(Map<String, Object> param) {
+		return session.selectOne("member.selectOneRequestFriendForCheck", param);
+	}
+
 	
 	
 

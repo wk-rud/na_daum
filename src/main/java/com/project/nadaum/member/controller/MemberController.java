@@ -120,6 +120,8 @@ public class MemberController {
 		// 프사 변경시 동기화
 		if(!member.getProfile().equals((String)map.get("profile_image"))) {
 			member.setProfile((String)map.get("profile_image"));
+			int result = memberService.updateMemberProfile(member);
+			log.debug("프사변경 = {}", result);
 		}
 		redirectAttr.addFlashAttribute("member", member);
 		return "redirect:/member/memberLogin.do";
@@ -216,7 +218,19 @@ public class MemberController {
 		
 		// 관계없음 -> 팔로잉
 		if("noRelation".equals(flag)) {
-			result = memberService.insertRequestFriend(reverse);	
+			Map<String, Object> check = new HashMap<>();
+			try {
+				check = memberService.selectOneRequestFriendForCheck(param);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+			if(check != null && !check.isEmpty()) {
+				result = memberService.updateRequestFriend(param);
+				result = memberService.insertFriend(param);
+				result = memberService.insertFriend(reverse);
+			}			
+			else
+				result = memberService.insertRequestFriend(reverse);
 			log.debug("noRelation = {}", "성공");
 		// 팔로워 -> 맞팔
 		}else if("follower".equals(flag)) {

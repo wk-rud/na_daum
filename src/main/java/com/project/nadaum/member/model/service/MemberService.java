@@ -49,5 +49,9 @@ public interface MemberService {
 
 	int deleteFriend(Map<String, Object> param);
 
+	int updateMemberProfile(Member member);
+
+	Map<String, Object> selectOneRequestFriendForCheck(Map<String, Object> param);
+
 
 }

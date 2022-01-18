@@ -7,6 +7,7 @@ import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.project.nadaum.riot.model.Summoner;
+import com.project.nadaum.riot.model.service.RiotService;
+import com.project.nadaum.riot.model.vo.Summoner;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,19 +32,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ApitestController {
 
-	final static String API_KEY = "RGAPI-dd3554e4-31d1-48dd-9398-821873ca80c8";
+	final static String API_KEY = "RGAPI-d57b20b5-c168-4726-ad45-1ec37692fd1d";
+	
+	@Autowired
+	private RiotService riotService;
+	
 
 	@RequestMapping("/riotheader.do")
-	public String riotheader() {
-		return "riot/riotheader";
+	public void riotheader() {
+		
 	}
 
 	@RequestMapping(value = "/riot1.do", method = RequestMethod.GET)
-	public String searchSummoner(Model model, HttpServletRequest httpServletRequest) {
+	public String searchSummoner(Model model, HttpServletRequest httpServletRequest,Summoner summoner) {
 		BufferedReader br = null;
 		String SummonerName = httpServletRequest.getParameter("nickname").replaceAll(" ", "%20");
-		log.info("dev = {}", SummonerName);
-		Summoner temp = null;
+		log.info("SummonerName = {}", SummonerName);
+		
 		Gson gson = new GsonBuilder().create();
 		try {
 			String urlstr = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + SummonerName
@@ -57,7 +63,7 @@ public class ApitestController {
 				result = result + line;
 			}
 
-			log.info("dev = {}", result);
+			log.info("summoner = {}", result);
 			JsonElement element = JsonParser.parseString(result);
 
 			JsonObject object = element.getAsJsonObject();
@@ -65,23 +71,36 @@ public class ApitestController {
 			int profileIconId = object.get("profileIconId").getAsInt();
 			String name = object.get("name").getAsString();
 			String puuid = object.get("puuid").getAsString();
-			long summonerLevel = object.get("summonerLevel").getAsLong();
-			long revisionDate = object.get("revisionDate").getAsLong();
+			int summonerLevel = object.get("summonerLevel").getAsInt();
+			int revisionDate = object.get("revisionDate").getAsInt();
 			String id = object.get("id").getAsString();
 			String accountId = object.get("accountId").getAsString();
-			temp = new Summoner(profileIconId, name, puuid, summonerLevel, revisionDate, id, accountId);
-
-			log.info("dev = {}", temp);
+			summoner = new Summoner(0, accountId, profileIconId, revisionDate, name, id, puuid, summonerLevel);
+			log.info("summoner = {}", summoner);
+			int summonerrecord = riotService.insertSummoner(summoner);
+			
+			String msg = summonerrecord > 0 ? "summoner 등록 성공!" : "summoner 등록 실패!";
+			log.info("msg = {}", msg);
 
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		log.info("dev = {}", temp);
-		model.addAttribute("summoner", temp);
+		
+		
+		
+		
+		model.addAttribute("summoner", summoner);
 		model.addAttribute("imgURL",
-				"http://ddragon.leagueoflegends.com/cdn/12.1.1/img/profileicon/" + temp.getProfileIconId() + ".png");
+				"http://ddragon.leagueoflegends.com/cdn/12.1.1/img/profileicon/" + summoner.getProfileIconId() + ".png");
+		
+		
 		return "riot/riotheader";
 
 	}
+	
+
+	
+	
+	
 
 }

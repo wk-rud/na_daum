@@ -11,11 +11,14 @@
 </jsp:include>
 <br><br><br><br><br><br>
 <h2>찾은사람의 정보는?</h2>
-<form id="riotnick" method="GET">
+<form id="riotnick" method="GET" >
 	<input type="text" id="nickname" name="nickname" />
 	
 </form>
 <button type="button" onclick="submit('riot1')">전적검색</button>
+
+
+
 
 <p>${summoner.name}</p>
 <img alt="아이콘" src=${ imgURL}>
