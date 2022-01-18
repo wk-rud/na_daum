@@ -117,6 +117,10 @@ public class MemberController {
 			member = memberService.selectOneMember(id);
 			result = memberService.insertRole(member);
 		}
+		// 프사 변경시 동기화
+		if(!member.getProfile().equals((String)map.get("profile_image"))) {
+			member.setProfile((String)map.get("profile_image"));
+		}
 		redirectAttr.addFlashAttribute("member", member);
 		return "redirect:/member/memberLogin.do";
 	}
@@ -163,7 +167,79 @@ public class MemberController {
 	public void memberFriends() {
 		
 	}
+
+	@GetMapping("/mypage/memberFindFriend.do")
+	public void memberFindFriend() {}
 	
+	@GetMapping("/mypage/requestAllFriend.do")
+	public ResponseEntity<?> requestAllFriend(@AuthenticationPrincipal Member member) {
+		Map<String, Object> allList;
+		try {
+			log.debug("member = {}", member);
+			// 전체 회원
+			List<Member> memberList = memberService.selectAllNotInMe(member);
+			log.debug("memberList = {}", memberList);
+			// 맞팔 fr
+			List<Map<String, Object>> friend = memberService.selectAllFriend(member);
+			log.debug("friend = {}", friend);
+			// 나를 팔로우 rf
+			List<Map<String, Object>> rfriend = memberService.selectAllRequestFriend(member);
+			log.debug("rfriend = {}", rfriend);
+			// 내가 팔로잉 ff
+			List<Map<String, Object>> ffriend = memberService.selectAllRequestFriendByMe(member);
+			log.debug("ffriend = {}", ffriend);
+			
+			allList = new HashMap<>();
+			allList.put("memberList", memberList);
+			allList.put("friend", friend);
+			allList.put("rfriend", rfriend);
+			allList.put("ffriend", ffriend);
+		} catch (Exception e) {
+			log.debug(e.getMessage(), e);
+			return ResponseEntity.status(404).build();
+		}
+		return ResponseEntity.ok(allList);
+	}
+	
+	@PostMapping("/mypage/requestFriend.do")
+	public ResponseEntity<?> requestFriend(@AuthenticationPrincipal Member member, @RequestParam String name, @RequestParam String flag){
+		int result = 0;				
+		Member findId = memberService.selectOneMemberNickname(name);
+		log.debug("findId = {}", findId);
+		
+		Map<String, Object> param = new HashMap<>();
+		Map<String, Object> reverse = new HashMap<>();
+		param.put("name", findId.getId());
+		param.put("id", member.getId());
+		reverse.put("name", member.getId());
+		reverse.put("id", findId.getId());
+		
+		// 관계없음 -> 팔로잉
+		if("noRelation".equals(flag)) {
+			result = memberService.insertRequestFriend(reverse);	
+			log.debug("noRelation = {}", "성공");
+		// 팔로워 -> 맞팔
+		}else if("follower".equals(flag)) {
+			result = memberService.updateRequestFriend(param);
+			result = memberService.insertFriend(param);
+			result = memberService.insertFriend(reverse);
+			log.debug("follower = {}", "성공");
+		// 맞팔 -> 관계없음
+		}else if("friend".equals(flag)) {
+			result = memberService.deleteRequestFriend(param);
+			result = memberService.deleteRequestFriend(reverse);
+			result = memberService.deleteFriend(param);
+			result = memberService.deleteFriend(reverse);
+			log.debug("friend = {}", "성공");
+		// 팔로잉 -> 관계없음
+		}else if("following".equals(flag)) {
+			result = memberService.deleteRequestFriend(reverse);
+			log.debug("following = {}", "성공");
+		}		
+		
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/mypage/memberAnnouncement.do")
 	public void memberAnnouncement(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		int limit = 10;
@@ -173,7 +249,7 @@ public class MemberController {
 		param.put("offset", offset);
 		List<Map<String, Object>> announceList = memberService.selectAllAnnouncement(param);
 		log.debug("announceList = {}", announceList);
-		
+
 		int totalContent = memberService.countAllAnnouncementList();
 		log.debug("totalContent = {}", totalContent);
 		

@@ -31,5 +31,23 @@ public interface MemberService {
 
 	int countAllAnnouncementList();
 
+	List<Member> selectAllNotInMe(Member member);
+
+	List<Map<String, Object>> selectAllFriend(Member member);
+
+	List<Map<String, Object>> selectAllRequestFriend(Member member);
+
+	List<Map<String, Object>> selectAllRequestFriendByMe(Member member);
+
+	int insertRequestFriend(Map<String, Object> param);
+
+	int updateRequestFriend(Map<String, Object> param);
+
+	int insertFriend(Map<String, Object> param);
+
+	int deleteRequestFriend(Map<String, Object> param);
+
+	int deleteFriend(Map<String, Object> param);
+
 
 }

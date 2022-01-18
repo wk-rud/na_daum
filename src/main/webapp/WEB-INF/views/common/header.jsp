@@ -127,7 +127,7 @@ input[type=checkbox]{
 									class="dropdown-item" href="https://news.naver.com/">뉴스</a> 
 									<a class="dropdown-item"href="https://search.naver.com/search.naver?sm=tab_hty.top&where=nexearch&query=%EC%84%9C%EC%9A%B8%EC%8B%9C+%EC%A0%84%EC%8B%9C&oquery=%EC%84%9C%EC%9A%B8%EC%8B%9C+%EB%AC%B8%ED%99%94&tqi=hOH1KdprvhGssTAhLkKssssstz4-386194">문화생활</a> 
 									<a class="dropdown-item" href="https://audioclip.naver.com/">오디오북</a> <a
-									class="dropdown-item" href="https://your.gg/">롤전적</a>
+									class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>
 							</div></li>
 					</ul>
 					<!-- 뱃지생성완료, 클릭시 알람 영역 숨기기 완료 비동기 통신후 알람이 있을경우 다시 표기.-->

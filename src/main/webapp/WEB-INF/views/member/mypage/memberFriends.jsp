@@ -10,7 +10,13 @@
 	<jsp:param value="친구관리" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
-
-
+<br /><br /><br /><br />
+<button type="button" class="btn btn-outline-warning" id="searchFriendBtn">친구검색</button>
+<script>
+$(searchFriendBtn).click((e) => {
+	const spec = "left=500px, top=500px, width=400px, height=150px";
+	const popup = open('${pageContext.request.contextPath}/member/mypage/memberFindFriend.do', '친구찾기', spec);
+});
+</script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>

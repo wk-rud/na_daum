@@ -20,6 +20,46 @@
 		select count(*) from announcement
 	</select>
 	
+	<select id="selectAllNotInMe" resultType="member">
+		select * from member where id not in #{id} and search = 'T'
+	</select>
+	
+	<select id="selectAllFriend" resultMap="friendMap">
+		select * from friend where id = #{id}
+	</select>
+	
+	<select id="selectAllRequestFriend" resultMap="requestFriendMap">
+		select * from request_friend where id = #{id} and is_friend = 'F'
+	</select>
+	
+	<select id="selectAllRequestFriendByMe" resultMap="requestFriendMap">
+		select * from request_friend where follower = #{id} and is_friend = 'F'
+	</select>
+	
+	<!-- 친구 crud 시작 -->
+	
+	<insert id="insertRequestFriend">
+		insert into request_friend (no, id, follower) values(seq_request_friend_no.nextval, #{id}, #{name})
+	</insert>
+	
+	<update id="updateRequestFriend">
+		update request_friend set is_friend = 'T' where id = #{id} and follower = #{name}
+	</update>
+	
+	<insert id="insertFriend">
+		insert into friend values(seq_friend_no.nextval, #{id}, #{name})
+	</insert>
+	
+	<delete id="deleteRequestFriend">
+		delete from request_friend where id = #{id} and follower = #{name}
+	</delete>
+	
+	<delete id="deleteFriend">
+		delete from friend where id = #{id} and friend_id = #{name}
+	</delete>
+	
+	<!-- 친구 crud 끝 -->
+	
 	<insert id="insertMember">
 		insert into member(id, password, name, email, address, nickname, auth_key)
 		values(#{id}, #{password}, #{name}, #{email}, #{address}, #{nickname}, #{authKey})
@@ -97,6 +137,19 @@
 		<result column="read_count" property="readCount"/>
 		<result column="reg_date" property="regDate"/>
 		<result column="id" property="id"/>
+	</resultMap>
+	
+	<resultMap type="map" id="friendMap">
+		<id column="no" property="no"/>
+		<result column="id" property="id"/>
+		<result column="friend_id" property="friendId"/>
+	</resultMap>
+	
+	<resultMap type="map" id="requestFriendMap">
+		<id column="no" property="no"/>
+		<result column="id" property="id"/>
+		<result column="follower" property="follower"/>
+		<result column="is_friend" property="isFriend"/>
 	</resultMap>
 	
 </mapper>

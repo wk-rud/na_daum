@@ -27,8 +27,6 @@
 	integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
 	crossorigin="anonymous">
 
-<!-- 카카오 로그인 -->
-
 <script>
 $(() => {	
 	$(loginModal)

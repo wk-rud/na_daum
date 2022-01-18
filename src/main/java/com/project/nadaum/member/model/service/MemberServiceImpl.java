@@ -75,6 +75,52 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.countAllAnnouncementList();
 	}
 
+	@Override
+	public List<Member> selectAllNotInMe(Member member) {
+		return memberDao.selectAllNotInMe(member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllFriend(Member member) {
+		return memberDao.selectAllFriend(member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllRequestFriend(Member member) {
+		return memberDao.selectAllRequestFriend(member);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectAllRequestFriendByMe(Member member) {
+		return memberDao.selectAllRequestFriendByMe(member);
+	}
+
+	@Override
+	public int insertRequestFriend(Map<String, Object> param) {
+		return memberDao.insertRequestFriend(param);
+	}
+
+	@Override
+	public int updateRequestFriend(Map<String, Object> param) {
+		return memberDao.updateRequestFriend(param);
+	}
+
+	@Override
+	public int insertFriend(Map<String, Object> param) {
+		return memberDao.insertFriend(param);
+	}
+
+	@Override
+	public int deleteRequestFriend(Map<String, Object> param) {
+		return memberDao.deleteRequestFriend(param);
+	}
+
+	@Override
+	public int deleteFriend(Map<String, Object> param) {
+		return memberDao.deleteFriend(param);
+	}
+
+	
 	
 	
 }
