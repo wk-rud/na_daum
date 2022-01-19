@@ -24,7 +24,7 @@
 <script
 	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-	crossorigin="anonymous"></script>
+	crossorigin="anonymous"></script> 
 
 <!-- bootstrap css -->
 <link rel="stylesheet"
@@ -117,20 +117,20 @@ input[type=checkbox]{
 								❄ </a></li>
 					</ul>
 					<ul class="navbar-nav justify-content-end">
-						<li class="nav-item dropdown"><a
-							class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-							role="button" data-toggle="dropdown" aria-haspopup="true"
-							aria-expanded="false"> </a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<!-- 각자페이지 링크거시면 됩니다 -->
-								<a class="dropdown-item" href="https://www.naver.com/">메인</a> <a
-									class="dropdown-item" href="https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fmemo.naver.com%2Fmain.nhn">ToDoList</a> 
-									<a class="dropdown-item" href="${pageContext.request.contextPath}/culture/culture.do">문화생활</a>
-									<a class="dropdown-item" href="${pageContext.request.contextPath}/movie/movieBoardList.do">영화</a> 
-									<a class="dropdown-item" href="https://audioclip.naver.com/">오디오북</a> <a
-									class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>
-							</div></li>
-					</ul>
+                        <li class="nav-item dropdown"><a
+                            class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                            role="button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false"> </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- 각자페이지 링크거시면 됩니다 -->
+                                <a class="dropdown-item" href="https://www.naver.com">메인</a> 
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/accountbook/accountbook.do">가계부</a> 
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/culture/cultureBoardList.do">문화생활</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/movie/movieList.do">영화</a> 
+                                <a class="dropdown-item" href="https://audioclip.naver.com">오디오북</a> 
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>
+                            </div></li>
+                    </ul>
 					<!-- 뱃지생성완료, 클릭시 알람 영역 숨기기 완료 비동기 통신후 알람이 있을경우 다시 표기.-->
 					<!-- 프로필 사진으로 보일시 크기에 맞게 이미지를 넣어야됨, 썸네일용 이미지 따로 저장하는 방법도 좋으나 일이 많아짐.-->
 					<!-- 아래 span에서 동적으로 메시지 갯수다르게 처리하기 필요 -->

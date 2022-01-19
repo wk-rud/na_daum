@@ -6,45 +6,44 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="게시판 상세보기" name="title"/>
 </jsp:include>
+
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/culture/cultureDetail.css" />
+
 <style>
-div#culture-container{width:400px;}
-input, button, textarea {margin-bottom:15px;}
-button { overflow: hidden; }
-/* 부트스트랩 : 파일라벨명 정렬*/
-div#board-container label.custom-file-label{text-align:left;}
 
-/*카카오 Api style */
-    .map_wrap {position:relative;width:100%;height:350px;}
-    .title {font-weight:bold;display:block;}
-    .hAddr {position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;}
-    #centerAddr {display:block;margin-top:2px;font-weight: normal;}
-    .bAddr {padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
 </style>
-
 <div id="culture-container" class="mx-auto text-center">
-	<input type="text" class="form-control" 
+	
+	<!-- 상세내용 -->
+	<div class="culture_detail">
+	<input type="image" class="form-control-" name="thumnail" title="썸네일" id="thumail"
+		   src="${culture.imgUrl}" readonly>
+	<input type="text" class="form-control-" 
 		   placeholder="제목" name="title" id="title" 
 		   value="${culture.title}" readonly>
 	
-	<input type="text" class="form-control" name="area" title="지역"
+	<input type="text" class="form-control-" name="area" title="지역" id="area"
 		   value="${culture.area}" readonly>
-	<input type="text" class="form-control" name="place" title="장소"
+	<input type="text" class="form-control-" name="place" title="장소" id="place"
 		   value="${culture.place}" readonly>
-	<input type="text" class="form-control" name="realmName" title="장르"
+	<input type="text" class="form-control-" name="realmName" title="장르" id="genre"
 		   value="${culture.realmName}" readonly>
-	<input type="image" class="form-control" name="thumnail" title="썸네일"
-		   src="${culture.imgUrl}" readonly>
-	<input type="text" class="form-control" name="startDate" 
-		   value='<fmt:formatDate value="${culture.startDate}" pattern="yyyy/MM/dd"/>'>
-	<input type="text" class="form-control" name="endDate" 
+	<input type="text" class="form-control-" name="startDate" id="startDate"
+		   value='<fmt:formatDate value="${culture.startDate}" pattern="yyyy/MM/dd"/>'> 
+	<input type="text" class="form-control-" name="endDate" id="endDate"
 		   value='<fmt:formatDate value="${culture.endDate}" pattern="yyyy/MM/dd"/>'>
-		   
+	</div>
+	
+	<hr style="border: solid 2px grey;">
+	
+	<!-- 지도 -->	   
 	<div class="map_wrap">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
     <div class="hAddr">
         <span class="title">지도중심기준 행정동 주소정보</span>
         <span id="centerAddr"></span>
     </div>
+    
 </div>
 </div>
 
@@ -124,3 +123,5 @@ function displayCenterInfo(result, status) {
 }
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
+cultureDetail.jsp
+7KB

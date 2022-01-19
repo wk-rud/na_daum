@@ -17,5 +17,21 @@
 		where
 			code = #{code}
 	</select>
+	<!--  <insert id="insertCultureApi"  parameterType="culture">
+		insert 
+			into 
+		culture 
+			values 
+			(concat('cu-',seq_culture_no.nextval),
+			#{title},
+			to_date(#{startDate}, 'yyyymmdd'),
+			to_date(#{endDate}, 'yyyymmdd'),
+			#{area},
+			#{place},
+			#{realmName},
+			#{imgUrl},
+			#{gpsX},
+			#{gpsY})
+	</insert>-->
 </mapper>
 

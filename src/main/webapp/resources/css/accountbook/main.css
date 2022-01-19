@@ -1,0 +1,196 @@
+@charset "UTF-8";
+
+* {
+  margin : 0;
+  padding : 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* 영역 확인용 박스 */
+.box {
+	border : 1px solid black;
+}
+
+/* 몸통 전체적으로 감싸고 있는 섹션 */
+.content {
+	background-color : #F5F5F5;
+	width : 100%;
+	height : 800px;
+	position : relative;
+}
+
+/* 왼쪽 섹션 */
+
+.box1 {
+  width: 35%;
+  height: 100%;
+  float: left;
+  position: relative;
+  text-align: center;
+  padding : 50px;
+}
+
+/*가운데, 오른쪽 섹션 공통*/
+.box2,.box3{
+  width : 30%;
+  height: 600px;
+  float: left;
+  position: relative;
+  text-align: center;
+}
+
+/* 가운데 */
+.box2 {
+  width : 35%;
+}
+
+/* 가운데 검색창 */
+
+.box2 h3{
+  text-align: left;
+  margin: 20px;
+  margin-left: 50px;
+}
+
+.search_box {
+  width : 100%;
+  height: 130px;
+}
+
+/* 가운데 가계부 내역 리스트 */
+.income {
+  color : green;
+}
+
+.expense {
+  color : rgb(195, 16, 16)
+}
+
+.account_list {
+  width : 100%;
+  height: 490px;
+}
+
+.account_list table {
+  width : 100%;
+  height: 50px;
+  margin: 20px;
+}
+
+.account_list table td:nth-child(3) {
+  font-size: 20px;
+}
+
+
+/* 오른쪽 섹션 */
+.account{
+  position: relative;
+  width: 100%;
+  height: 60%;
+}
+
+.account-info {
+  display: inline-block;
+  position: relative;
+  top : 50px;
+  font-size: 25px;
+}
+
+.account-info td {
+  height: 30px;
+  width : 150px;
+}
+
+.account-info tr:nth-child(3) {
+  height: 80px;
+  font-size: 30px;
+}
+
+.account-info tr:nth-child(4) {
+  height: 50px;
+}
+
+/* 가계부 입력 박스 */
+
+/* .insertForm {
+  width : 100%;
+  height: 40%;
+  position: relative;
+  bottom: 50px;
+  background : rgba(225, 225, 225, 0.1);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border : 1px solid rgba(225, 225, 225, 0.5);
+  border-radius: 10px;
+} */
+
+/* .insertForm::after {
+  content: '';
+  position: absolute;
+  background-color: red;
+  width : 100px;
+  height: 100px;
+  border-radius: 50%;
+  top : 40%;
+  left : 50%;
+  transform: translate(-50%, -50%);
+  border : 2px dotted lightgray;
+}
+
+.insertForm p {
+  font-size: 20px;
+  color: gray;
+  position: relative;
+  top : 180px;
+} */
+
+
+#btn1{
+  width : 300px;
+  height: 150px;
+  position: relative;
+  bottom: -20px;
+  background : rgba(225, 225, 225, 0.1);
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1);
+  border : 1px solid rgba(225, 225, 225, 0.5);
+  border-radius: 10px;
+}
+
+#btn1:hover {
+  cursor : pointer;
+  border : 1px solid gray;
+}
+
+
+.plus {
+	color : lightgray;
+	margin : 15px;
+}
+
+
+.insertAccount {
+	width : 450px;
+	height : 600px;
+	text-align : center;
+}
+
+.w_date {
+	width : 50px;
+	height : 50px;
+}
+
+.btn_t{
+	width : 100px;
+	height : 80px;
+}
+
+.radioBtn{
+	width : 100px;
+	height : 100px;
+}
+
+#income_checkbox{
+	visibility : visible;
+	width : 20px;
+	height : 20px;
+}

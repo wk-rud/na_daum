@@ -26,19 +26,11 @@ public class CultureController {
 	@Autowired
 	private CultureService cultureService;
 	
-	@GetMapping("/cultureBoardList.do")
-	public void boardList() {}
-	
-	@GetMapping("/kakaoMapApi.do")
-	public void kakaoMapApi() {}
-	
 	@GetMapping("/culture.do")
 	public void culture(Model model) {
-		log.debug("123");
 		List<Culture> list = cultureService.selectCultureList();
 		model.addAttribute("list", list);
 	}
-	
 	
 	@GetMapping("/cultureDetail.do")
 	public void cultureDetail(@RequestParam String code, Model model) {

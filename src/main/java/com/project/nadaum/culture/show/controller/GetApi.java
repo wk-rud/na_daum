@@ -1,21 +1,13 @@
 package com.project.nadaum.culture.show.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
-import org.json.JSONException;
-import org.json.XML;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,87 +17,144 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @Slf4j
 @RequestMapping("/culture")
 public class GetApi {
-	
-	@GetMapping("/xmlParser.do")
-    public static Map<String, Object> GetApi(Model model) throws IOException {
-        
-    	Map<String, Object> resultMap = new HashMap<>();
-    	
-    	try {
-			StringBuilder urlBuilder = new StringBuilder("http://www.culture.go.kr/openapi/rest/publicperformancedisplays/period"); /*URL*/
-			urlBuilder.append("?" + URLEncoder.encode("serviceKey","UTF-8") + "=p%2B16HHPYFEvCkanGQCoGc9CAAG7x66tc5u3xrBmJpM8avVLTGiJ%2FjJaIvItRCggk79J9k%2Byn47IjYUHr%2FdzlgA%3D%3D"); /*Service Key*/
-			urlBuilder.append("&" + URLEncoder.encode("MsgBody","UTF-8") + "=" + URLEncoder.encode("", "UTF-8")); /**/
-			urlBuilder.append("&" + URLEncoder.encode("cPage","UTF-8") + "=" + URLEncoder.encode("3", "UTF-8")); /**/
-			
-			URL url = new URL(urlBuilder.toString());
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.setRequestProperty("Content-type", "application/json");
-			System.out.println("Response code: " + conn.getResponseCode()); //200이면 정상
-			BufferedReader rd;
-      
-			if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-			    rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			} else {
-			    rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-			}
-			StringBuilder sb = new StringBuilder();
-			String line;
-			while ((line = rd.readLine()) != null) {
-			    sb.append(line);
-			}
-			rd.close();
-			conn.disconnect();
-			System.out.println(sb.toString());
-			
-			//=================================================================================
-			//xml -> json
-			
-			org.json.JSONObject xmlJSONObj = XML.toJSONObject(sb.toString());
-			
-			String xmlJSONObjString = xmlJSONObj.toString();
-			log.debug("xmlJSONObjString = {}", xmlJSONObjString);
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			
-			//map에 data담기
-			Map<String, Object> map = new HashMap<>();
-			map = objectMapper.readValue(xmlJSONObjString, new TypeReference<Map<String, Object>>(){});
-			
-			Map<String, Object> response = (Map<String, Object>) map.get("response");
-			Map<String, Object> msgBody = (Map<String, Object>) response.get("msgBody");
 
-			log.debug("response = {}", response);
-			log.debug("msgBody = {}", msgBody);
+    // tag값의 정보를 가져오는 메소드
+	private static String getTagValue(String tag, Element eElement) {
+		//
+	    NodeList nlList = eElement.getElementsByTagName(tag).item(0).getChildNodes();
+	    Node nValue = (Node) nlList.item(0);
+	    if(nValue == null) 
+	        return null;
+	    return nValue.getNodeValue();
+	}
+	
+	
+	//문화생활API
+	@GetMapping("/cultureBoardList.do")
+	public void getCultureApi(Model model) {
+		int page = 1;
+
+		List<Object> list = new ArrayList<>();
+			try {
+				
+			while(true){
+				// parsing할 url 지정(API 키 포함해서)
+				String url = "http://www.culture.go.kr/openapi/rest/publicperformancedisplays/period"
+						+ "?serviceKey=p%2B16HHPYFEvCkanGQCoGc9CAAG7x66tc5u3xrBmJpM8avVLTGiJ%2FjJaIvItRCggk79J9k%2Byn47IjYUHr%2FdzlgA%3D%3D"
+						+ "&rows=9"
+						+ "&cPage="+page;
+				
+				DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
+				Document doc = dBuilder.parse(url);
+				
+				// root tag 
+				doc.getDocumentElement().normalize();
+//				System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+				//최상위tag값
+				//result - products - product - baseinfo
+				
+				// 파싱할 tag
+				NodeList nList = doc.getElementsByTagName("perforList");
+//				System.out.println("파싱할 리스트 수 : "+ nList.getLength());
+				
+				for(int temp = 0; temp < nList.getLength(); temp++){
+					Node nNode = nList.item(temp);
+					if(nNode.getNodeType() == Node.ELEMENT_NODE){
+						
+						Element eElement = (Element) nNode;
+						System.out.println("######################");
+						
+//						System.out.println(eElement.getTextContent());
+						String seq = getTagValue("seq", eElement);
+						String title = getTagValue("title", eElement);
+						String startDate = getTagValue("startDate", eElement);
+						String endDate = getTagValue("endDate", eElement);
+						String area = getTagValue("area", eElement);
+						String place = getTagValue("place", eElement);
+						String thumbnail = getTagValue("thumbnail", eElement);
+						String realmName = getTagValue("realmName", eElement);
+						String gpsX = getTagValue("gpsX", eElement);
+						String gpsY = getTagValue("gpsY", eElement);
+						
+						Map<String, Object> map = new HashMap<>();
+						map.put("seq", seq);
+						map.put("title", title);
+						map.put("startDate", startDate);
+						map.put("endDate", endDate);
+						map.put("area", area);
+						map.put("place", place);
+						map.put("thumbnail", thumbnail);
+						map.put("realmName", realmName);
+						map.put("gpsX", gpsX);
+						map.put("gpsY", gpsY);
+						
+						
+						list.add(map);
+						
+						System.out.println(list);
+					}	// for end
+					
+				}	// if end
+				model.addAttribute("list",list);
+				page += 1;
+				System.out.println("page number : "+page);
+	
+				if(page > 1){	
+					break;
+				}
+			}	// while end
 			
-			List<Map<String, Object>> perforList = null;
-			perforList = (List<Map<String, Object>>) msgBody.get("perforList");
-			log.debug("perforList = {}", perforList);
-			
-			resultMap.put("Result", "0000");
-			resultMap.put("rows", msgBody.get("rows"));
-			resultMap.put("cPage", msgBody.get("cPage"));
-			resultMap.put("totalCount", msgBody.get("totalCount"));
-			resultMap.put("data", perforList);
-			
-			model.addAttribute("msgBody",msgBody);
-			model.addAttribute("perforList",perforList);
-			
-			
-		} catch (JSONException | IOException e) {
+			} catch (Exception e){	
 			e.printStackTrace();
-	        resultMap.clear();
-	        resultMap.put("Result", "0001");
-		}
-        return resultMap;
-    }
+		}	// try~catch end
+	}
+	
+	//문화 상세정보API
+	@GetMapping("/CultureDetail.do")
+	public void getCultureDetailApi(Model model) {
+			try {
+				
+				// parsing할 url 지정(API 키 포함해서)
+				String url = "http://www.culture.go.kr/openapi/rest/publicperformancedisplays/d/"
+						+ "?serviceKey=p%2B16HHPYFEvCkanGQCoGc9CAAG7x66tc5u3xrBmJpM8avVLTGiJ%2FjJaIvItRCggk79J9k%2Byn47IjYUHr%2FdzlgA%3D%3D"
+						+ "&seq=173550";
+				
+				DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
+				Document doc = dBuilder.parse(url);
+				
+				  doc.getDocumentElement().normalize();
+				 
+				  System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+				  
+				  NodeList nList = doc.getElementsByTagName("perforInfo");
+				  System.out.println(nList);
+				  System.out.println("-----------------------");
+				 
+				  for (int temp = 0; temp < nList.getLength(); temp++) {
+				 
+				     Node nNode = nList.item(temp);
+				     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+				 
+				        Element eElement = (Element) nNode;
+				 
+				        System.out.println("title: " + getTagValue("title", eElement));
+				 
+				     }
+				  }
+				   } catch (Exception e) {
+				  e.printStackTrace();
+				   }
+				  
+				  
+	}
 }
+	
+

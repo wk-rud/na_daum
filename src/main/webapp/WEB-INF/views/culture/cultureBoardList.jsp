@@ -3,19 +3,42 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="문화" name="title"/>
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/culture/cultureBoardList.css" />
+
 <style>
 .search-form label{
 padding-right: 8px;
 }
 div#culture-container{width:100%; margin:0 auto;text-align:center;}
 .thumnail{width: 20%; }
+#culture_code{
+	display:none;
+}
+.card{
+height: 300px;
+}
+.card-title{
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    width: 300px;
+}
 </style>
+<script>
+//cultureDetail
+$(() => {
+	$(".card[data-code]").click((e) => {
+		 //console.log(e.target); // td
+		const $card = $(e.target).parent().parent();
+		const code = $card.data("code");
+		location.href = `${pageContext.request.contextPath}/culture/cultureDetail.do?code=\${code}`;
+	});
+});
+</script>
 <body>
 	<div class="container">
 		<div class="culture-thumnail">
@@ -53,52 +76,38 @@ div#culture-container{width:100%; margin:0 auto;text-align:center;}
 				  <button type="submit" class="btn orange btn-default">Search</button>
 			</form>
 		</div>
-		
-  <div class="py-5">
+<div id="culture-container">
+    <br />
+    
+     <div class="py-5">
     <div class="container">
       <div class="row hidden-md-up">
        
-        <div class="col-md-4">
-          <div class="card">
+     <c:forEach var="culture" items="${list}">
+    	<div class="col-md-4">
+          <div class="card" data-code="${culture.seq}">
             <div class="card-block">
-              <h4 class="card-title">Card title</h4>
-              <h6 class="card-subtitle text-muted">Support card subtitle</h6>
-              <p class="card-text p-y-1">Some quick example text to build on the card title .</p>
-              <a href="#" class="card-link">link</a>
-              <a href="#" class="card-link">Second link</a>
-            </div>
+            	 <p class="card-text p-y-1" id="culture_code">${culture.code}</p>
+              <h4 class="card-title">${culture.title}</h4>
+             
+              <p class="card-text p-y-1">${culture.area}</p>
+              <p class="card-text p-y-1">${culture.place}</p>
+              <p class="card-text p-y-1">${culture.realmName}</p>
+              <img class="thumnail" src="${culture.thumbnail}" alt="" />
+               </div>
           </div>
         </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Card title</h4>
-              <h6 class="card-subtitle text-muted">Support card subtitle</h6>
-              <p class="card-text p-y-1">Some quick example text to build on the card title .</p>
-              <a href="#" class="card-link">link</a>
-              <a href="#" class="card-link">Second link</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-block">
-              <h4 class="card-title">Card title</h4>
-              <h6 class="card-subtitle text-muted">Support card subtitle</h6>
-              <p class="card-text p-y-1">Some quick example text to build on the card title .</p>
-              <a href="#" class="card-link">link</a>
-              <a href="#" class="card-link">Second link</a>
-            </div>
-          </div>
-        </div>
-      </div><br>
-      <div class="row">
-      </div>
-    </div>
-  </div>
-  </div>
+	   </c:forEach>
+	    			</div>
+	    		</div>
+	    	</div>
+		</div>
+		
+	</div>
 </body>
+
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
   <script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
-</html>
+</body>
+<jsp:include page="/WEB-INF/views/common/footer.jsp"/>
