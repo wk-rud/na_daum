@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.project.nadaum.kakaopay.ready.model.service.PayReadyService;
 import com.project.nadaum.kakaopay.ready.model.vo.PayAuth;
 import com.project.nadaum.kakaopay.ready.model.vo.PayReady;
+import com.project.nadaum.kakaopay.result.model.vo.PayResult;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +37,8 @@ public class PayReadyController {
 	@Autowired
 	private BCryptPasswordEncoder bcryptPasswordEncoder;
 	
-	// 테스트용url : payready/api/payIndex
+	
+	// 서블릿용 페이 url : payready/api/payIndex
 	@GetMapping("api/payIndex")
 	public String payIndex(RedirectAttributes redirectAttr) {
 		redirectAttr.addFlashAttribute("msg", "요청확인");
@@ -55,31 +57,31 @@ public class PayReadyController {
 		model.addAttribute("payReady",payReady);
 		model.addAttribute("payAuth",payAuth);
 		model.addAttribute("msg","토큰발행완료!");
-		return "pay/api/payReadyResult";
+		return "pay/api/payRequest";
 	}
+	//여기까지 결제준비 완료.이후 결제요청 과정은 PayResultController에서 진행
 	
-	
-	//Rest요청 처리
-	@GetMapping("/payRequest")
+		
+	//RESP API요청 처리
+	@GetMapping("/rest")
 	public String payReady() {
 		
-		return "pay/payRequest";
+		return "pay/rest/payReadyRequest";
 	}
 	
 	@ResponseBody
-	@PostMapping("/payRequest")
-	public Map<String,Object> payReady(@RequestBody PayReady payReady) {
-		
-		
-		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid() + payReady.getPartnerOrderId());
+	@PostMapping("/rest")
+	public ResponseEntity<?> payReady(@RequestBody Map<String, String>  payReady) {
+		log.info("payReady={}",payReady);
+		String pgToken = bcryptPasswordEncoder.encode(payReady.get("cid").toString() + payReady.get("PartnerOrderId").toString());
 		String tid = String.valueOf(System.currentTimeMillis());
-		PayAuth payAuth = new PayAuth(payReady.getPartnerOrderId(),tid,pgToken,new Date());
+		PayAuth payAuth = new PayAuth(payReady.get("PartnerOrderId").toString(),tid,pgToken,new Date());
 		
-		Map<String,Object> map = new HashMap<>();
-		map.put("payReady", payReady);
-		map.put("payAuth",payAuth);
+		Map<String,String> map = new HashMap<>();
+		//map.put("payReady", payReady);
+		//map.put("payAuth",payAuth);
 		
-		return map;
+		return ResponseEntity.ok(payReady);
 	}
 	
 	
@@ -118,7 +120,7 @@ public class PayReadyController {
 //		}		
 //	}
 	
-	@PostMapping("/payRequestReal")
+	@PostMapping("/payRequestSample")
 	@ResponseBody
 	public String payRequest(@RequestParam String cid, 
 						@RequestParam String partner_order_id, RedirectAttributes redirectAttr) {

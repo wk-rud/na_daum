@@ -1,5 +1,12 @@
 package com.project.nadaum.kakaopay.result.model.service;
 
-public class PayResultService {
+import com.project.nadaum.kakaopay.result.model.vo.PayMemberInfo;
+import com.project.nadaum.kakaopay.result.model.vo.PayResult;
+
+public interface PayResultService {
+
+	int insertPayResult(PayResult payResult);
+
+	PayMemberInfo selectOnePayMemberInfo(String partnerUserId);
 
 }

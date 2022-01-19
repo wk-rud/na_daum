@@ -29,10 +29,7 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 <body>
 	<div class="enroll-container">
 		<h2>단건결제준비(VO)</h2>
-		<form
-			name="payRequestFrm" 
-			method="post" 
-			action="">
+		<form method="post" action="${pageContext.request.contextPath}/payready/rest">
 			<table id="tbl-student">
 				<tr>
 					<th>가맹점 코드, 최대11자</th>
@@ -75,6 +72,9 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 					<td>
 						<input type="text" name="CARDS" value="SINHAN" required/>
 					</td>
+					<td>
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+					</td>
 				</tr>		
 				<tr>
 					<td colspan="2">
@@ -85,13 +85,30 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 		</form>
 		<script>
 		$(document.payRequestFrm).submit((e) => {
-			e.preventDefault(); // 제출방지				
+			e.preventDefault(); // 제출방지	
+			
+			const csrfHeader = "${_csrf.headerName}";
+	        const csrfToken = "${_csrf.token}";
+	        const headers = {};
+	        headers[csrfHeader] = csrfToken;
+	        
+	        const payReady = {
+					cid: $("input[name='cid']").val(),
+					partnerOrderId: $("input[name='partnerOrderId']").val(),
+					partnerUserId: $("input[name='partnerUserId']").val(),
+					itemName: $("input[name='itemName']").val(),
+					quantity: $("input[name='quantity']").val(),
+					totalAmount: $("input[name='totalAmount']").val(),
+					CARDS: $("input[name='CARDS']").val(),
+			};
+	        console.log(payReady); //여기까지는 잘 매핑해옴.
 			$.ajax({
 				url: "${pageContext.request.contextPath}/payready/payRequest",
+				contentType: "application/json; charset=utf-8",
+				/* accept:"application/json", */
+				/* headers: headers, */
 				method: "POST",
-				data:formData,
-				processData: false, //Content-Type: application/x-www-formurlencoded에 따른 처리 안함.
-				contentType: false, //Content-Type: application/x-www-formurlencoded에 따른 처리 안함.
+				data:JSON.stringify(payReady), 
 				dataType: "json",
 				success(data){
 					console.log(data);
@@ -105,8 +122,6 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 		});
 		
 		</script>
-		
-		
 		<hr />
 		
 		<h2>단건결제준비(Map)</h2>
@@ -148,7 +163,9 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 						<input type="number" name="total_amount" value="13200" required/>
 					</td>
 				</tr>
-					
+				<tr>
+				<td> <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/></td>
+				</tr>	
 				<tr>
 					<td colspan="2">
 						<input type="submit" value="등록" />

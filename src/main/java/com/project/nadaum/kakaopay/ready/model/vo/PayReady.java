@@ -20,10 +20,7 @@ public class PayReady implements Serializable{
 	private String itemName;
 	private int quantity;
 	private int totalAmount;
-	private int taxFreeAmount;
-	private String approvalUrl;
-	private String cancelUrl;
-	private String failUrl;
+	private String sid;
 	private String CARDS;
 	
 	enum CARDS{

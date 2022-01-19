@@ -10,5 +10,11 @@
 	
 	<insert id="insertPayResult"></insert>
 	
+	
+	
+	<select id="selectOnePayMemberInfo" resultType="member">
+		select * from member where id = #{id}
+	</select>
+	
 </mapper>
 

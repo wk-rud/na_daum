@@ -83,7 +83,44 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 				</tr>
 			</table>
 		</form>
+		<script>
+		$(document.payRequestFrm).submit((e) => {
+			e.preventDefault(); // 제출방지	
+			
+			const csrfHeader = "${_csrf.headerName}";
+	        const csrfToken = "${_csrf.token}";
+	        const headers = {};
+	        headers[csrfHeader] = csrfToken;
+	        
+	        const payReady = {
+					cid: $("input[name='cid']").val(),
+					partnerOrderId: $("input[name='partnerOrderId']").val(),
+					partnerUserId: $("input[name='partnerUserId']").val(),
+					itemName: $("input[name='itemName']").val(),
+					quantity: $("input[name='quantity']").val(),
+					totalAmount: $("input[name='totalAmount']").val(),
+					CARDS: $("input[name='CARDS']").val(),
+			};
+	        console.log(payReady); //여기까지 문제x
+			$.ajax({
+				url: "${pageContext.request.contextPath}/payready/payRequest",
+				contentType : 'application/json; charset=UTF-8',
+				headers: headers
+				method: "POST",
+				data: payReady,  
+				dataType: "json",
+				success(data){
+					console.log(data);
+					alert(data.msg);
+				},
+				error: console.log,
+				complete(){
+					document.payRequestFrm.reset(); // 폼 초기화				
+				}
+			});
+		});
 		
+		</script>
 		<hr />
 		
 		<h2>단건결제준비(Map)</h2>
