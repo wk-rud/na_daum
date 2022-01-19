@@ -15,8 +15,8 @@ public class PayAuth implements Serializable{/**
 	 */
 	private static final long serialVersionUID = -7802689701998289246L;
 	private int no;
-	private String partnerOrderId;
 	private String tid;
+	private String orderCode;
 	private String pgToken;
 	private Date createdAt;
 }

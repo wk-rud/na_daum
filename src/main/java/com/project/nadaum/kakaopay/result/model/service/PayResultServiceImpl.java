@@ -20,8 +20,8 @@ public class PayResultServiceImpl implements PayResultService{
 	}
 
 	@Override
-	public PayMemberInfo selectOnePayMemberInfo(String partnerUserId) {
-		PayMemberInfo payMemberInfo = payResultDao.selectOnePayMemberInfo(partnerUserId);
+	public PayMemberInfo selectOnePayMemberInfo(String memberId) {
+		PayMemberInfo payMemberInfo = payResultDao.selectOnePayMemberInfo(memberId);
 		return payMemberInfo;
 	}
 

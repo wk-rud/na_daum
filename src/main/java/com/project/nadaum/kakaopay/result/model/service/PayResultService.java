@@ -7,6 +7,6 @@ public interface PayResultService {
 
 	int insertPayResult(PayResult payResult);
 
-	PayMemberInfo selectOnePayMemberInfo(String partnerUserId);
+	PayMemberInfo selectOnePayMemberInfo(String memberId);
 
 }

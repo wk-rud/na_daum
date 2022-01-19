@@ -3,51 +3,69 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="payReady">
-	
-	<!-- payReady 결제 준비-->
+
+	<!-- payReady 결제 준비 -->
 	<select id="selectPayReady" resultType="payReady">
-		select * from purchase_ready where cid = #{cid}
+		select * from pay_ready
+		where order_code = #{orderCode}
 	</select>
-	
+
 	<!-- 페이징으로 반드시 일정부분만 불러올것 -->
 	<select id="selectPayReadyList" resultType="payReady">
-		select * from purchase_ready 
+		select * from
+		pay_ready
 	</select>
-	
+
 	<insert id="insertPayReady">
-		insert into purchase_ready(cid,partnerOrderId,partnerUserId,itemName,quantity,totalAmount)
-		values (#{cid},#{partnerOrderId},#{partnerUserId},#{itemName},#{quantity},#{totalAmount})
+		insert into
+		pay_ready(order_code,member_id,cid,item_name,quantity,total_amount,approval_url,cancel_url,fail_url,cards,sid)
+		values (#{orderCode},
+				#{memberId},
+				#{cid},
+				#{itemName},
+				#{quantity},
+				#{totalAmount},
+				#{approvalUrl},
+				#{cancelUrl},
+				#{failUrl},
+				#{CARDS},
+				#{sid})
 	</insert>
-	
+
 	<!-- 수량 변경 및 총액만 변경가능 -->
 	<update id="updatePayReady">
-		update purchase_ready 
+		update pay_ready
 		<set>
-			<if test= "quantity!=null and quantity gt 0" > quantity = #{quantity},</if>
-			<if test= "totalAmount!=null and totalAmount gt 0 " > totalAmount = #{totalAmount},</if>
-		</set> 
+			<if test="quantity!=null and quantity gt 0"> quantity =
+				#{quantity},</if>
+			<if test="totalAmount!=null and totalAmount gt 0 "> totalAmount =
+				#{totalAmount},</if>
+		</set>
 	</update>
-	
+
 	<!-- 결제취소 -->
 	<delete id="deletePayReady">
-		delete purchase_ready where partner_order_id = #{partnerOrderId}
-	</delete>
-	
-	<!-- payAuth 결제 인증-->
-	<select id="selectOnePayAuth" resultType="map">
-		select * from purchaseAuth where pgToken = #{pgToken}
-	</select>
-	
-	<insert id="insertPayAuth">
-		insert into purchase_auth(no,tid,pg_token,cid)
-		values(seq_pay_auth_no.nextval,#{tid},#{pg_token},#{cid})
-	</insert>
-	
-	<delete id="deletePayAuth">
-		delete purchase_auth where partner_order_id = #{partnerOrderId}
+		delete pay_ready where order_code = #{orderCode}
 	</delete>
 
-	
-	
+	<!-- payAuth 결제 인증 -->
+	<select id="selectOnePayAuth" resultType="payAuth">
+		select * from payAuth
+		where order_code = #{orderCode}
+	</select>
+
+	<insert id="insertPayAuth">
+		insert into pay_auth(no,tid,order_code,pg_token)
+		values(seq_pay_auth_no.nextval,#{tid},#{orderCode},#{pgToken})
+	</insert>
+
+	<delete id="deletePayAuth">
+		delete pay_auth where order_code = #{orderCode}
+	</delete>
+
+	<select id="selectPayAuthList" resultType="map">
+		select * from payAuth
+	</select>
+
 </mapper>
 

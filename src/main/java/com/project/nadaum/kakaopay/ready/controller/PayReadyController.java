@@ -51,19 +51,25 @@ public class PayReadyController {
 
 	@PostMapping("api/payEnroll")
 	public String payEnroll(PayReady payReady, RedirectAttributes redirectAttr, Model model) {
-		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid() + payReady.getPartnerOrderId());
+		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid() + payReady.getMemberId());
 		String tid = String.valueOf(System.currentTimeMillis());
-		PayAuth payAuth = new PayAuth(0, payReady.getPartnerOrderId(), tid, pgToken, new Date());
-		
+		PayAuth payAuth = new PayAuth(0, tid,payReady.getOrderCode(), pgToken, new Date());
+		log.info("payReady={}",payReady);
+//		model.addAttribute("payReady", payReady);
+//		model.addAttribute("payAuth", payAuth);
+//		model.addAttribute("msg", "토큰발행완료!");
+//		return "pay/api/payRequest";
+
 		int resultAuth = payReadyService.insertPayAuth(payAuth);
 		int resultPayReady = payReadyService.insertPayReady(payReady);
-		if (resultAuth == 1 && resultPayReady == 1) {
+		if ((resultAuth ==1) && (resultPayReady==1)) {
 			model.addAttribute("payReady", payReady);
 			model.addAttribute("payAuth", payAuth);
 			model.addAttribute("msg", "토큰발행완료!");
 			return "pay/api/payRequest";
-		} else {		
-			return "redirect:/"; 
+		} else {
+			redirectAttr.addFlashAttribute("msg","토큰발행오류");
+			return "redirect:/pay/api/payApiIndex";
 		}
 	}
 	// 여기까지 결제준비 완료.이후 결제요청 과정은 PayResultController에서 진행
@@ -79,14 +85,20 @@ public class PayReadyController {
 	public ResponseEntity<?> payReady(@RequestBody PayReady payReady) {
 		log.info("payReady={}", payReady);
 
-		String pgToken = bcryptPasswordEncoder
-				.encode(payReady.getCid() + payReady.getPartnerOrderId() + payReady.getSid());
+		String pgToken = bcryptPasswordEncoder.encode(payReady.getCid() + payReady.getMemberId() + payReady.getSid());
 		String tid = String.valueOf(System.currentTimeMillis());
-		PayAuth payAuth = new PayAuth(0, payReady.getPartnerOrderId(), tid, pgToken, new Date());
+		PayAuth payAuth = new PayAuth(0, payReady.getMemberId(), tid, pgToken, new Date());
+
+		// api설명용
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("payReady", payReady);
+//		map.put("payAuth", payAuth);
+//		log.info("map={}", map);
+//		return ResponseEntity.ok(map);
 
 		int resultAuth = payReadyService.insertPayAuth(payAuth);
 		int resultPayReady = payReadyService.insertPayReady(payReady);
-		if (resultAuth == 1 && resultPayReady == 1) {
+		if ((resultAuth == 1) && (resultPayReady == 1)) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("payReady", payReady);
 			map.put("payAuth", payAuth);
@@ -94,6 +106,7 @@ public class PayReadyController {
 			return ResponseEntity.ok(map);
 		} else
 			return ResponseEntity.badRequest().build();
+
 	}
 
 //	@PostMapping("/payRequest")

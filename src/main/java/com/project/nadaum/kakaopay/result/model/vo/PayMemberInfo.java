@@ -16,6 +16,11 @@ public class PayMemberInfo implements Serializable{/**
 
 	private int no;
 	private String memberId;
+	private String CARDS;
 	private String payPw;
+	
+	enum CARDS{
+		TOSS, KAKAO, SHINHAN, KB, HANA, NH, HYUNDAI, SAMSUNG, CITI  
+	}
 	
 }

@@ -31,22 +31,23 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 		<h2>단건결제준비(VO)</h2>
 		<form method="post" action="${pageContext.request.contextPath}/payready/api/payEnroll">
 			<table id="tbl-student">
+				
 				<tr>
-					<th>가맹점 코드, 최대11자</th>
+					<th>주문번호</th>
 					<td>
-						<input type="text" name="cid" value="#0221232222" required/>
+						<input type="text" name="orderCode" value="nd0120" required/>
 					</td>
 				</tr>
 				<tr>
-					<th>가맹점 주문번호</th>
+					<th>회원 id</th>
 					<td>
-						<input type="text" name="partnerOrderId" value="1023124" required/>
+						<input type="text" name="memberId" value="jimmer3" required/>
 					</td>
 				</tr>
 				<tr>
-					<th>가맹점 회원 id</th>
+					<th>서비스 코드 </th>
 					<td>
-						<input type="text" name="partnerUserId" value="crunching" required/>
+						<input type="text" name="cid" value="nadaum2022" readonly/>
 					</td>
 				</tr>
 				<tr>
@@ -86,56 +87,6 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 		
 		<hr />
 		
-		<h2>단건결제준비(Map)</h2>
-		<form method="post" action="${pageContext.request.contextPath}/payready/payMapEnroll">
-			<table id="tbl-student">
-				<tr>
-					<th>가맹점 코드, 최대11자</th>
-					<td>
-						<input type="text" name="cid" value="#0221232222" required/>
-					</td>
-				</tr>
-				<tr>
-					<th>가맹점 주문번호</th>
-					<td>
-						<input type="text" name="partner_order_id" value="1023124" required/>
-					</td>
-				</tr>
-				<tr>
-					<th>가맹점 회원 id</th>
-					<td>
-						<input type="text" name="partner_user_id" value="crunching" required/>
-					</td>
-				</tr>
-				<tr>
-					<th>상품명</th>
-					<td>
-						<input type="text" name="item_name" value="샤베트용냉동딸기" required/>
-					</td>
-				</tr>
-				<tr>
-					<th>상품 수량</th>
-					<td>
-						<input type="number" name="quantity" value="1" required />
-					</td>
-				</tr>
-				<tr>
-					<th>상품 총액</th>
-					<td>
-						<input type="number" name="total_amount" value="13200" required/>
-					</td>
-				</tr>
-				<tr>
-				<td> <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/></td>
-				</tr>	
-				<tr>
-					<td colspan="2">
-						<input type="submit" value="등록" />
-					</td>
-				</tr>
-			</table>
-		</form>
-	</div>
 
 </body>
 </html>

@@ -41,31 +41,29 @@ public class PayResultController {
 		
 		try {
 			log.info("payResult={}",payResult);
-			if(payResult!=null) {
-				redirectAttr.addFlashAttribute("msg","결제완료");
-				return "redirect:/payready/api/payIndex";
-			}
-			//PayMemberInfo memberPayInfo = payResultService.selectOnePayMemberInfo(payReady.getPartnerUserId());
-			//log.debug("payMemberInfo ={}", memberPayInfo);
-
-			//Boolean bool = bcryptPasswordEncoder.matches(payPw, memberPayInfo.getPayPw());
-			
-//			if (!bool) {
-//				model.addAttribute("msg","비밀번호가다릅니다!");
-//				return "pay/api/payRequest";
+//			if(payResult!=null) {
+//				redirectAttr.addFlashAttribute("msg","결제완료");
+//				return "redirect:/payready/api/payIndex";
 //			}
+			PayMemberInfo payMemberInfo = payResultService.selectOnePayMemberInfo(payResult.getMemberId());
+			log.info("payMemberInfo ={}", payMemberInfo);
+			Boolean bool = bcryptPasswordEncoder.matches(payPw, payMemberInfo.getPayPw());
+			
+			if (!bool) {
+				model.addAttribute("msg","비밀번호가다릅니다!");
+				return "pay/api/payRequest";
+			}
 			int result = payResultService.insertPayResult(payResult);
 			
 			if(result!=1) {
-				
+				model.addAttribute("msg","결제성공!");
+				model.addAttribute("payResult",payResult);
 			}
 		} catch (Exception e) {
 			model.addAttribute("msg","오류");
 			e.printStackTrace();
 			throw e;
 		}	
-		model.addAttribute("payReady",payResult);
-		model.addAttribute("payAuth","payAuth");
 		
 		return "pay/api/payRequestResult";
 	}

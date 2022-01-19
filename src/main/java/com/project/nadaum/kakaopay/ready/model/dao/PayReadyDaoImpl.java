@@ -15,14 +15,12 @@ public class PayReadyDaoImpl implements PayReadyDao {
 	
 	@Override
 	public int insertPayReady(PayReady payReady) {
-		
-		return 0;
+		return sqlSession.insert("payReady.insertPayReady", payReady);
 	}
 
 	@Override
 	public int insertPayAuth(PayAuth payAuth) {
-		// TODO Auto-generated method stub
-		return 0;
+		return sqlSession.insert("payAuth.insertPayAuth", payAuth);
 	}
 
 }

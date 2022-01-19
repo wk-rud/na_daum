@@ -30,14 +30,16 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 
 <%-- <h3>${payResult}</h3> --%>
 <h2> 결제완료 </h2>
+<h3> orderCode = ${payResult.orderCode}</h3>
+<h3> memberId = ${payResult.memberId}</h3>
 <h3> cid = ${payResult.cid}</h3>
-<h3> partnerOrderId = ${payResult.partnerOrderId}</h3>
-<h3> partnerUserId = ${payResult.partnerUserId}</h3>
 <h3> itemName = ${payResult.itemName}</h3>
 <h3> quantity = ${payResult.quantity}</h3>
 <h3> card = ${payResult.CARDS}</h3>
 <h2> 승인날짜</h2>
-<h3> approvedAt = ${payResult.approvedAt}</h3>
+<h3> createdAt= <fmt:formatDate value="${payResult.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/></h3>
 
+<h3><a href="${pageContext.request.contextPath}/">메인으로</a></h3>
+<h3><a href="${pageContext.request.contextPath}/payready/api/payIndex">API Index로 돌아가기</a></h3>
 </body>
 </html>

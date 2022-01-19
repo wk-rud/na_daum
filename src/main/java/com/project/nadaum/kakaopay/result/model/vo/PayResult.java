@@ -13,19 +13,18 @@ public class PayResult implements Serializable{
 
 	private static final long serialVersionUID = -2430097147429432602L;
 	
-	private String partnerOrderId;
-	private String partnerUserId;
+	private String orderCode;
+	private String memberId;
 	private String tid;
 	private String cid;
 	private String sid;
+	private Date createdAt;
 	private String itemName;
 	private int quantity;
 	private int totalAmount;
 	private String CARDS;
-	private String pgToken;
-	private String createdAt;
 	
-	enum CARDS{
-		TOSS, KAKAO, SHINHAN, KB, HANA, NH, HYUNDAI, SAMSUNG, CITI  
-	}
+//	enum CARDS{
+//		TOSS, KAKAO, SHINHAN, KB, HANA, NH, HYUNDAI, SAMSUNG, CITI  
+//	}
 }

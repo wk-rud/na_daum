@@ -4,17 +4,33 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="payResult">
 	
+	<!-- payResult -->
 	<select id="selectOnePayResult" resultType="payResult">
-		select * from member where partnerOrderId = #{partnerOrderId}
+		select * from pay_result where order_code = #{orderCode}
+	</select>
+	<!-- 반드시 페이징, 또는 그룹화 해서 가져올것 -->
+	<select id="selectPayList" resultType="payResult">
+		select * from pay_result
 	</select>
 	
-	<insert id="insertPayResult"></insert>
+	<insert id="insertPayResult">
+		insert into pay_result(order_code,member_id,tid,cid,sid,item_name,quantity,total_amount,cards)
+		values (#{orderCode},
+				#{memberId},
+				#{tid},
+				#{cid},
+				#{sid},
+				#{itemName},
+				#{quantity},
+				#{totalAmount},
+				#{CARDS})
+	</insert>
 	
+	<delete id="deletePayResult">
+		delete pay_ready where order_code = #{orderCode}
+	</delete>
 	
-	
-	<select id="selectOnePayMemberInfo" resultType="member">
-		select * from member where id = #{id}
-	</select>
+
 	
 </mapper>
 

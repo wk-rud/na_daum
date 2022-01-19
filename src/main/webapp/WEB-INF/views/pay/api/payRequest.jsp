@@ -52,18 +52,18 @@ table#tbl-student tr:last-of-type td {
 			<table id="tbl-student">
 				<tr>
 					<th></th>
+					<td><input type="hidden" name="orderCode"
+						value="${payReady.orderCode}" readonly /></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><input type="hidden" name="memberId"
+						value="${payReady.memberId}" readonly /></td>
+				</tr>
+				<tr>
+					<th></th>
 					<td><input type="hidden" name="cid" value="${payReady.cid}"
 						readonly /></td>
-				</tr>
-				<tr>
-					<th></th>
-					<td><input type="hidden" name="partnerOrderId"
-						value="${payReady.partnerOrderId}" readonly /></td>
-				</tr>
-				<tr>
-					<th></th>
-					<td><input type="hidden" name="partnerUserId"
-						value="${payReady.partnerUserId}" readonly /></td>
 				</tr>
 				<tr>
 					<th>상품명</th>
@@ -90,13 +90,13 @@ table#tbl-student tr:last-of-type td {
 					<td><input type="text" name="payPw" value="" required /></td>
 				</tr>
 				<tr>
-					<th></th>
-					<td><input type="hidden" name="tid" value="${payAuth.tid}"
+					<th>결제고유번호</th>
+					<td><input type="text" name="tid" value="${payAuth.tid}"
 						readonly /></td>
 				</tr>
 				<tr>
-					<th></th>
-					<td><input type="hidden" name="pgToken"
+					<th>결제고유토큰</th>
+					<td><input type="text" name="pgToken"
 						value="${payAuth.pgToken}" readonly /></td>
 				</tr>
 				<tr>

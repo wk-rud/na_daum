@@ -33,19 +33,19 @@ public class PayResultDaoImpl implements PayResultDao {
 	
 
 	@Override
-	public List<Map<String, Object>> selectOnePayResult(String partnerOrderId) {
-		return sqlSession.selectOne("payResult.selectOnepayResultList", partnerOrderId);
+	public List<Map<String, Object>> selectOnePayResult(String memberId) {
+		return sqlSession.selectOne("payResult.selectOnepayResultList", memberId);
 	}
 
 	
 	@Override
-	public List<Map<String, Object>> selectListPayResult(String partnerUserId) {
-		return sqlSession.selectList("payResult.selectListPayResult", partnerUserId);
+	public List<Map<String, Object>> selectListPayResult(String memberId) {
+		return sqlSession.selectList("payResult.selectListPayResult", memberId);
 	}
-
+	
 	@Override
-	public PayMemberInfo selectOnePayMemberInfo(String partnerUserId) {
-		return sqlSession.selectOne("payResult.selectOnePayMemberInfo",partnerUserId);
+	public PayMemberInfo selectOnePayMemberInfo(String memberId) {
+		return sqlSession.selectOne("payMemberInfo.selectOnePayMemberInfo",memberId);
 	}
 
 }

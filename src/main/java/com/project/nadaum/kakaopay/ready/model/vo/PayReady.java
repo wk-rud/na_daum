@@ -1,6 +1,7 @@
 package com.project.nadaum.kakaopay.ready.model.vo;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,8 +15,8 @@ public class PayReady implements Serializable{
 	
 	private static final long serialVersionUID = -7879450914568709197L;
 	
-	private String partnerOrderId;
-	private String partnerUserId;
+	private String orderCode;
+	private String memberId;
 	private String cid;
 	private String itemName;
 	private int quantity;
@@ -25,10 +26,10 @@ public class PayReady implements Serializable{
 	private String failUrl;
 	private String CARDS;
 	private String sid;
+	private Date created_at;
 	
-	enum CARDS{
-		TOSS, KAKAO, SHINHAN, KB, HANA, NH, HYUNDAI, SAMSUNG, CITI  
-	}
-	
+//	enum CARDS{
+//		TOSS, KAKAO, SHINHAN, KB, HANA, NH, HYUNDAI, SAMSUNG, CITI  
+//	}
 
 }
