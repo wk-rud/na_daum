@@ -8,6 +8,7 @@
 <head>
 <meta charset="UTF-8">
 <title>payments</title>
+<script src="<%=request.getContextPath()%>/resources/js/jquery-3.6.0.js"></script>
 <style>
 div.enroll-container{text-align:center;}
 table#tbl-student{margin:0 auto;border:1px solid; border-collapse:collapse;}
@@ -29,7 +30,10 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 <body>
 	<div class="enroll-container">
 		<h2>단건결제준비(VO)</h2>
-		<form method="post" action="${pageContext.request.contextPath}/payready/rest">
+		<form 
+			name="payRequestFrm"
+			method="post" 
+			action="${pageContext.request.contextPath}/payready/rest">
 			<table id="tbl-student">
 				<tr>
 					<th>가맹점 코드, 최대11자</th>
@@ -101,18 +105,18 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 					totalAmount: $("input[name='totalAmount']").val(),
 					CARDS: $("input[name='CARDS']").val(),
 			};
-	        console.log(payReady); //여기까지는 잘 매핑해옴.
+	        console.log(payReady); 
 			$.ajax({
-				url: "${pageContext.request.contextPath}/payready/payRequest",
+				url: "${pageContext.request.contextPath}/payready/rest",
 				contentType: "application/json; charset=utf-8",
 				/* accept:"application/json", */
-				/* headers: headers, */
+				headers: headers,
 				method: "POST",
 				data:JSON.stringify(payReady), 
 				dataType: "json",
 				success(data){
 					console.log(data);
-					alert(data.msg);
+					console.log(payReady["cid"]);		
 				},
 				error: console.log,
 				complete(){
@@ -120,7 +124,7 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 				}
 			});
 		});
-		
+
 		</script>
 		<hr />
 		

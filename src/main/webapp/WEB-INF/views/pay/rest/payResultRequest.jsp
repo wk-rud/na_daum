@@ -74,7 +74,7 @@ table#tbl-student tr:last-of-type td{text-align:center;}
 				<tr>
 					<th>결제카드사</th>
 					<td>
-						<input type="hidden" name="CARDS" value="${payReady.CARDS}" required/>
+						<input type="hidden" name="CARDS" value="${payReady.CARDS}" readonly/>
 					</td>
 				</tr>
 				<tr>

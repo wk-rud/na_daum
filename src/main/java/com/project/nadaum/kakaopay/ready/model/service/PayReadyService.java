@@ -10,4 +10,6 @@ public interface PayReadyService {
 	int insertPayReady(PayReady payReady);
 
 	int insertPayAuth(PayAuth payAuth);
+
+	int insertOneAuth(PayAuth payAuth);
 }

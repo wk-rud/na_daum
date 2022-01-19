@@ -36,18 +36,10 @@ public class PayResultController {
 			@RequestParam("payPw") String payPw,
 			RedirectAttributes redirectAttr, Model model) {
 		//PayResult payResult = new PayResult();
-		log.info("payResult={}",payResult);
-		log.info("payPw={}",payPw);
+		log.info("payResult={}",payResult);		
+		log.info("payPw={}",bcryptPasswordEncoder.encode(payPw));
+		
 		try {
-//			payResult.setCid(payReady.getCid());
-//			payResult.setTid(payAuth.getTid());
-//			payResult.setPgToken(payAuth.getPgToken());
-//			payResult.setPartnerOrderId(payReady.getPartnerOrderId());
-//			payResult.setPartnerUserId(payReady.getPartnerUserId());
-//			payResult.setItemName(payReady.getItemName());
-//			payResult.setQuantity(payReady.getQuantity());
-//			payResult.setTotalAmount(payReady.getTotalAmount());
-//			payResult.setCARDS(payReady.getCARDS());
 			log.info("payResult={}",payResult);
 			if(payResult!=null) {
 				redirectAttr.addFlashAttribute("msg","결제완료");
