@@ -69,6 +69,8 @@ public interface MemberService {
 
 	int insertRequestFriend(Map<String, Object> nicknames);
 
+	Map<String, Object> selectOneMemberAndAttachment(Member member);
+
 
 
 }

@@ -106,13 +106,18 @@ public class KakaoService {
 			
 			String id = element.getAsJsonObject().get("id").getAsString();
 			String name = properties.getAsJsonObject().get("nickname").getAsString();
-			String profile_image = "https://file.mk.co.kr/meet/neds/2021/02/image_readbot_2021_144269_16137158354538199.jpeg";
-			if(properties.getAsJsonObject().get("thumbnail_image").getAsString() != null) {
-				profile_image = properties.getAsJsonObject().get("thumbnail_image").getAsString();
-			}
+			String profile_image = "";
 			
-//			if(updateUserInfo(access_Token) != null)
-				profile_image = updateUserInfo(access_Token);
+//			String getImage = properties.getAsJsonObject().get("thumbnail_image").getAsString();
+//			if(getImage != null && !getImage.isEmpty())
+//				profile_image = getImage;
+			
+			String updateImage = updateUserInfo(access_Token);
+			if(updateImage != null && !updateImage.isEmpty())
+				profile_image = updateImage;
+			else
+				profile_image = "https://file.mk.co.kr/meet/neds/2021/02/image_readbot_2021_144269_16137158354538199.jpeg";
+			log.debug("profile_image = {}", profile_image);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd");
 			String sysDay = sdf.format(new Date());

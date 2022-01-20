@@ -141,10 +141,11 @@ public class MemberController {
 	@GetMapping("/mypage/memberDetail.do")
 	public void memberDetail(@AuthenticationPrincipal Member member, @RequestParam String tPage, Model model, RedirectAttributes redirectAttr) {
 		log.debug("tPage = {}", tPage);
-		
+		Map<String, Object> memberInfo = memberService.selectOneMemberAndAttachment(member);
 		List<Map<String, Object>> alarm = memberService.selectAllAlarm(member);
 		log.debug("alarm = {}", alarm);
-		
+		log.debug("memberInfo = {}", memberInfo);
+		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute("alarmList", alarm);
 	}
 	

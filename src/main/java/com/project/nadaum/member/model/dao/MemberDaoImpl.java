@@ -170,6 +170,11 @@ public class MemberDaoImpl implements MemberDao {
 		return session.insert("member.insertRequestFriend", nicknames);
 	}
 
+	@Override
+	public Map<String, Object> selectOneMemberAndAttachment(Member member) {
+		return session.selectOne("member.selectOneMemberAndAttachment", member);
+	}
+
 	
 	
 	

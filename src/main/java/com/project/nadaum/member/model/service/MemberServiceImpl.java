@@ -170,6 +170,11 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.insertRequestFriend(nicknames);
 	}
 
+	@Override
+	public Map<String, Object> selectOneMemberAndAttachment(Member member) {
+		return memberDao.selectOneMemberAndAttachment(member);
+	}
+
 	
 	
 	

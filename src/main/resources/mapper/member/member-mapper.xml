@@ -40,6 +40,17 @@
 		update member set profile = #{profile} where id = #{id}
 	</update>
 	
+	<select id="selectOneMemberAndAttachment" resultMap="memberDetailMap">
+		select
+			id, name, email, address, phone, nickname, hobby, search, introduce, birthday,
+			profile, login_type, no, code, original_filename, renamed_filename
+		from
+			member m join attachment a
+				on m.id = a.code
+		where
+			m.id = #{id}
+	</select>
+	
 	<!-- 친구 crud 시작 -->	
 	
 	<select id="selectSearchMemberNickname" resultType="string">
@@ -199,6 +210,25 @@
 		<result column="my_nickname" property="myNickname"/>
 		<result column="follower_nickname" property="followerNickname"/>
 		<result column="is_friend" property="isFriend"/>
+	</resultMap>
+	
+	<resultMap type="map" id="memberDetailMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="email" property="email"/>
+		<result column="address" property="address"/>
+		<result column="phone" property="phone"/>
+		<result column="nickname" property="nickname"/>
+		<result column="hobby" property="hobby"/>
+		<result column="search" property="search"/>
+		<result column="introduce" property="introduce"/>
+		<result column="birthday" property="birthday"/>
+		<result column="profile" property="profile"/>
+		<result column="login_type" property="loginType"/>		
+		<result column="no" property="no"/>
+		<result column="code" property="code"/>
+		<result column="original_filename" property="originalFilename"/>
+		<result column="renamed_filename" property="renamedFilename"/>
 	</resultMap>
 	
 	
