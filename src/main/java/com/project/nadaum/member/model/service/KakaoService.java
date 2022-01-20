@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -103,13 +106,18 @@ public class KakaoService {
 			JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 			
 			String id = element.getAsJsonObject().get("id").getAsString();
-			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-			String profile_image = "";
+			String name = properties.getAsJsonObject().get("nickname").getAsString();
+			String profile_image = "https://file.mk.co.kr/meet/neds/2021/02/image_readbot_2021_144269_16137158354538199.jpeg";
 			if(properties.getAsJsonObject().get("thumbnail_image") != null) {
 				profile_image = properties.getAsJsonObject().get("thumbnail_image").getAsString();
 			}
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("dd");
+			String sysDay = sdf.format(new Date());
+			String nickname = Math.random() * 999 + sysDay + "닉네임";
+			
 			userInfo.put("id", id);
+			userInfo.put("name", name);
 			userInfo.put("nickname", nickname);
 			userInfo.put("profile_image", profile_image);
 			

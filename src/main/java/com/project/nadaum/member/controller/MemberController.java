@@ -165,95 +165,148 @@ public class MemberController {
 		model.addAttribute("helpList", helpList);		
 	}
 	
-	@GetMapping("/mypage/memberFriends.do")
-	public void memberFriends() {
+	@GetMapping("/mypage/searchHelpTitle.do")
+	public ResponseEntity<?> searchHelpTitle(@RequestParam String value){
+		List<Map<String, Object>> titles = memberService.selectAllHelpTitle(value);		
+		return ResponseEntity.ok(titles);
+	}
+	
+	@GetMapping("/mypage/searchStart.do")
+	public ResponseEntity<?> searchStart(@RequestParam String title) {
+		log.debug("title = {}", title);
+		List<Map<String, Object>> searchResult = memberService.selectHelpByInput(title);
+		if(searchResult != null && !searchResult.isEmpty())
+			return ResponseEntity.ok(searchResult);
+		else
+			return ResponseEntity.ok(0);
+	}
+	
+	@GetMapping("/mypage/memberHelpDetail.do")
+	public void memberHelpDetail(@RequestParam String code, Model model) {
+		log.debug("code = {}", code);
+		Map<String, Object> helpDetail = memberService.selectOneSelectedHelp(code);
+		log.debug("helpDetail = {}", helpDetail);
+		model.addAttribute("helpDetail", helpDetail);
+	}
+	
+	@PostMapping("/mypage/updateFriend.do")
+	public ResponseEntity<?> updateFriend(@AuthenticationPrincipal Member member, @RequestParam String check, @RequestParam String friendNickname){
+		log.debug("check = {}, friendNickname = {}", check, friendNickname);
+		int result = 0;
+		Map<String, Object> nicknames = new HashMap<>();
+		Map<String, Object> reverse = new HashMap<>();
+		Map<String, Object> alarm = new HashMap<>();
 		
+		nicknames.put("friendNickname", friendNickname);
+		nicknames.put("id", member.getId());
+		nicknames.put("myNickname", member.getNickname());
+		reverse.put("friendNickname", member.getNickname());
+		reverse.put("myNickname", friendNickname);
+		
+		Member friendInfo = memberService.selectOneMemberNickname(friendNickname);
+		alarm.put("id", friendInfo.getId());
+		
+		if("follower".equals(check)) {
+			// -> friend
+			Map<String, Object> isFollower = memberService.selectFollower(nicknames);
+			if(isFollower != null) {
+				alarm.put("content", member.getNickname() + "님과 친구가 되었습니다.");
+				result = memberService.updateRequestFriend(nicknames);
+				result = memberService.insertFriend(nicknames);
+				result = memberService.insertFriend(reverse);
+				result = memberService.insertAlarm(alarm);
+				return ResponseEntity.ok(1);
+			}
+			return ResponseEntity.ok(0);
+			
+		}else if("following".equals(check)) {
+			// -> free
+			Map<String, Object> isFollowing = memberService.selectFollowing(nicknames);
+			if(isFollowing != null) {
+				alarm.put("content", member.getNickname() + "님이 친구신청을 끊었습니다.");
+				result = memberService.deleteRequestFriend(reverse);
+				result = memberService.insertAlarm(alarm);
+				return ResponseEntity.ok(1);
+			}
+			return ResponseEntity.ok(0);
+		}else if("friend".equals(check)) {
+			// -> free
+			Map<String, Object> isFriend = memberService.selectFriend(nicknames);
+			if(isFriend != null) {
+				alarm.put("content", member.getNickname() + "님과 더이상 친구가 아니에요");
+				result = memberService.deleteRequestFriend(nicknames);
+				result = memberService.deleteRequestFriend(reverse);
+				result = memberService.deleteFriend(nicknames);
+				result = memberService.deleteFriend(reverse);	
+				result = memberService.insertAlarm(alarm);
+				return ResponseEntity.ok(1);
+			}
+			return ResponseEntity.ok(0);
+		}else if("free".equals(check)) {
+			// -> following
+			Map<String, Object> isFollower = memberService.selectFollower(reverse);
+			log.debug("isFollower = {}", isFollower);
+			if(isFollower == null) {
+				alarm.put("content", member.getNickname() + "님이 회원님을 팔로우하기 시작했습니다.");
+				result = memberService.insertRequestFriend(nicknames);
+				result = memberService.insertAlarm(alarm);
+				return ResponseEntity.ok(1);
+			}
+			return ResponseEntity.ok(0);
+		}
+		return ResponseEntity.ok(0);
+	}
+	
+	@GetMapping("/mypage/searchStartFriend.do")
+	public ResponseEntity<?> searchStartFriend(@AuthenticationPrincipal Member member, @RequestParam String friend){
+		log.debug("friend = {}", friend);
+		Map<String, Object> nicknames = new HashMap<>();
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("nickname", friend);
+		nicknames.put("id", member.getId());
+		nicknames.put("myNickname", member.getNickname());
+		nicknames.put("friendNickname", friend);
+		Member friendInfo = memberService.selectOneMemberNicknameNotMe(nicknames);
+		if(friendInfo != null) {
+			Map<String, Object> isFollower = memberService.selectFollower(nicknames);
+			Map<String, Object> isFollowing = memberService.selectFollowing(nicknames);
+			Map<String, Object> isFriend = memberService.selectFriend(nicknames);
+			if(isFollower != null) {
+				resultMap.put("check", "follower");				
+			}else if(isFollowing != null) {
+				resultMap.put("check", "following");
+			}else if(isFriend != null) {
+				resultMap.put("check", "friend");
+			}else {
+				resultMap.put("check", "free");
+			}
+			return ResponseEntity.ok(resultMap);
+		}else
+			return ResponseEntity.ok(0);
+	}
+	
+	@GetMapping("/mypage/searchFriendsByNickname.do")
+	public ResponseEntity<?> searchFriendsByNickname(@RequestParam String value){		
+		List<Map<String, Object>> searchNickname = memberService.selectSearchMemberNickname(value);	
+		return ResponseEntity.ok(searchNickname);
+	}
+	
+	@GetMapping("/mypage/memberFriends.do")
+	public void memberFriends(@AuthenticationPrincipal Member member, Model model) {
+		List<Map<String, Object>> friends = memberService.selectAllFriend(member);
+		List<Map<String, Object>> follower = memberService.selectAllRequestFriend(member);
+		List<Member> memberList = memberService.selectAllNotInMe(member);
+		log.debug("friends = {}", friends);
+		log.debug("follower = {}", follower);
+		
+		model.addAttribute("memberList", memberList);
+		model.addAttribute("friends", friends);
+		model.addAttribute("follower", follower);
 	}
 
 	@GetMapping("/mypage/memberFindFriend.do")
 	public void memberFindFriend() {}
 	
-	@GetMapping("/mypage/requestAllFriend.do")
-	public ResponseEntity<?> requestAllFriend(@AuthenticationPrincipal Member member) {
-		Map<String, Object> allList;
-		try {
-			log.debug("member = {}", member);
-			// 전체 회원
-			List<Member> memberList = memberService.selectAllNotInMe(member);
-			log.debug("memberList = {}", memberList);
-			// 맞팔 fr
-			List<Map<String, Object>> friend = memberService.selectAllFriend(member);
-			log.debug("friend = {}", friend);
-			// 나를 팔로우 rf
-			List<Map<String, Object>> rfriend = memberService.selectAllRequestFriend(member);
-			log.debug("rfriend = {}", rfriend);
-			// 내가 팔로잉 ff
-			List<Map<String, Object>> ffriend = memberService.selectAllRequestFriendByMe(member);
-			log.debug("ffriend = {}", ffriend);
-			
-			allList = new HashMap<>();
-			allList.put("memberList", memberList);
-			allList.put("friend", friend);
-			allList.put("rfriend", rfriend);
-			allList.put("ffriend", ffriend);
-		} catch (Exception e) {
-			log.debug(e.getMessage(), e);
-			return ResponseEntity.status(404).build();
-		}
-		return ResponseEntity.ok(allList);
-	}
-	
-	@PostMapping("/mypage/requestFriend.do")
-	public ResponseEntity<?> requestFriend(@AuthenticationPrincipal Member member, @RequestParam String name, @RequestParam String flag){
-		int result = 0;				
-		Member findId = memberService.selectOneMemberNickname(name);
-		log.debug("findId = {}", findId);
-		
-		Map<String, Object> param = new HashMap<>();
-		Map<String, Object> reverse = new HashMap<>();
-		param.put("name", findId.getId());
-		param.put("id", member.getId());
-		reverse.put("name", member.getId());
-		reverse.put("id", findId.getId());
-		
-		// 관계없음 -> 팔로잉
-		if("noRelation".equals(flag)) {
-			Map<String, Object> check = new HashMap<>();
-			try {
-				check = memberService.selectOneRequestFriendForCheck(param);
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-			if(check != null && !check.isEmpty()) {
-				result = memberService.updateRequestFriend(param);
-				result = memberService.insertFriend(param);
-				result = memberService.insertFriend(reverse);
-			}			
-			else
-				result = memberService.insertRequestFriend(reverse);
-			log.debug("noRelation = {}", "성공");
-		// 팔로워 -> 맞팔
-		}else if("follower".equals(flag)) {
-			result = memberService.updateRequestFriend(param);
-			result = memberService.insertFriend(param);
-			result = memberService.insertFriend(reverse);
-			log.debug("follower = {}", "성공");
-		// 맞팔 -> 관계없음
-		}else if("friend".equals(flag)) {
-			result = memberService.deleteRequestFriend(param);
-			result = memberService.deleteRequestFriend(reverse);
-			result = memberService.deleteFriend(param);
-			result = memberService.deleteFriend(reverse);
-			log.debug("friend = {}", "성공");
-		// 팔로잉 -> 관계없음
-		}else if("following".equals(flag)) {
-			result = memberService.deleteRequestFriend(reverse);
-			log.debug("following = {}", "성공");
-		}		
-		
-		return ResponseEntity.ok(result);
-	}
-
 	@GetMapping("/mypage/memberAnnouncement.do")
 	public void memberAnnouncement(@RequestParam(defaultValue = "1") int cPage, Model model, HttpServletRequest request) {
 		int limit = 10;

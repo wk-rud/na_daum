@@ -25,57 +25,103 @@
 	</select>
 	
 	<select id="selectAllFriend" resultMap="friendMap">
-		select * from friend where id = #{id}
+		select * from friend where my_nickname = #{nickname}
 	</select>
 	
 	<select id="selectAllRequestFriend" resultMap="requestFriendMap">
-		select * from request_friend where id = #{id} and is_friend = 'F'
+		select * from request_friend where my_nickname = #{nickname} and is_friend = 'F'
 	</select>
 	
 	<select id="selectAllRequestFriendByMe" resultMap="requestFriendMap">
-		select * from request_friend where follower = #{id} and is_friend = 'F'
+		select * from request_friend where follower_nickname = #{nickname} and is_friend = 'F'
 	</select>
 	
 	<update id="updateMemberProfile">
 		update member set profile = #{profile} where id = #{id}
 	</update>
 	
-	<!-- 친구 crud 시작 -->
+	<!-- 친구 crud 시작 -->	
 	
-	<select id="selectOneRequestFriendForCheck" resultMap="requestFriendMap">
-		select * from request_friend where id = #{id} and follower = #{name}
+	<select id="selectSearchMemberNickname" resultType="string">
+		select nickname from member where nickname like '%'||#{value}||'%'
 	</select>
 	
-	<insert id="insertRequestFriend">
-		insert into request_friend (code, id, follower) values(concat('rf-',seq_request_friend_no.nextval), #{id}, #{name})
-	</insert>
+	<select id="selectOneMemberNicknameNotMe" resultType="member">
+		select * from member where nickname = #{friendNickname} and not id = #{id}
+	</select>
+	
+	<select id="selectFollower" resultMap="requestFriendMap">
+		select * from request_friend where is_friend = 'F' and my_nickname = #{myNickname} and follower_nickname = #{friendNickname}
+	</select>
+	
+	<select id="selectFollowing" resultMap="requestFriendMap">
+		select * from request_friend where is_friend = 'F' and my_nickname = #{friendNickname} and follower_nickname = #{myNickname}
+	</select>
+	
+	<select id="selectFriend" resultMap="friendMap">
+		select * from friend where my_nickname = #{myNickname} and friend_nickname = #{friendNickname}
+	</select>
 	
 	<update id="updateRequestFriend">
-		update request_friend set is_friend = 'T' where id = #{id} and follower = #{name}
+		update request_friend set is_friend = 'T' where my_nickname = #{myNickname} and follower_nickname = #{friendNickname}
 	</update>
 	
 	<insert id="insertFriend">
-		insert into friend values(concat('fr-',seq_friend_no.nextval), #{id}, #{name})
+		insert into friend values(concat('fr-',seq_friend_no.nextval), #{myNickname}, #{friendNickname})
+	</insert>
+	
+	<insert id="insertAlarm">
+		insert into alarm (no, id, content)
+		values(seq_alarm_no.nextval, #{id}, #{content})
 	</insert>
 	
 	<delete id="deleteRequestFriend">
-		delete from request_friend where id = #{id} and follower = #{name}
+		delete from request_friend where my_nickname = #{myNickname} and follower_nickname = #{friendNickname}
 	</delete>
 	
 	<delete id="deleteFriend">
-		delete from friend where id = #{id} and friend_id = #{name}
+		delete from friend where my_nickname = #{myNickname} and friend_nickname = #{friendNickname}
 	</delete>
+	
+	<insert id="insertRequestFriend">
+		insert into request_friend (code, my_nickname, follower_nickname)
+		values(concat('rf-', seq_request_friend_no.nextval), #{friendNickname}, #{myNickname})
+	</insert>
 	
 	<!-- 친구 crud 끝 -->
 	
+	<!-- help 시작 -->
+	
+	<select id="selectAllMyQuestions" resultMap="helpMap">
+		select * from help where id = #{id}
+	</select>
+	
+	<select id="selectAllMembersQuestions" resultMap="helpMap">
+		select * from help order by status desc
+	</select>
+	
+	<select id="selectAllHelpTitle" resultType="string">
+		select title from help where title like '%'||#{value}||'%'
+	</select>
+	
+	<select id="selectHelpByInput" resultType="map">
+		select code code, id id, category category, title title, reg_date regDate, status status from help where title like '%'||#{value}||'%'
+	</select>
+	
+	<select id="selectOneSelectedHelp" resultMap="helpMap">
+		select * from help where code = #{code}
+	</select>
+	
+	<!-- help 끝 -->
+		
 	<insert id="insertMember">
 		insert into member(id, password, name, email, address, nickname, auth_key)
 		values(#{id}, #{password}, #{name}, #{email}, #{address}, #{nickname}, #{authKey})
 	</insert>
 	
 	<insert id="insertKakaoMember">
-		insert into member(id, password, nickname, enabled, profile, login_type)
-		values(#{id}, #{password}, #{nickname}, 1, #{profile_image}, #{loginType})
+		insert into member(id, password, name, nickname, enabled, profile, login_type)
+		values(#{id}, #{password}, #{name}, #{nickname}, 1, #{profile_image}, #{loginType})
 	</insert>
 	
 	<update id="confirmMember">
@@ -99,12 +145,15 @@
 					on a.code = s.code
 		where
 			a.id = #{id}
+		order by
+			a.reg_date desc
 	</select>
 	
 	<resultMap type="map" id="alarm">
 		<id column="no" property="no"/>
 		<result column="code" property="code"/>
 		<result column="status" property="status"/>
+		<result column="content" property="content"/>
 		<result column="id" property="id"/>
 		<result column="reg_date" property="regDate"/>
 		<result column="no" property="no"/>
@@ -115,16 +164,8 @@
 		<result column="all_day" property="allDay"/>
 		<result column="id" property="id"/>
 	</resultMap>
-	
-	<select id="selectAllMyQuestions" resultMap="myQ">
-		select * from help where id = #{id}
-	</select>
-	
-	<select id="selectAllMembersQuestions" resultMap="myQ">
-		select * from help order by status desc
-	</select>
-	
-	<resultMap type="map" id="myQ">
+			
+	<resultMap type="map" id="helpMap">
 		<id column="code" property="code"/>
 		<result column="id" property="id"/>
 		<result column="category" property="category"/>
@@ -132,9 +173,9 @@
 		<result column="content" property="content"/>
 		<result column="reg_date" property="regDate"/>
 		<result column="status" property="status"/>
-		<result column="a_code" property="a_code"/>
-		<result column="a_title" property="a_title"/>
-		<result column="a_content" property="a_content"/>
+		<result column="a_code" property="aCode"/>
+		<result column="a_title" property="aTitle"/>
+		<result column="a_content" property="aContent"/>
 		<result column="a_reg_date" property="aRegDate"/>
 	</resultMap>
 	
@@ -149,16 +190,17 @@
 	
 	<resultMap type="map" id="friendMap">
 		<id column="code" property="code"/>
-		<result column="id" property="id"/>
-		<result column="friend_id" property="friendId"/>
+		<result column="my_nickname" property="myNickname"/>
+		<result column="friend_nickname" property="friendNickname"/>
 	</resultMap>
 	
 	<resultMap type="map" id="requestFriendMap">
 		<id column="code" property="code"/>
-		<result column="id" property="id"/>
-		<result column="follower" property="follower"/>
+		<result column="my_nickname" property="myNickname"/>
+		<result column="follower_nickname" property="followerNickname"/>
 		<result column="is_friend" property="isFriend"/>
 	</resultMap>
+	
 	
 </mapper>
 

@@ -39,19 +39,36 @@ public interface MemberDao {
 
 	List<Map<String, Object>> selectAllRequestFriendByMe(Member member);
 
-	int insertRequestFriend(Map<String, Object> param);
-
-	int updateRequestFriend(Map<String, Object> param);
-
-	int insertFriend(Map<String, Object> param);
-
-	int deleteRequestFriend(Map<String, Object> param);
-
-	int deleteFriend(Map<String, Object> param);
-
 	int updateMemberProfile(Member member);
 
-	Map<String, Object> selectOneRequestFriendForCheck(Map<String, Object> param);
+	List<Map<String, Object>> selectAllHelpTitle(String value);
+
+	List<Map<String, Object>> selectHelpByInput(String title);
+
+	Map<String, Object> selectOneSelectedHelp(String code);
+
+	List<Map<String, Object>> selectSearchMemberNickname(String value);
+
+	Member selectOneMemberNicknameNotMe(Map<String, Object> nicknames);
+
+	Map<String, Object> selectFollower(Map<String, Object> nicknames);
+
+	Map<String, Object> selectFollowing(Map<String, Object> nicknames);
+
+	Map<String, Object> selectFriend(Map<String, Object> nicknames);
+
+	int updateRequestFriend(Map<String, Object> nicknames);
+
+	int insertFriend(Map<String, Object> nicknames);
+
+	int insertAlarm(Map<String, Object> alarm);
+
+	int deleteRequestFriend(Map<String, Object> nicknames);
+
+	int deleteFriend(Map<String, Object> nicknames);
+
+	int insertRequestFriend(Map<String, Object> nicknames);
+
 
 
 

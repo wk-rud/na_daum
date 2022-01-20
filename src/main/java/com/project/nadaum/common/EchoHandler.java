@@ -59,25 +59,28 @@ public class EchoHandler extends TextWebSocketHandler {
 				String caller = strs[1];
 				String receiver = strs[2];
 				String receiverId = "";
+				String senderNickname = "";
 				log.debug("cmd = {}", cmd);
 				log.debug("caller = {}", caller);
 				log.debug("receiverId = {}", receiverId);
 				
 				
-				if(cmd != null && (cmd.equals("following")) || (cmd.equals("follower")) || (cmd.equals("noRelation")) || (cmd.equals("friend"))) {
+				if(cmd != null && (cmd.equals("following")) || (cmd.equals("follower")) || (cmd.equals("free")) || (cmd.equals("friend"))) {
 					Member member = memberService.selectOneMemberNickname(receiver);
+					Member senderInfo = memberService.selectOneMember(caller);
+					senderNickname = senderInfo.getNickname();
 					receiverId = member.getId();
 				}					
 				
 				WebSocketSession friendSession = friendSession = userMap.get(receiverId);
-				if(("noRelation".equals(cmd) || "follower".equals(cmd)) && friendSession != null) {
-					TextMessage tMsg = new TextMessage(caller + "님이 " + receiverId + "님을 친구추가 했습니다.");
+				if(("free".equals(cmd) || "follower".equals(cmd)) && friendSession != null) {
+					TextMessage tMsg = new TextMessage(senderNickname + "님이 " + receiver + "님을 친구추가 했습니다.");
 					friendSession.sendMessage(tMsg);				
 				}else if("friend".equals(cmd) && friendSession != null) {
-					TextMessage tMsg = new TextMessage(caller + "님이 " + receiverId + "님을 친구삭제했습니다.");
+					TextMessage tMsg = new TextMessage(senderNickname + "님이 " + receiver + "님을 친구삭제했습니다.");
 					friendSession.sendMessage(tMsg);
 				}else if("following".equals(cmd) && friendSession != null) {
-					TextMessage tMsg = new TextMessage(caller + "님이 팔로잉을 그만두었습니다.");
+					TextMessage tMsg = new TextMessage(senderNickname + "님이 팔로잉을 그만두었습니다.");
 					friendSession.sendMessage(tMsg);
 				}
 			}

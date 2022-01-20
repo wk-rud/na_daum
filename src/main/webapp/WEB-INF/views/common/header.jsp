@@ -26,6 +26,8 @@
 	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 	crossorigin="anonymous"></script> 
 
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!-- bootstrap css -->
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -281,7 +283,19 @@ input[type=checkbox]{
 					var data = evt.data;
 					console.log("ReceivMessage : " + data + "\n");
 					
-					countBdege();
+					$.ajax({
+						url: `${pageContext.request.contextPath}/websocket/wsCountAlarm.do`,
+						success(resp){
+							if(resp != '0'){
+								let bedge = `
+								<span id='bg-alarm' class='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>\${resp}</span>
+								`;
+								
+								$(profile).append(bedge);
+							}
+						},
+						error: console.log
+					});		
 					
 				};
 				sock.onclose = function() {
