@@ -59,7 +59,6 @@ public class KakaoService {
 			log.debug("response body = {}", result);
 			
 			JsonElement element = JsonParser.parseString(result);
-//			JsonElement element = parser.parse(result);
 			
 			access_Token = element.getAsJsonObject().get("access_token").getAsString();
 			refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
@@ -69,7 +68,7 @@ public class KakaoService {
 			br.close();
 			bw.close();
 		}catch(IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		
 		return access_Token;
@@ -108,9 +107,12 @@ public class KakaoService {
 			String id = element.getAsJsonObject().get("id").getAsString();
 			String name = properties.getAsJsonObject().get("nickname").getAsString();
 			String profile_image = "https://file.mk.co.kr/meet/neds/2021/02/image_readbot_2021_144269_16137158354538199.jpeg";
-			if(properties.getAsJsonObject().get("thumbnail_image") != null) {
+			if(properties.getAsJsonObject().get("thumbnail_image").getAsString() != null) {
 				profile_image = properties.getAsJsonObject().get("thumbnail_image").getAsString();
 			}
+			
+//			if(updateUserInfo(access_Token) != null)
+				profile_image = updateUserInfo(access_Token);
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd");
 			String sysDay = sdf.format(new Date());
@@ -122,10 +124,46 @@ public class KakaoService {
 			userInfo.put("profile_image", profile_image);
 			
 		}catch(IOException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		}
 		
 		return userInfo;
+	}
+	
+	public String updateUserInfo(String access_Token) {
+		String thumbnail = "";
+		String reqURL = "https://kapi.kakao.com/v1/api/talk/profile";
+		
+		try {
+			URL url = new URL(reqURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.setDoOutput(true);
+			conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+			
+			log.debug("access_Token = {}", access_Token);
+			int responseCode = conn.getResponseCode();
+			log.debug("responseCode = {}", responseCode);
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			
+			String line = "";
+			String result = "";
+			
+			while((line = br.readLine()) != null) {
+				result += line;
+			}
+			log.debug("responseBody = {}", result);
+			
+			JsonElement element = JsonParser.parseString(result);
+			
+			thumbnail = element.getAsJsonObject().get("thumbnailURL").getAsString();
+			log.debug("thumbnail = {}", thumbnail);
+		} catch (IOException e) {
+			log.error(e.getMessage(), e);
+		}
+		
+		return thumbnail;		
 	}
 	
 }
