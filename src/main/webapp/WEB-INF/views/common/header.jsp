@@ -43,7 +43,7 @@
 	href="${pageContext.request.contextPath}/resources/css/darkmode.css" />
 <!-- 토글용 css 파일 로딩이 안되서 직접 붙여놓음. -->
 <style>
-input[type=checkbox]{
+input[id="switch"]{
   height: 0;
   width: 0;
   visibility: hidden;
