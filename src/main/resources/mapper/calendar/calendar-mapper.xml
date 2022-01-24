@@ -48,6 +48,9 @@
 			background_color = #{backgroundColor}
 			where no = #{no}
 	</update>
+	<delete id="deleteCalendar">
+		delete from calendar where no = #{no}
+	</delete>
 	
 	<resultMap type="calendar" id="calendar">
 		<id property="no" column="no"/>

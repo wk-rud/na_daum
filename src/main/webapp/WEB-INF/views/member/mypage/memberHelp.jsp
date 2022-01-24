@@ -14,69 +14,90 @@
 <div class="question-list-wrap">
 	<div class="question-list-head">
 		<h1>질문 모음</h1>
-		<div class="input-group mb-3">
-			<div class="input-group-prepend">
-				<button id="search-help-start" class="btn btn-outline-secondary" type="button">검색</button>
-				<input id="searchHelp" type="text" name="title" class="form-control" required placeholder="질문을 검색해보세요." aria-label="" aria-describedby="basic-addon1">
+		<div class="help-btn-wrap">
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
+					<button id="search-help-start" class="btn btn-outline-secondary" type="button">검색</button>
+					<input id="searchHelp" type="text" name="title" class="form-control" required placeholder="질문을 검색해보세요." aria-label="" aria-describedby="basic-addon1">
+				</div>
 			</div>
+			<button type="button" class="btn btn-outline-primary" onclick="location.href='${pageContext.request.contextPath}/member/mypage/memberHelpEnroll.do'">질문하기</button>
 		</div>
 		<div class="search-result-list">
 			<ul id="search-result-ul" class="list-group list-group-flush"></ul>
 		</div>
 	</div>
 	<div class="question-list-body">
-		<div class="me">
-			<ul class="list-group list-group-flush">
-				<c:forEach items="${helpList}" var="help">
-					<c:if test="${help.category eq 'me'}">
-						<li class="list-group-item">
-							<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
-								${help.title}
-							</a>
-						</li>
-					</c:if>
-				</c:forEach>
-			</ul>
-		</div>
-		<div class="dy">
-			<ul class="list-group list-group-flush">
-				<c:forEach items="${helpList}" var="help">
-					<c:if test="${help.category eq 'dy'}">
-						<li class="list-group-item">
-							<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
-								${help.title}
-							</a>
-						</li>
-					</c:if>
-				</c:forEach>
-			</ul>
-		</div>
-		<div class="ab">
-			<ul class="list-group list-group-flush">
-				<c:forEach items="${helpList}" var="help">
-					<c:if test="${help.category eq 'ab'}">
-						<li class="list-group-item">
-							<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
-								${help.title}
-							</a>
-						</li>
-					</c:if>
-				</c:forEach>
-			</ul>
-		</div>
-		<div class="cu">
-			<ul class="list-group list-group-flush">
-				<c:forEach items="${helpList}" var="help">
-					<c:if test="${help.category eq 'cu'}">
-						<li class="list-group-item">
-							<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
-								${help.title}
-							</a>
-						</li>
-					</c:if>
-				</c:forEach>
-			</ul>
-		</div>
+		<c:forEach items="${helpList}" var="help">
+			<c:if test="${help.category eq 'me'}">
+				<div class="${help.category}-wrap">
+					<span>메모</span>
+					<div class="help-list-main">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
+									${help.title}
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="help-list-footer">
+						<a href="${pageContext.request.contextPath}/member/mypage/memberHelpOneCategory.do?category=${help.category}">더보기</a>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${help.category eq 'dy'}">
+				<div class="${help.category}-wrap">
+					<span>다이어리</span>
+					<div class="help-list-main">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
+									${help.title}
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="help-list-footer">
+						<a href="${pageContext.request.contextPath}/member/mypage/memberHelpOneCategory.do?category=${help.category}">더보기</a>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${help.category eq 'ab'}">
+				<div class="${help.category}-wrap">
+					<span>가계부</span>
+					<div class="help-list-main">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
+									${help.title}
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="help-list-footer">
+						<a href="${pageContext.request.contextPath}/member/mypage/memberHelpOneCategory.do?category=${help.category}">더보기</a>
+					</div>
+				</div>
+			</c:if>
+			<c:if test="${help.category eq 'cu'}">
+				<div class="${help.category}-wrap">
+					<span>문화</span>
+					<div class="help-list-main">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item">
+								<a href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
+									${help.title}
+								</a>
+							</li>
+						</ul>
+					</div>
+					<div class="help-list-footer">
+						<a href="${pageContext.request.contextPath}/member/mypage/memberHelpOneCategory.do?category=${help.category}">더보기</a>
+					</div>
+				</div>
+			</c:if>
+		</c:forEach>		
 	</div>
 </div>
 
@@ -104,7 +125,7 @@ $("#search-help-start").click((e) => {
 					let d = new Date(REGDATE);
 					let date = `\${d.getFullYear()}.\${d.getMonth() + 1}.\${d.getDate()}`;
 					let answer = '';
-					if(STATUS = 'T')
+					if(STATUS == 'T')
 						answer = '답변완료';
 					else
 						answer = '답변대기중';

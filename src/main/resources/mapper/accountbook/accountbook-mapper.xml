@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="accountbook">
+
+	<insert id = "insertAccount">
+		insert into 
+			account_book
+		values(
+			concat('ab-', seq_account_book_no.nextval),
+			#{id},
+			#{detail},
+			#{price},
+			#{reg_date},
+			#{income_expense},
+			#{payment},
+			#{category}
+		)	
+	</insert>
+	
+	<delete id="deleteAccount">
+		delete
+			account_book
+		where
+			code = #{code}
+	</delete>
+	
+	<select id="selectAllAccountList" resultMap="accountbookMap">
+		select
+    		*
+    	from 
+    		account_book
+    	where
+    		id = #{id}
+    	order by
+    		reg_date desc
+	</select>
+	
+	<select id="monthlyTotalIncome" resultMap="accountbookMap">
+		select
+        *
+    	from (
+	        select
+	            nvl(income_expense, 0) as income_expense,
+	            sum(price) as total
+	         from (
+	                select
+	                    *
+	                from
+	                    account_book
+	                where
+	                    to_char(reg_date, 'mm') = to_char((sysdate), 'mm')
+          		)
+	    where
+	        id = #{id}
+	    group by rollup(income_expense)
+	    )
+	</select>
+	
+	<select id="monthlyAccount" resultType="String">
+		select
+	    sum(plus_minus)
+			from (
+				select
+				    case 
+				        when income_expense = 'E' then price * -1
+				        when income_expense ='I' then  price * 1
+				    end as plus_minus
+				from (
+				    select
+				        *
+				    from
+				        account_book
+				    where
+				        to_char(reg_date, 'mm') = to_char((sysdate), 'mm')
+				        and
+				        id = #{id}
+				    order by
+				        reg_date desc
+			    )
+		)
+	</select>
+	
+	<select id="income_expense_filter" resultMap="accountbookMap">
+	select
+   	 *
+	from
+    	account_book
+	where
+    	id = #{id}
+		and 
+		income_expense = #{income_expense}
+	</select>
+	
+	
+	
+	<resultMap type="Map" id="accountbookMap">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="detail" property="detail"/>
+		<result column="price" property="price"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="income_expense" property="incomeExpense"/>
+		<result column="payment" property="payment"/>
+		<result column="cateogory" property="category"/>
+		<result column="total" property="total"/>
+	</resultMap>
+
+</mapper>
+

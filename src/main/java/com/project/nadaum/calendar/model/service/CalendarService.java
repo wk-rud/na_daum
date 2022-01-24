@@ -17,5 +17,7 @@ public interface CalendarService {
 
 	int updateCalendar(Map<String, Object> map);
 
+	int deleteCalendar(Map<String, Object> map);
+
 	
 }

@@ -3,6 +3,8 @@ package com.project.nadaum.accountbook.model.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +20,9 @@ public class AccountBook implements Serializable {
    private String id;
    private String detail;
    private int price;
+   @DateTimeFormat(pattern="yyyy-MM-dd")
    private Date reg_date;
-   private String income_expensive;
+   private String income_expense;
    private String payment;
-   private int goal;
+   private String category;
 }

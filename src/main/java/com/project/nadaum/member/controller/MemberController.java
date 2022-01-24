@@ -89,6 +89,41 @@ public class MemberController {
 	@GetMapping("/memberEnrollAgreement.do")
 	public void memberEnrollAgreement() {}	
 	
+	@GetMapping("/mypage/memberHelpOneCategory.do")
+	public void memberHelpOneCategory(@RequestParam String category, @RequestParam(defaultValue="1") int cPage, Model model, HttpServletRequest request) {
+					
+		int limit = 10;
+		int offset = (cPage - 1) * limit;
+		Map<String, Object> param = new HashMap<>();
+		param.put("limit", limit);
+		param.put("offset", offset);
+		param.put("category", category);
+		List<Map<String, Object>> help = memberService.selectHelpOneCategory(param);
+		
+		int totalContent = memberService.countHelpOneCategoryCount(category);
+		log.debug("totalContent = {}", totalContent);
+		String url = request.getRequestURI();
+		String pagebar = NadaumUtils.getPagebar(cPage, limit, totalContent, url);
+		String check = "";
+		if("dy".equals(category)) {
+			check = "다이어리";
+		}else if("ab".equals(category)) {
+			check = "가계부";
+		}else if("me".equals(category)) {
+			check = "메모";
+		}else if("fr".equals(category)) {
+			check = "친구";
+		}else if("mo".equals(category)) {
+			check = "영화";
+		}else if("cu".equals(category)) {
+			check = "문화";
+		}
+		model.addAttribute("check", check);
+		model.addAttribute("pagebar", pagebar);
+		model.addAttribute("help", help);
+		
+	}
+	
 	@PostMapping("/mypage/memberHelpEnroll.do")
 	public String memberHelpEnroll(@AuthenticationPrincipal Member member, @RequestParam Map<String, Object> map) {
 		log.debug("map = {}", map);
@@ -373,10 +408,19 @@ public class MemberController {
 	}
 	
 	@GetMapping("/mypage/memberHelpDetail.do")
-	public void memberHelpDetail(@RequestParam String code, Model model) {
+	public void memberHelpDetail(@RequestParam String code, Model model, @AuthenticationPrincipal Member member) {
+		Map<String, Object> param = new HashMap<>();
 		log.debug("code = {}", code);
 		Map<String, Object> helpDetail = memberService.selectOneSelectedHelp(code);
+		if("T".equals(helpDetail.get("status")))
+			param.put("aCode", helpDetail.get("aCode"));
+		param.put("code", code);
+		param.put("id", member.getId());
+		List<Map<String, Object>> checkLikes = memberService.selectLikesCheck(param);
+		
+		log.debug("checkLikes = {}", checkLikes);
 		log.debug("helpDetail = {}", helpDetail);
+		model.addAttribute("checkLikes", checkLikes);
 		model.addAttribute("helpDetail", helpDetail);
 	}
 	

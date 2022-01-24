@@ -37,4 +37,9 @@ public class CalendarServiceImpl implements CalendarService {
 		return calendarDao.updateCalendar(map);
 	}
 
+	@Override
+	public int deleteCalendar(Map<String, Object> map) {
+		return calendarDao.deleteCalendar(map);
+	}
+
 }

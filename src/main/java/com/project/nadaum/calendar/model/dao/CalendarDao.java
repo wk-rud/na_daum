@@ -17,5 +17,7 @@ public interface CalendarDao {
 
 	int updateCalendar(Map<String, Object> map);
 
+	int deleteCalendar(Map<String, Object> map);
+
 
 }

@@ -26,7 +26,13 @@
 			<div class="q-writer-info">${helpDetail.id}</div>
 			<div class="q-button">
 				<label for="empathy">공감해요</label>
-				<input type="checkbox" name="empathy" id="empathy" />
+				<input type="checkbox" name="empathy" id="empathy" 
+					<c:forEach items="${checkLikes}" var="check">
+						<c:if test="${fn:contains(check.code, 'he')}">
+							checked="checked"
+						</c:if>
+					</c:forEach>
+				/>
 			</div>
 		</div>
 	</section>
@@ -39,7 +45,13 @@
 		</div>
 		<div class="a-info-wrap">
 			<label for="good">답변이 도움이 됩니다</label>
-			<input type="checkbox" name="good" id="good" />
+			<input type="checkbox" name="good" id="good" 
+				<c:forEach items="${checkLikes}" var="check">
+					<c:if test="${fn:contains(check.code, 'ah')}">
+						checked="checked"
+					</c:if>
+				</c:forEach>
+			/>
 		</div>
 	</section>
 </div>
@@ -47,6 +59,8 @@
 	<button type="button" id="backToList" class="btn btn-warning">전체목록</button>
 </div>
 <script>
+
+
 $(backToList).click((e) => {
 	location.href="${pageContext.request.contextPath}/member/mypage/memberHelp.do";
 });

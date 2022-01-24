@@ -11,31 +11,75 @@
 <sec:authentication property="principal" var="loginMember"/>
 
 <link href='${pageContext.request.contextPath}/resources/css/accountbook/main.css' rel='stylesheet' />
-<script src='${pageContext.request.contextPath}/resources/js/accountbook/main.js'></script>
 <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
 
-	<div class="insertAccount box">
+	<div class="modal-background">
+	<div class="insertAccountModal">
 		<h2>가계부 테스트</h2>
-		<form action="">
-			<input type="date" name="reg_date" id="reg_date" value="" />
-			<label for="reg_date">날짜</label>
-			<input type="checkbox" name="income_expense" id="income_checkbox" value="I" />
-			<label for="income_checkbox">수입</label>
-			<input type="checkbox" name="income_expense" id="income_checkbox" value="E"/>
-			<label for="income_checkbox">지출</label>
-			<br />
-			<label for="detail">내역</label>
-			<input type="text" name="detail" id="detail" placeholder="내역을 입력하세요." />
-			<br />
-			<label for="price">가격</label>
-			<input type="text" name="price" id="price" placeholder="가격을 입력하세요." />
-			<select name="payment" id="payment">
-				<option value="cash" name="payment">현금</option>
-				<option value="card" name="payment">카드</option>
-			</select>
+		<form 
+			name="insertFrm" 
+			method="POST"
+			action="${pageContext.request.contextPath}/accountbook/accountInsert.do">
+		<table>
+			<tr>
+				<td colspan="2">
+					<input type="date" name="reg_date" id="reg_date" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="income_expense">수입</label>
+					<input type="radio" name="income_expense" id="income" value="I" checked/>
+				</td>
+				<td>
+					<label for="income_expense">지출</label>
+					<input type="radio" name="income_expense" id="expense" value="E"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="">
+					<select name="payment" id="">
+						<option value="cash" name="payment">현금</option>
+						<option value="card" name="payment">카드</option>
+					</select>
+					<select name="category" id="income_category">
+						<option value="급여">급여</option>
+						<option value="용돈">용돈</option>
+						<option value="기타(i)">기타</option>
+					</select>
+					<!-- <select name="category" id="expense_cateogory">
+						<option value="식비">식비</option>
+						<option value="쇼핑">쇼핑</option>
+						<option value="저축">저축</option>
+						<option value="유흥">유흥</option>
+						<option value="생활비">생활비</option>
+						<option value="자기계발">자기계발</option>
+						<option value="기타(e)">기타</option>
+					</select> -->
+						
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<label for="detail">내역</label>
+					<input type="text" name="detail" id="" placeholder="내역을 입력하세요." value="용돈" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2"> 
+					<label for="price">금액</label>
+					<input type="text" name="price" id="" placeholder="금액을 입력하세요" value="300000" />
+				</td>
+			</tr>
+			<tr>
+				<input type="hidden" name="id" id="id" value="${loginMember.id}" />
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			</tr>
+		</table>
 			<input type="submit" value="제출하기" />
-			<input type="hidden" name="Id" value="${loginMember.id}" />
 		</form>
+			<button id="closeBtn">닫기</button>
+	</div>
 	</div>
 
 	<section class="box1">
@@ -54,7 +98,8 @@
 			<form action="">
 				<h3>검색</h3>
 				<select name="mainCategory" id="mainCategory">
-					<option value="">대분류</option>
+					<option value="" selected>대분류</option>
+					<option value=""></option>
 				</select>
 				<select name="subCategory" id="subCategory">
 					<option value="">소분류</option>
@@ -65,62 +110,23 @@
 		</div>
 		<!-- 화면만 잡고 리스트 싹 불러오기 -->
 		<div class="account_list">
-			<table class="account_list_table">
-			<hr>
-				<tr>
-					<td rowspan="2">용돈</td>
-					<td colspan="2">2022-01-17</td>
-					<td rowspan="2" class="income">+18,000</td>
-				</tr>
-				<tr>
-					<td>용돈 받았음</td>
-				</tr>
-			</table>
-			<hr>
-			<table class="account_list_table">
-				<tr>
-					<td rowspan="2">식비</td>
-					<td colspan="2">2022-01-15</td>
-					<td rowspan="2" class="expense">-20,000</td>
-				</tr>
-				<tr>
-					<td>배달 음식</td>
-				</tr>
-			</table>
-			<hr>
-			<table class="account_list_table">
-				<tr>
-					<td rowspan="2">생활비</td>
-					<td colspan="2">2022-01-13</td>
-					<td rowspan="2" class="expense">-66,000</td>
-				</tr>
-				<tr>
-					<td>교통비</td>
-				</tr>
-			</table>
-			<hr>
-			<table class="account_list_table">
-				<tr>
-					<td rowspan="2">급여</td>
-					<td colspan="2">2022-01-10</td>
-					<td rowspan="2" class="income">+3,000,000</td>
-				</tr>
-				<tr>
-					<td>월급</td>
-				</tr>
-			</table>
-			<hr>
-			<table class="account_list_table">
-				<tr>
-					<td rowspan="2">쇼핑</td>
-					<td colspan="2">2022-01-04</td>
-					<td rowspan="2" class="expense">-99,000</td>
-				</tr>
-				<tr>
-					<td>신발</td>
-				</tr>
-			</table>
-			<hr>
+		<button id="income_filter_btn")>수입</button>
+		<button id="expense_filter_btn">지출</button>
+		<a href="#">전체보기</a>
+			<form 
+				action="${pageContext.request.contextPath}/accountbook/accountDelete.do"
+				method="POST"
+				name="deleteFrm">
+				<table class="account_list_table">
+					<%-- <tr>
+						<td rowspan="2">${account.incomeExpense}</td>
+						<td colspan="2"><fmt:formatDate pattern="yyyy-MM-dd" value="${account.regDate}"/></td>
+						<td>${account.price}</td>
+					</tr>		 --%>			
+				</table>
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			</form>
+
 		</div>
 	</section>
 	<section class="box3">
@@ -132,16 +138,13 @@
 				<tr>
 					<td colspan="2">1월 총 자산</td>
 				</tr>
-				<tr>
-					<td colspan="2">2,833,000원</td>
+				<tr id="total_income">
 				</tr>
 				<tr>
 					<td>수입</td>
 					<td>지출</td>
 				</tr>
-				<tr>
-					<td><span class="income">3,018,000</span>원</td>
-					<td><span class="expense">185,000</span>원</td>
+				<tr class="user_income_expense">
 				</tr>
 			</table>
 		</div>
@@ -149,6 +152,9 @@
 			<button id="btn1"><i class="fas fa-plus plus"></i><br />거래내역 입력하기</button>
 		</div>
 	</section>
+
+	
+	<script src='${pageContext.request.contextPath}/resources/js/accountbook/main.js'></script>
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp" />

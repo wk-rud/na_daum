@@ -89,7 +89,6 @@ public class CalendarController {
 	@PostMapping("/updateCalendar.do")
 	public Map<String, Object> updateCalendar(@RequestBody Map<String, Object> updateCalendar) {
 
-		System.out.println("updateCalendar = " + updateCalendar);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("no", updateCalendar.get("no"));
 		map.put("title", updateCalendar.get("title"));
@@ -100,10 +99,20 @@ public class CalendarController {
 		map.put("backgroundColor", updateCalendar.get("backgroundColor"));
 		map.put("allDay", updateCalendar.get("allDay"));
 		
-		System.out.println(map);
-		
 		int result = calendarService.updateCalendar(map);
 		return map;
 		
 	}
+	
+	// 캘린더 상세 삭제
+	@ResponseBody
+	@PostMapping("/deleteCalendar.do")
+	public Map<String, Object> deleteCalendar(@RequestBody Map<String, Object> deleteCalendar) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("no", deleteCalendar.get("no"));	
+		int result = calendarService.deleteCalendar(map);
+		return map;
+		
+	}
+	
 }

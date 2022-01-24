@@ -2,11 +2,17 @@
  *  일정 편집
  * ************** */
 var editEvent = function (event, element, view) {
-
     $('#deleteEvent').data('id', event._id); //클릭한 이벤트 ID
 
     $('.popover.fade.top').remove();
     $(element).popover("hide");
+	
+	// 403에러방지 csrf토큰 headers
+	const csrfToken = $("meta[name='_csrf']").attr("content");
+	const csrfHeader = $("meta[name='_csrf_header']").attr("content");
+	const headers = {};
+	headers[csrfHeader] = csrfToken;
+
 
     if (event.allDay === true) {
         editAllDay.prop('checked', 1);
@@ -76,7 +82,7 @@ var editEvent = function (event, element, view) {
         event.backgroundColor = editColor.val();
         event.description = editDesc.val();
 
-		var updateCalendar = {
+		var calendarDetail = {
 			allDay : event.allDay,
 	        title : event.title,
 	        startDate : event.start,
@@ -85,16 +91,9 @@ var editEvent = function (event, element, view) {
 	        backgroundColor : event.backgroundColor,
 	        content : event.description,
 			no : event.id
-		}
-		console.log(updateCalendar);
+		}		
 
         $("#calendar").fullCalendar('updateEvent', event);
-
-		// 403에러방지 csrf토큰 headers
-		const csrfToken = $("meta[name='_csrf']").attr("content");
-		const csrfHeader = $("meta[name='_csrf_header']").attr("content");
-		const headers = {};
-		headers[csrfHeader] = csrfToken;
 		
         //일정 업데이트
         $.ajax({
@@ -103,36 +102,38 @@ var editEvent = function (event, element, view) {
             url: "/nadaum/calendar/updateCalendar.do",
 			dataType: "json",
 			contentType: "application/json",
-            data: JSON.stringify(updateCalendar),
+            data: JSON.stringify(calendarDetail),
             success: function (response) {
-				console.log(updateCalendar);
-				alert("수정하였습니다.");
+				alert("수정했습니다.");
             },
 			error: function(response){
-			console.log("캘린더 수정 실패");
+				console.log("캘린더 수정 실패");
 			} 
         });
 
     });
+	// 삭제버튼
+	$('#deleteEvent').on('click', function () {
+	    
+	    $('#deleteEvent').unbind();
+	    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
+	    eventModal.modal('hide');
+		var no = {no : event.id};
+	    //삭제시
+	    $.ajax({
+	        type: "post",
+			headers: headers,
+	        url: "/nadaum/calendar/deleteCalendar.do",
+			dataType: "json",
+			contentType: "application/json",
+	        data: JSON.stringify(no),
+	        success: function (response) {
+	            alert('삭제되었습니다.');
+	        },
+			error: function(response){
+				console.log("캘린더 삭제 실패");
+			} 
+	    });
+	
+	});
 };
-
-// 삭제버튼
-$('#deleteEvent').on('click', function () {
-    
-    $('#deleteEvent').unbind();
-    $("#calendar").fullCalendar('removeEvents', $(this).data('id'));
-    eventModal.modal('hide');
-
-    //삭제시
-    $.ajax({
-        type: "get",
-        url: "",
-        data: {
-            //...
-        },
-        success: function (response) {
-            alert('삭제되었습니다.');
-        }
-    });
-
-});

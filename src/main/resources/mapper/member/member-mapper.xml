@@ -48,12 +48,37 @@
 		update member set nickname = #{nickname} where id = #{id}
 	</update>
 	
+	<!-- 공지 시작 -->
+	
+	<select id="selectLikesCheck" resultMap="likesMap">
+		select 
+			* 
+		from 
+			likes 
+		<where>
+			id = #{id}
+			and
+			code = #{code}
+			<if test="aCode != null">or a_code = #{aCode}</if>
+		</where>
+	</select>
+	
+	<!-- 공지 끝 -->
+	
 	<!-- 질문 시작 -->
 	
 	<insert id="insertMemberHelp">
 		insert into help(code, id, category, title, content)
 		values(concat('he-',seq_help_no.nextval), #{id}, #{category}, #{title}, #{content})
 	</insert>
+	
+	<select id="selectHelpOneCategory" resultMap="helpMap">
+		select * from help where category like '%'||#{category}||'%' order by reg_date desc
+	</select>
+	
+	<select id="countHelpOneCategoryCount" resultType="int">
+		select count(*) from help where category = #{category}
+	</select>
 	
 	<!-- 질문 끝 -->
 	
@@ -224,6 +249,12 @@
 		<result column="my_id" property="id"/>
 		<result column="follower_id" property="followerId"/>
 		<result column="is_friend" property="isFriend"/>
+	</resultMap>
+	
+	<resultMap type="map" id="likesMap">
+		<id column="no" property="no"/>
+		<result column="id" property="id"/>
+		<result column="code" property="code"/>
 	</resultMap>
 	
 	

@@ -60,6 +60,10 @@ var newEvent = function (start, end, eventType) {
             alert('일정명은 필수입니다.');
             return false;
         }
+        if (eventData.Type === '') {
+            alert('타입은 필수입니다.');
+            return false;
+        }
 
         var realEndDay;
 
@@ -96,8 +100,6 @@ var newEvent = function (start, end, eventType) {
 				eventData
 			),
             success: function (response) {
-				console.log("캘린더 등록");
-				console.log(response);
                 //DB연동시 중복이벤트 방지
                 $('#calendar').fullCalendar('removeEvents');
                 $('#calendar').fullCalendar('refetchEvents');

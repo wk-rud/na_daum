@@ -211,6 +211,21 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.insertMemberHelp(map);
 	}
 
+	@Override
+	public List<Map<String, Object>> selectHelpOneCategory(Map<String, Object> param) {
+		return memberDao.selectHelpOneCategory(param);
+	}
+
+	@Override
+	public int countHelpOneCategoryCount(String category) {
+		return memberDao.countHelpOneCategoryCount(category);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectLikesCheck(Map<String, Object> param) {
+		return memberDao.selectLikesCheck(param);
+	}
+
 	
 	
 	

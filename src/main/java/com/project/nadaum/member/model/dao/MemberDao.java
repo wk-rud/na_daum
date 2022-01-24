@@ -86,6 +86,12 @@ public interface MemberDao {
 
 	int insertMemberHelp(Map<String, Object> map);
 
+	List<Map<String, Object>> selectHelpOneCategory(Map<String, Object> param);
+
+	int countHelpOneCategoryCount(String category);
+
+	List<Map<String, Object>> selectLikesCheck(Map<String, Object> param);
+
 
 
 
