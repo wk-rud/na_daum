@@ -3,11 +3,11 @@ package com.project.nadaum.audiobook.model.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.nadaum.audiobook.model.dao.AudioBookDao;
+import com.project.nadaum.audiobook.model.dao.AlbumDao;
 
 @Service
-public class AudioBookServiceImpl implements AudioBookService{
+public class AlbumServiceImpl implements AlbumService{
 
 	@Autowired
-	private AudioBookDao audioBookDao;
+	private AlbumDao audioBookDao;
 }

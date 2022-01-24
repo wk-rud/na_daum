@@ -1,0 +1,27 @@
+@charset "UTF-8";
+
+body {
+	 font-size:20px;
+	 margin: 0;
+     padding: 0;
+}
+div, section, header, aside, footer {padding:10px;}
+
+/********** 전체컨테이너 **********/
+div#container	{}
+
+/********** header **********/
+header div#header-container {height:80px;}
+header div#header-container h2 	{margin:30px 10px 0px 10px;}
+nav { padding-left:0px; height:60px;}
+.navbar{padding-left:0px;}
+navbar-collapse{padding-top:0px; padding-bottom:0px;}
+.navbar-brand{font-size:24px; font-weight:700;}
+.container-fluid{padding-top:0px; padding-bottom:0px;}
+/********** content **********/
+section#content		{min-height:600px;}
+
+
+/********** footer **********/
+footer	{background-color:#f8f9fa; background-clip:content-box; clear:both; height:95px; text-align:center;}
+footer p 	{margin-top:30px;}
