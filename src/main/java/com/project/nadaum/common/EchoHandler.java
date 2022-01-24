@@ -36,6 +36,7 @@ public class EchoHandler extends TextWebSocketHandler {
 		userMap.put(session.getPrincipal().getName(), session);			
 		
 		log.debug("userMap = {}", userMap);
+		log.debug("session = {}", session.getPrincipal());
 		log.info(session.getPrincipal().getName() + "접속");
 	}
 	
@@ -62,7 +63,7 @@ public class EchoHandler extends TextWebSocketHandler {
 				String senderNickname = "";
 				log.debug("cmd = {}", cmd);
 				log.debug("caller = {}", caller);
-				log.debug("receiverId = {}", receiverId);
+				log.debug("receiver = {}", receiver);
 				
 				
 				if(cmd != null && (cmd.equals("following")) || (cmd.equals("follower")) || (cmd.equals("free")) || (cmd.equals("friend"))) {
@@ -72,6 +73,7 @@ public class EchoHandler extends TextWebSocketHandler {
 					receiverId = member.getId();
 				}					
 				
+				log.debug("receiverId = {}", receiverId);
 				WebSocketSession friendSession = friendSession = userMap.get(receiverId);
 				if(("free".equals(cmd) || "follower".equals(cmd)) && friendSession != null) {
 					TextMessage tMsg = new TextMessage(senderNickname + "님이 " + receiver + "님을 친구추가 했습니다.");

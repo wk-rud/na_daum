@@ -33,5 +33,6 @@ public class MemberEntity implements Serializable {
 	private boolean enabled;
 	private String profile;
 	private String loginType;
+	private String profileStatus;
 
 }

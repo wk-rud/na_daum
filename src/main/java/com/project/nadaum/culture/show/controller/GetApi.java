@@ -56,13 +56,11 @@ public class GetApi {
 				
 				// root tag 
 				doc.getDocumentElement().normalize();
-//				System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-				//최상위tag값
-				//result - products - product - baseinfo
+				//response - comMsgHeader/msgBody - perforList
+				//response - comMsgHeader/msgBody - seq/perforInfo
 				
 				// 파싱할 tag
 				NodeList nList = doc.getElementsByTagName("perforList");
-//				System.out.println("파싱할 리스트 수 : "+ nList.getLength());
 				
 				for(int temp = 0; temp < nList.getLength(); temp++){
 					Node nNode = nList.item(temp);
@@ -80,8 +78,6 @@ public class GetApi {
 						String place = getTagValue("place", eElement);
 						String thumbnail = getTagValue("thumbnail", eElement);
 						String realmName = getTagValue("realmName", eElement);
-						String gpsX = getTagValue("gpsX", eElement);
-						String gpsY = getTagValue("gpsY", eElement);
 						
 						Map<String, Object> map = new HashMap<>();
 						map.put("seq", seq);
@@ -92,9 +88,6 @@ public class GetApi {
 						map.put("place", place);
 						map.put("thumbnail", thumbnail);
 						map.put("realmName", realmName);
-						map.put("gpsX", gpsX);
-						map.put("gpsY", gpsY);
-						
 						
 						list.add(map);
 						
@@ -117,27 +110,26 @@ public class GetApi {
 	}
 	
 	//문화 상세정보API
-	@GetMapping("/CultureDetail.do")
+	@GetMapping("/cultureView.do")
 	public void getCultureDetailApi(Model model) {
+		
+		List<Object> list = new ArrayList<>();
+		String seq = "";
 			try {
 				
 				// parsing할 url 지정(API 키 포함해서)
 				String url = "http://www.culture.go.kr/openapi/rest/publicperformancedisplays/d/"
 						+ "?serviceKey=p%2B16HHPYFEvCkanGQCoGc9CAAG7x66tc5u3xrBmJpM8avVLTGiJ%2FjJaIvItRCggk79J9k%2Byn47IjYUHr%2FdzlgA%3D%3D"
-						+ "&seq=173550";
+						+ "&seq="+seq;
 				
 				DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
 				Document doc = dBuilder.parse(url);
 				
 				  doc.getDocumentElement().normalize();
-				 
-				  System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 				  
 				  NodeList nList = doc.getElementsByTagName("perforInfo");
-				  System.out.println(nList);
-				  System.out.println("-----------------------");
-				 
+				 System.out.println(nList);
 				  for (int temp = 0; temp < nList.getLength(); temp++) {
 				 
 				     Node nNode = nList.item(temp);
@@ -145,15 +137,47 @@ public class GetApi {
 				 
 				        Element eElement = (Element) nNode;
 				 
-				        System.out.println("title: " + getTagValue("title", eElement));
-				 
-				     }
-				  }
-				   } catch (Exception e) {
+
+				       String title = getTagValue("title", eElement);
+						String startDate = getTagValue("startDate", eElement);
+						String endDate = getTagValue("endDate", eElement);
+						String area = getTagValue("area", eElement);
+						String place = getTagValue("place", eElement);
+						String placeAddr = getTagValue("placeAddr", eElement);
+						String realmName = getTagValue("realmName", eElement);
+						String price = getTagValue("price", eElement);
+						String phone = getTagValue("phone", eElement);
+						String imgUrl = getTagValue("imgUrl", eElement);
+						String placeUrl = getTagValue("placeUrl", eElement);
+						String contents1 = getTagValue("contents1", eElement);
+						String contents2 = getTagValue("contents2", eElement);
+
+						Map<String, Object> map = new HashMap<>();
+						
+						map.put("title", title);
+						map.put("startDate", startDate);
+						map.put("endDate", endDate);
+						map.put("area", area);
+						map.put("place", place);
+						map.put("placeAddr", placeAddr);
+						map.put("realmName", realmName);
+						map.put("price", price);
+						map.put("phone", phone);
+						map.put("imgUrl", imgUrl);
+						map.put("placeUrl", placeUrl);
+						map.put("contents1", contents1);
+						map.put("contents2", contents2);
+						
+						list.add(map);
+						
+				     }//if end
+				     System.out.println(list);
+				     model.addAttribute("list", list);
+				  }// try end
+				  
+			} catch (Exception e) {
 				  e.printStackTrace();
-				   }
-				  
-				  
+		}		  
 	}
 }
 	

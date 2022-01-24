@@ -17,7 +17,7 @@ public class CultureServiceImpl implements CultureService {
 	private CultureDao cultureDao;
 	@Override
 	public List<Culture> selectCultureList() {
-		return cultureDao.selectMemoList();
+		return cultureDao.selectCultureList();
 	}
 	@Override
 	public Culture selectOneCulture(String code) {

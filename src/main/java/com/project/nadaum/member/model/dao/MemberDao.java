@@ -3,6 +3,7 @@ package com.project.nadaum.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.member.model.vo.Member;
 
 public interface MemberDao {
@@ -69,7 +70,21 @@ public interface MemberDao {
 
 	int insertRequestFriend(Map<String, Object> nicknames);
 
-	Map<String, Object> selectOneMemberAndAttachment(Member member);
+	Attachment selectMemberProfile(Member member);
+
+	int updateMemberNickname(Member member);
+
+	Member selectOneMemberByEmail(Map<String, Object> email);
+
+	Member selectOneMemberByIdEmail(Map<String, Object> map);
+
+	int updateMemberPassword(Map<String, Object> map);
+
+	Member selectOneMemberByPhone(Map<String, Object> map);
+
+	Member selectOneMemberByIdPhone(Map<String, Object> map);
+
+	int insertMemberHelp(Map<String, Object> map);
 
 
 

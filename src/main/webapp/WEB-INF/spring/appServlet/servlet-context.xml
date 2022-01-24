@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
 	<context:property-placeholder location="classpath:emailsource.properties"/>
-
+	
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
@@ -76,5 +76,7 @@
 		<websocket:sockjs/>
 	</websocket:handlers>
 	
+	<!-- 문자(coolsms)관련 -->
+	<beans:bean id="messageService" class="com.project.nadaum.member.model.service.MessageService"/>
 	
 </beans:beans>

@@ -3,17 +3,18 @@ package com.project.nadaum.culture.review.model.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.project.nadaum.culture.show.model.vo.Culture;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Review implements Serializable {
 
 	/**

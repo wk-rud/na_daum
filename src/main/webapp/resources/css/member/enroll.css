@@ -1,0 +1,45 @@
+
+.enroll-wrapper{
+	display: flex;
+	justify-content: center;
+	padding-top: 80px;
+}
+
+.carousel-item{
+	height: 500px;
+	width: 500px;
+	padding: 5px;
+}
+
+.input-wrap{
+	
+}
+
+.must-need{
+	font-size: 0.7rem;
+}
+
+input{
+	width: 400px;
+	height: 38px;
+}
+
+#email{
+	width: 100px;	
+}
+#selfWrite{
+	width: 120px;
+}
+
+
+#postcode{
+	width: 150px;
+}
+
+
+.enroll-btn-wrap{
+	display: flex;
+    justify-content: flex-end;
+    padding-top: 20px;
+}
+    

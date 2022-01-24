@@ -31,13 +31,14 @@ height: 300px;
 <script>
 //cultureDetail
 $(() => {
-	$(".card[data-code]").click((e) => {
+	$(".card").click((e) => {
 		 //console.log(e.target); // td
 		const $card = $(e.target).parent().parent();
 		const code = $card.data("code");
-		location.href = `${pageContext.request.contextPath}/culture/cultureDetail.do?code=\${code}`;
+		location.href = `${pageContext.request.contextPath}/culture/cultureView.do?code=\${code}`;
 	});
 });
+
 </script>
 <body>
 	<div class="container">
@@ -89,7 +90,6 @@ $(() => {
             <div class="card-block">
             	 <p class="card-text p-y-1" id="culture_code">${culture.code}</p>
               <h4 class="card-title">${culture.title}</h4>
-             
               <p class="card-text p-y-1">${culture.area}</p>
               <p class="card-text p-y-1">${culture.place}</p>
               <p class="card-text p-y-1">${culture.realmName}</p>

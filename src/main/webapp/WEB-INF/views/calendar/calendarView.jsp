@@ -1,211 +1,190 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset='utf-8' />
-<link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
-<link href='${pageContext.request.contextPath}/resources/css/calendar/main.css' rel='stylesheet' />
-<script src='${pageContext.request.contextPath}/resources/js/calendar/main.js'></script>
-<script src='${pageContext.request.contextPath}/resources/js/calendar/theme-chooser.js'></script>
-<script>
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<jsp:include page="/WEB-INF/views/common/header.jsp">
+	<jsp:param value="캘린더" name="title"/>
+</jsp:include>
+<meta id="_csrf" name="_csrf" content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header" content="${_csrf.headerName}" />
+<sec:authentication property="principal" var="loginMember"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Calendar</title>
+<link rel=" shortcut icon" href="${pageContext.request.contextPath}/resources/images/calendar/favicon.ico">
 
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar;
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/vendor/fullcalendar.min.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/vendor/bootstrap.min.css">
+<link rel="stylesheet" href='${pageContext.request.contextPath}/resources/css/calendar/vendor/select2.min.css' />
+<link rel="stylesheet" href='${pageContext.request.contextPath}/resources/css/calendar/vendor/bootstrap-datetimepicker.min.css' />
 
-    initThemeChooser({
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,500,600">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-      init: function(themeSystem) {
-        calendar = new FullCalendar.Calendar(calendarEl, {
-          themeSystem: themeSystem,
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,listMonth'
-          },
-          initialDate: '2022-01-16',
-          weekNumbers: true,
-          navLinks: true, // click day/week names to navigate views
-          editable: true,
-          selectable: true,
-          nowIndicator: true,
-          dayMaxEvents: true, // allow "more" link when too many events
-          // showNonCurrentDates: false,
-          events: [
-            {
-              title: 'All Day Event',
-              start: '2022-01-16'
-            },
-            {
-              title: 'Long Event',
-              start: '2022-01-07',
-              end: '2022-01-10'
-            },
-            {
-              groupId: 999,
-              title: '그룹 999 Event',
-              start: '2022-01-09T16:00:00'
-            },
-            {
-              groupId: 999,
-              title: '그룹 999 Event2',
-              start: '2022-01-16T16:00:00'
-            },
-            {
-              title: 'Conference',
-              start: '2022-01-11',
-              end: '2022-01-13'
-            },
-            {
-              title: '미팅',
-              start: '2022-01-12T10:30:00',
-              end: '2022-01-12T12:30:00'
-            },
-            {
-              title: '점심약속',
-              start: '2022-01-12T12:00:00'
-            },
-            {
-              title: '과제',
-              start: '2022-01-12T14:30:00'
-            },
-            {
-              title: '휴일',
-              start: '2022-01-12T17:30:00'
-            },
-            {
-              title: '저녁약속',
-              start: '2022-01-12T20:00:00'
-            },
-            {
-              title: 'Birthday Party',
-              start: '2022-01-13T07:00:00'
-            },
-            {
-              title: '누르면 구글갈지두~?',
-              url: 'http://google.com/',
-              start: '2022-01-28'
-            }
-          ]
-        });
-        calendar.render();
-      },
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/main.css">
+	<input type="hidden" id="id" value="${loginMember.id}" />
+    <div class="container">
+        <!-- 일자 클릭시 메뉴오픈 -->
+        <div id="contextMenu" class="dropdown clearfix">
+            <ul class="dropdown-menu dropNewEvent" role="menu" aria-labelledby="dropdownMenu"
+                style="display:block;position:static;margin-bottom:5px;">
+                <li><a tabindex="-1" href="#">일정</a></li>
+                <li><a tabindex="-1" href="#">일기</a></li>
+                <li><a tabindex="-1" href="#">가계부</a></li>
+                <li><a tabindex="-1" href="#">문화생활</a></li>
+                <li><a tabindex="-1" href="#">영화</a></li>
+                <li><a tabindex="-1" href="#">롤</a></li>
+                <li class="divider"></li>
+                <li><a tabindex="-1" href="#" data-role="close">Close</a></li>
+            </ul>
+        </div>
 
-      change: function(themeSystem) {
-        calendar.setOption('themeSystem', themeSystem);
-      }
+        <div id="wrapper">
+            <div id="loading"></div>
+            <div id="calendar"></div>
+        </div>
 
-    });
+        <!-- 일정 추가 MODAL -->
+        <div class="modal fade" tabindex="-1" role="dialog" id="eventModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
 
-  });
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-allDay">하루종일</label>
+                                <input class='allDayNewEvent' id="edit-allDay" type="checkbox"></label>
+                            </div>
+                        </div>
 
-</script>
-<style>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-title">일정명</label>
+                                <input class="inputModal" type="text" name="edit-title" id="edit-title"
+                                    required="required" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-start">시작</label>
+                                <input class="inputModal" type="text" name="edit-start" id="edit-start" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-end">끝</label>
+                                <input class="inputModal" type="text" name="edit-end" id="edit-end" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-type">구분</label>
+                                <select class="inputModal" type="text" name="edit-type" id="edit-type">
+                                    <option value="schedule">일정</option>
+                                    <option value="diary">일기</option>
+                                    <option value="accountBook">가계부</option>
+                                    <option value="culture">문화생활</option>
+                                    <option value="movie">영화</option>
+                                    <option value="lol">롤</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-color">색상</label>
+                                <select class="inputModal" name="color" id="edit-color">
+                                    <option value="#D25565" style="color:#D25565;">빨간색</option>
+                                    <option value="#9775fa" style="color:#9775fa;">보라색</option>
+                                    <option value="#ffa94d" style="color:#ffa94d;">주황색</option>
+                                    <option value="#74c0fc" style="color:#74c0fc;">파란색</option>
+                                    <option value="#f06595" style="color:#f06595;">핑크색</option>
+                                    <option value="#63e6be" style="color:#63e6be;">연두색</option>
+                                    <option value="#a9e34b" style="color:#a9e34b;">초록색</option>
+                                    <option value="#4d638c" style="color:#4d638c;">남색</option>
+                                    <option value="#495057" style="color:#495057;">검정색</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <label class="col-xs-4" for="edit-desc">설명</label>
+                                <textarea rows="4" cols="50" class="inputModal" name="edit-desc"
+                                    id="edit-desc"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modalBtnContainer-addEvent">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary" id="save-event">저장</button>
+                    </div>
+                    <div class="modal-footer modalBtnContainer-modifyEvent">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                        <button type="button" class="btn btn-danger" id="deleteEvent">삭제</button>
+                        <button type="button" class="btn btn-primary" id="updateEvent">저장</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
-  body {
-    margin: 0;
-    padding: 0;
-    font-size: 14px;
-  }
+        <div class="panel panel-default">
 
-  #top,
-  #calendar.fc-theme-standard {
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-  }
+            <div class="panel-heading">
+                <h3 class="panel-title">필터</h3>
+            </div>
 
-  #calendar.fc-theme-bootstrap {
-    font-size: 14px;
-  }
+            <div class="panel-body">
 
-  #top {
-    background: #eee;
-    border-bottom: 1px solid #ddd;
-    padding: 0 10px;
-    line-height: 40px;
-    font-size: 12px;
-    color: #000;
-  }
+                <div class="col-lg-6">
+                    <label for="calendar_view">구분별</label>
+                    <div class="input-group">
+                        <select class="filter" id="type_filter" multiple="multiple">
+	                    	<option value="schedule">일정</option>
+	                    	<option value="diary">일기</option>
+	                        <option value="accountBook">가계부</option>
+	                        <option value="culture">문화생활</option>
+	                        <option value="movie">영화</option>
+	                        <option value="lol">롤</option>
+                        </select>
+                    </div>
+                </div>
 
-  #top .selector {
-    display: inline-block;
-    margin-right: 10px;
-  }
+                <!-- <div class="col-lg-6">
+                    <label for="calendar_view">등록자별</label>
+                    <div class="input-group">
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="정연"
+                                checked>정연</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="다현"
+                                checked>다현</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="사나"
+                                checked>사나</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="나연"
+                                checked>나연</label>
+                        <label class="checkbox-inline"><input class='filter' type="checkbox" value="지효"
+                                checked>지효</label>
+                    </div>
+                </div> -->
 
-  #top select {
-    font: inherit; /* mock what Boostrap does, don't compete  */
-  }
-
-  .left { float: left }
-  .right { float: right }
-  .clear { clear: both }
-
-  #calendar {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 10px;
-  }
-
-</style>
-</head>
-<body>
-
-  <div id='top'>
-
-    <div class='left'>
-
-      <div id='theme-system-selector' class='selector' value='bootstrap'>
-        Theme System:
-        <select>
-          <option value='bootstrap' selected>Bootstrap 4</option>
-          <option value='standard'>unthemed</option>
-        </select>
-      </div>
-
-      <div data-theme-system="bootstrap" class='selector' style='display:none'>
-        테마 :
-
-        <select>
-          <option value='' selected>Default</option>
-          <option value='cerulean'>Cerulean</option>
-          <option value='cosmo'>Cosmo</option>
-          <option value='cyborg'>Cyborg</option>
-          <option value='darkly'>Darkly</option>
-          <option value='flatly'>Flatly</option>
-          <option value='journal'>Journal</option>
-          <option value='litera'>Litera</option>
-          <option value='lumen'>Lumen</option>
-          <option value='lux'>Lux</option>
-          <option value='materia'>Materia</option>
-          <option value='minty'>Minty</option>
-          <option value='pulse'>Pulse</option>
-          <option value='sandstone'>Sandstone</option>
-          <option value='simplex'>Simplex</option>
-          <option value='sketchy'>Sketchy</option>
-          <option value='slate'>Slate</option>
-          <option value='solar'>Solar</option>
-          <option value='spacelab'>Spacelab</option>
-          <option value='superhero'>Superhero</option>
-          <option value='united'>United</option>
-          <option value='yeti'>Yeti</option>
-        </select>
-      </div>
-
-      <span id='loading' style='display:none'>loading theme...</span>
-
+            </div>
+        </div>
+        <!-- /.filter panel -->
     </div>
-
-    <div class='right'>
-      <span class='credits' data-credit-id='bootstrap-standard' style='display:none'>
-        <a href='https://getbootstrap.com/docs/3.3/' target='_blank'>Theme by Bootstrap</a>
-      </span>
-      <span class='credits' data-credit-id='bootstrap-custom' style='display:none'>
-        <a href='https://bootswatch.com/' target='_blank'>Theme by Bootswatch</a>
-      </span>
-    </div>
-
-    <div class='clear'></div>
-  </div>
-
-  <div id='calendar'></div>
-	<jsp:include page="/WEB-INF/views/common/footer.jsp" />
+    <!-- /.container -->
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/moment.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/fullcalendar.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/ko.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/select2.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/vendor/bootstrap-datetimepicker.min.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/main.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/addEvent.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/editEvent.js"></script>
+    <script src="${pageContext.request.contextPath}/resources/js/calendar/etcSetting.js"></script>
+<jsp:include page="/WEB-INF/views/common/footer.jsp" />

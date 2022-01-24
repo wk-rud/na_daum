@@ -86,9 +86,9 @@ $(() => {
 						<label for="remember-me">자동 로그인</label>
 					</div>
 					<div>
-						<a href="#">비밀번호 찾기</a>
-						<a href="#">아이디 찾기</a>
-						<a href="${pageContext.request.contextPath}/member/memberEnroll.do">처음이신가요?</a>
+						<a href="${pageContext.request.contextPath}/member/memberFindPassword.do">비밀번호 찾기</a>
+						<a href="${pageContext.request.contextPath}/member/memberFindId.do">아이디 찾기</a>
+						<a href="${pageContext.request.contextPath}/member/memberEnrollAgreement.do">처음이신가요?</a>
 					</div>
 					<div>
 						<button type="submit" class="btn btn-outline-success">로그인</button>
@@ -97,7 +97,7 @@ $(() => {
 				</div>
 				<div>
 					<div id="kakao-login">
-						<img src="${pageContext.request.contextPath}/resources/image/member/kakao_login_medium_wide.png" alt="" />
+						<img src="${pageContext.request.contextPath}/resources/images/member/kakao_login_medium_wide.png" alt="" />
 					</div>
 				</div>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>

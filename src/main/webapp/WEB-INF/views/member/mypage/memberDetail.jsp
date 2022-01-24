@@ -30,20 +30,42 @@
 	<!-- 메인 -->
 	<div class="main-section">
 		<c:if test="${param.tPage eq 'myPage'}">
-			<div class="info-form">
-				<form id="memberUpdateFrm">
-					<input type="text" class="form-control" name="id" id="id" value="${loginMember.id}" readonly required/>
-					<input type="text" class="form-control" placeholder="이름" name="name" id="name" value="${loginMember.name}" readonly required/>
-					<input type="text" class="form-control" placeholder="별명" name="nickname" id="nickname" value="${loginMember.nickname}" required/>
-					<input type="text" class="form-control" placeholder="이메일" name="email" id="email" value="${loginMember.email}" readonly required/>
-					<input type="text" class="form-control" placeholder="주소" name="address" id="address" value="${loginMember.address}" readonly required/>
-					<input type="text" class="form-control" placeholder="전화번호" name="phone" id="phone" value="${loginMember.phone}" readonly required/>
-										
-					
-					<input type="submit" class="btn btn-outline-success" value="수정" >
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-				</form>
+			<div class="info-profile-wrap">
+				<div class="profile-div-wrap">
+					<div class="profile-div">
+						<c:if test="${loginMember.loginType eq 'K'}">
+							<img src="${loginMember.profile}" alt="" />
+						</c:if>
+						<c:if test="${loginMember.loginType eq 'D'}">
+							<c:if test="${loginMember.profileStatus eq 'N'}">							
+								<img src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" />
+							</c:if>
+							<c:if test="${loginMember.loginType eq 'Y'}">
+								<img src="${pageContext.request.contextPath}/resources/upload/member/profile/${profileImage.originalFilename}" alt="" />
+							</c:if>
+						</c:if>
+						<div class="nickname-wrap">
+							<span>${loginMember.nickname}</span>
+							<button type="button" id="modify-nickname-modal" class="btn btn-outline-warning">별명 수정</button>
+						</div>
+					</div>
+				</div>
+				<div class="info-form">
+					<form id="memberUpdateFrm">
+						<input type="text" class="form-control" name="id" id="id" value="${loginMember.id}" readonly required/>
+						<input type="text" class="form-control" placeholder="이름" name="name" id="name" value="${loginMember.name}" readonly required/>
+						<input type="text" class="form-control" placeholder="이메일" name="email" id="email" value="${loginMember.email}" readonly required/>
+						<input type="text" class="form-control" placeholder="주소" name="address" id="address" value="${loginMember.address}" readonly required/>
+						<input type="text" class="form-control" placeholder="전화번호" name="phone" id="phone" value="${loginMember.phone}" readonly required/>
+											
+						
+						<input type="submit" class="btn btn-outline-success" value="수정" >
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+					</form>
+				</div>				
 			</div>
+			
+			
 		
 			<script>
 			$(memberUpdateFrm).submit((e) => {
@@ -64,6 +86,10 @@
 					},
 					error:console.log
 				});
+			});
+			
+			$("#modify-nickname-modal").click((e) => {
+				location.href="${pageContext.request.contextPath}/member/mypage/memberModifyNickname.do";
 			});
 			</script>
 		</c:if>

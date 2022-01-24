@@ -1,5 +1,8 @@
 package com.project.nadaum.websocket.model.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -13,8 +16,8 @@ public class WebsocketDaoImpl implements WebsocketDao {
 	private SqlSessionTemplate session;
 
 	@Override
-	public int selectAlarmCount(Member member) {
-		return session.selectOne("ws.selectAlarmCount", member);
+	public List<Map<String, Object>> selectAlarmCount(Member member) {
+		return session.selectList("ws.selectAlarmCount", member);
 	}
 
 	@Override

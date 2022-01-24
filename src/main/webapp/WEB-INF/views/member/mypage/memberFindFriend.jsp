@@ -68,6 +68,8 @@ $("#search-friend-start").click((e) => {
 			$resultDiv.empty();
 			if(resp == '0'){
 				searched = `<span>그런 친구는 없어요</span>`;
+				$resultDiv.append(searched);
+				return;
 			}else{
 				if(resp.check == 'friend'){
 					searched = `<span>\${resp.nickname}</span>

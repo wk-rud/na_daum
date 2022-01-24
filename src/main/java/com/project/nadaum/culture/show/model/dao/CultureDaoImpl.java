@@ -18,7 +18,7 @@ public class CultureDaoImpl implements CultureDao {
 	private SqlSessionTemplate session;
 
 	@Override
-	public List<Culture> selectMemoList() {
+	public List<Culture> selectCultureList() {
 		return session.selectList("culture.selectCultureList");
 	}
 

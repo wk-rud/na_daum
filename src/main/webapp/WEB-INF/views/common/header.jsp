@@ -28,6 +28,9 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <!-- bootstrap css -->
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
@@ -35,12 +38,11 @@
 	crossorigin="anonymous">
 
 <!-- 사용자작성 css -->
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/common/style.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common/style.css" /> 
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common/profile.css" />
 
 <!-- 토글용 테스트용 다른 ui속성과 충돌나는중-->
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/darkmode.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/darkmode.css" />
 <!-- 토글용 css 파일 로딩이 안되서 직접 붙여놓음. -->
 <style>
 input[id="switch"]{
@@ -95,7 +97,7 @@ input[id="switch"]{
 <sec:authorize access="isAuthenticated()">
 <sec:authentication property="principal" var="loginMember"/>
 	<div id="container">
-		<header>
+		<header class="head-header">
 			<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 				<!-- 타이틀 클릭시 메인으로 -->
 				<a id="main-link" class="navbar-brand" href="#">나:다움</a>
@@ -115,14 +117,14 @@ input[id="switch"]{
 						<fmt:formatDate value="${now}" pattern="yyyy-MM-dd" />
 						</a></li>
 						<!--날씨에 따라서 출력값이 바뀌게하기 -->
-						<li class="nav-item active"><a class="nav-link" href="https://weather.naver.com/">
-								❄ </a></li>
+						<li class="nav-item active">
+							<a class="nav-link" href="https://weather.naver.com/"> ❄ </a>
+						</li>
 					</ul>
 					<ul class="navbar-nav justify-content-end">
-                        <li class="nav-item dropdown"><a
-                            class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
-                            role="button" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false"> </a>
+                        <li class="nav-item dropdown">
+                        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                        	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <!-- 각자페이지 링크거시면 됩니다 -->
                                 <a class="dropdown-item" href="https://www.naver.com">메인</a> 
@@ -131,34 +133,38 @@ input[id="switch"]{
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/movie/movieList.do">영화</a> 
                                 <a class="dropdown-item" href="https://audioclip.naver.com">오디오북</a> 
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/calendar/calendarView.do">캘린더</a>
                             </div></li>
                     </ul>
 					<!-- 뱃지생성완료, 클릭시 알람 영역 숨기기 완료 비동기 통신후 알람이 있을경우 다시 표기.-->
 					<!-- 프로필 사진으로 보일시 크기에 맞게 이미지를 넣어야됨, 썸네일용 이미지 따로 저장하는 방법도 좋으나 일이 많아짐.-->
 					<!-- 아래 span에서 동적으로 메시지 갯수다르게 처리하기 필요 -->
 					<!-- 클릭하면 알림창이 나오게 하는 ui는 답이없음. -->
-					<span>
+					<span class="head-nickname-span">
 						<a href="${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=myPage">
 							안녕하세요, <sec:authentication property="principal.nickname"/>님
 						</a>
 					</span>
 					<div class="profile-wrap">
-						<button id="profile" type="button" class="btn btn-primary position-relative bg-light border-light rounded-circle">
+						<button id="profile" type="button"
+							data-toggle="collapse" data-target="#alarmList" aria-expanded="false" aria-controls="alarmList">
+							<div class="bedge-wrap"></div>
+							<div class="thumbnail-wrap" style="border-radius:50%; width:45px; height: 45px; overflow:hidden; padding: 0;">
 								<c:if test="${loginMember.loginType eq 'K'}">
-									<div class="kakao_thumbnail" style="border-radius:50%; width:45px; height: 45px; overflow:hidden; padding: 0;">
-										<img src="${loginMember.profile}" alt="" style="width:45px; height:45px; object-fit:cover;" />
-									</div>
-								</c:if>
-						    <!-- <svg height="32" aria-hidden="true" viewBox="0 0 16 16" version="1.1" width="32"data-view-component="true" class="octicon octicon-mark-github">
-							</svg>  -->
-						    
+									<img src="${loginMember.profile}" alt="" style="width:45px; height:45px; object-fit:cover;" />
+								</c:if>	
+								<c:if test="${loginMember.loginType eq 'D'}">
+									<c:if test="${loginMember.profileStatus eq 'N'}">							 		
+										<img src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" style="width:45px; height:45px; object-fit:cover;" />
+									</c:if>						
+									<c:if test="${loginMember.profileStatus eq 'Y'}">		
+										<img src="${pageContext.request.contextPath}/resources/upload/member/profile/${attach.renamedFilename}" alt="" style="width:45px; height:45px; object-fit:cover;" />										 		
+									</c:if>								
+								</c:if>								
+							</div>						    
 						</button>
-					    <!-- <div class="alarm-list">
-					        <a class="dropdown-item" href="#">Action</a>
-					  	    <a class="dropdown-item" href="#">Another action</a>
-					  	    <a class="dropdown-item" href="#">Something else here</a>
-					    </div> -->
-					</div>
+						<div class="collapse" id="alarmList"></div>
+					</div>					
 
 					<ul class="navbar-nav justify-content-end">
 						<li class="nav-item">
@@ -168,14 +174,13 @@ input[id="switch"]{
 						</li>
 					</ul>
 					<ul class="navbar-nav justify-content-end">
-						<li class="nav-item">
-							<div class="form-check pl-0 toggle darkmode">
-							  <input id="switch" type="checkbox" name="theme" class="darkmode">
-  							  <label for="switch" class="dk-tg">Toggle</label>
-
-							</div>
-						</li>
-					</ul>
+					    <li class="nav-item">
+					        <div class="form-check pl-0 toggle darkmode">
+					            <input id="switch" type="checkbox" name="theme" class="darkmode">
+					            <label for="switch" class="dk-tg">Toggle</label>
+					        </div>
+					    </li>
+					</ul> 
 					<!-- 다크모드 실험 중 -->
 					<!-- <button onclick='changeToDarkMode();' class="btn btn-light">Dark</button> -->
 					
@@ -222,10 +227,14 @@ input[id="switch"]{
 			$(() => {
 				countBedge();
 			});
-			/* 샘플코드 */
+			
 			$("#profile").click(function(){
-				checkBedge();
+				if($("#alarmList").hasClass("show")){
+					console.log($("#alarmList").hasClass("show"));
+					checkBedge();
+				}
 			});
+			/* 샘플코드 */
 			$("#sign-out").click(function(){
 				alert("로그아웃되었습니다.");
 			});
@@ -283,19 +292,7 @@ input[id="switch"]{
 					var data = evt.data;
 					console.log("ReceivMessage : " + data + "\n");
 					
-					$.ajax({
-						url: `${pageContext.request.contextPath}/websocket/wsCountAlarm.do`,
-						success(resp){
-							if(resp != '0'){
-								let bedge = `
-								<span id='bg-alarm' class='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>\${resp}</span>
-								`;
-								
-								$(profile).append(bedge);
-							}
-						},
-						error: console.log
-					});		
+					countBedge();
 					
 				};
 				sock.onclose = function() {
@@ -310,13 +307,26 @@ input[id="switch"]{
 		    	$.ajax({
 					url: `${pageContext.request.contextPath}/websocket/wsCountAlarm.do`,
 					success(resp){
-						if(resp != '0'){
+						
+						const $alarmList = $("#alarmList");
+						const $bedgeWrap = $(".bedge-wrap");
+						$alarmList.empty();
+						$bedgeWrap.empty();
+						
+						let count = 0;
+						$(resp).each((i, v) => {
+							count++;
+							let alarmDiv = `<div class="card card-body alarmContent">\${v.content}</div>`;
+							$alarmList.append(alarmDiv);
+						});						
+						
+						if(count > 0){
 							let bedge = `
-							<span id='bg-alarm' class='position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger'>\${resp}</span>
+							<span id='bg-alarm' class='badge rounded-pill bg-danger'>\${count}</span>
 							`;
 							
-							$(profile).append(bedge);
-						}
+							$bedgeWrap.append(bedge);
+						}						
 					},
 					error: console.log
 				});		
@@ -331,6 +341,15 @@ input[id="switch"]{
 					error: console.log
 				});	
 		    };
+		    
+		   
+		    
+		    
+		    
+		    
 		</script>
 </sec:authorize>
 		<section id="content">
+			<sec:authorize access="isAnonymous()">
+				<a href="${pageContext.request.contextPath}/member/memberLogin.do">로그인폼</a>
+			</sec:authorize>

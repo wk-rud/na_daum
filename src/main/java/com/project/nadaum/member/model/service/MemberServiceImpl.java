@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.member.model.dao.MemberDao;
 import com.project.nadaum.member.model.vo.Member;
 
@@ -171,8 +172,43 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Map<String, Object> selectOneMemberAndAttachment(Member member) {
-		return memberDao.selectOneMemberAndAttachment(member);
+	public Attachment selectMemberProfile(Member member) {
+		return memberDao.selectMemberProfile(member);
+	}
+
+	@Override
+	public int updateMemberNickname(Member member) {
+		return memberDao.updateMemberNickname(member);
+	}
+
+	@Override
+	public Member selectOneMemberByEmail(Map<String, Object> email) {
+		return memberDao.selectOneMemberByEmail(email);
+	}
+
+	@Override
+	public Member selectOneMemberByIdEmail(Map<String, Object> map) {
+		return memberDao.selectOneMemberByIdEmail(map);
+	}
+
+	@Override
+	public int updateMemberPassword(Map<String, Object> map) {
+		return memberDao.updateMemberPassword(map);
+	}
+
+	@Override
+	public Member selectOneMemberByPhone(Map<String, Object> map) {
+		return memberDao.selectOneMemberByPhone(map);
+	}
+
+	@Override
+	public Member selectOneMemberByIdPhone(Map<String, Object> map) {
+		return memberDao.selectOneMemberByIdPhone(map);
+	}
+
+	@Override
+	public int insertMemberHelp(Map<String, Object> map) {
+		return memberDao.insertMemberHelp(map);
 	}
 
 	

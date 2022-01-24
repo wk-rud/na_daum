@@ -7,13 +7,13 @@ import com.project.nadaum.culture.movie.model.vo.Movie;
 
 public interface MovieService {
 
-	int selectTotalContent();
-
-	Movie selectOneMovieCollection(String code);
-
-	List<Movie> selectMovieList();
-
-	Movie selectOneMovie(String code);
+//	int selectTotalContent();
+//
+//	Movie selectOneMovieCollection(String code);
+//
+//	List<Movie> selectMovieList();
+//
+//	Movie selectOneMovie(String code);
 
 //	List<Movie> selectMovieList(Map<String, Object> param);
 	

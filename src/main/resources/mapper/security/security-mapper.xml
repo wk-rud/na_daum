@@ -30,6 +30,7 @@
 		<result column="enabled" property="enabled"/>
 		<result column="profile" property="profile"/>
 		<result column="login_type" property="loginType"/>
+		<result column="profile_status" property="profileStatus"/>
 		<collection property="authorities" ofType="org.springframework.security.core.authority.SimpleGrantedAuthority">
 			<constructor>
 				<arg column="authority" javaType="string"/>

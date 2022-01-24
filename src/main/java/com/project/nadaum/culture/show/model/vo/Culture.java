@@ -22,6 +22,4 @@ public class Culture implements Serializable {
    private String place;
    private String realmName;
    private String imgUrl;
-   private double gpsX;
-   private double gpsY;
 }

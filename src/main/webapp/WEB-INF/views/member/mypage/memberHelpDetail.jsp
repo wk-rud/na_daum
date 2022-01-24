@@ -9,7 +9,11 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="나:다움 질문상세보기" name="title"/>
 </jsp:include>
-
+<c:if test="${not empty msg}">
+	<script>
+		alert("${msg}");
+	</script>
+</c:if>
 <div class="help-detail-wrap">
 	<h1>${helpDetail.title}</h1>
 	<section class="question-wrap">

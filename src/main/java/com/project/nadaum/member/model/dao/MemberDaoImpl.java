@@ -7,6 +7,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.member.model.vo.Member;
 
 @Repository
@@ -171,8 +172,43 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
-	public Map<String, Object> selectOneMemberAndAttachment(Member member) {
-		return session.selectOne("member.selectOneMemberAndAttachment", member);
+	public Attachment selectMemberProfile(Member member) {
+		return session.selectOne("member.selectMemberProfile", member);
+	}
+
+	@Override
+	public int updateMemberNickname(Member member) {
+		return session.update("member.updateMemberNickname", member);
+	}
+
+	@Override
+	public Member selectOneMemberByEmail(Map<String, Object> email) {
+		return session.selectOne("member.selectOneMemberByEmail", email);
+	}
+
+	@Override
+	public Member selectOneMemberByIdEmail(Map<String, Object> map) {
+		return session.selectOne("member.selectOneMemberByIdEmail", map);
+	}
+
+	@Override
+	public int updateMemberPassword(Map<String, Object> map) {
+		return session.update("member.updateMemberPassword", map);
+	}
+
+	@Override
+	public Member selectOneMemberByPhone(Map<String, Object> map) {
+		return session.selectOne("member.selectOneMemberByPhone", map);
+	}
+
+	@Override
+	public Member selectOneMemberByIdPhone(Map<String, Object> map) {
+		return session.selectOne("member.selectOneMemberByIdPhone", map);
+	}
+
+	@Override
+	public int insertMemberHelp(Map<String, Object> map) {
+		return session.insert("member.insertMemberHelp", map);
 	}
 
 	

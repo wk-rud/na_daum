@@ -3,189 +3,173 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<%@page import="com.project.nadaum.culture.movie.controller.MovieApi"%>
+<%@page import="com.project.nadaum.culture.movie.controller.GetMovieApi"%>
 <jsp:include page="/WEB-INF/views/common/header.jsp" />
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/movie/movieList.css" />
-<style>
-.search-form label{
-padding-right: 8px;
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/movie/movieList.css" />
+ --%>
+<body>
+	<style>
+#container {
+	padding: 0;
 }
-div#culture-container{width:60%; margin:0 auto;text-align:center;}
-.thumnail{width: 30%; }
-#movie_code{
-	display:none;
+
+.container {
+	padding: 0;
+}
+
+section {
+	background-color: #FFFBF5;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: #EEEEEE;
+}
+
+/* 썸네일 이미지 설정*/
+.movie-thumnail {
+	position: relative;
+	padding: 0;
+}
+
+.movie-thumnail img {
+	height: 450px;
+	width: 100%;
+	opacity: 0.75;
+}
+
+.title {
+	position: absolute;
+	top: 30%;
+	left: 60%;
+}
+/*검색 폼 */
+.search-form {
+	/* position: absolute; */
+	position: relative;
+	background: #F2F2F2;
+	left: 30%;
+	bottom: -10%;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 5px 5px 10px grey;
+	margin-bottom: 20px;
+	width: 50%
+}
+
+/* 오렌지색 버튼*/
+.btn {
+	border-radius: 10px;
+	text-decoration: none;
+	color: #fff;
+	position: relative;
+	display: inline-block;
+}
+
+.btn:active {
+	transform: translate(0px, 5px);
+	-webkit-transform: translate(0px, 5px);
+	box-shadow: 0px 1px 0px 0px;
+}
+
+.orange {
+	background-color: #F6953C;
+	box-shadow: 0px 4px 0px 0px #CD6509;
+}
+
+.orange:hover {
+	background-color: #FF983C;
 }
 </style>
-<body>
-	<div class="container">
-		<div class="culture-thumnail">
-			<!-- 썸네일 그림, 타이틀  -->
-			<img
-				src="${pageContext.request.contextPath}/resources/image/movie/movie_popcorn.png"
-				alt="영화간판" />
-			<h1 class="title">Movie</h1>
-			<form class="form-inline search-form">
+	<div class="movie-container">
 
-				<div class="form-group">
-					<label for="Date" class="control-label">기간</label> <input
-						type="text" class="form-control" id="startDate"> <input
-						type="text" class="form-control" id="endDate">
-				</div>
+		<!-- 썸네일 그림, 타이틀  -->
+		<div class="culture-thumnail"></div>
 
-				<div class="form-group">
-					<label for="TRL" class="control-label">지역</label> <select
-						class="form-control" name="TRL" id="TRL">
-						<option value="1">서울</option>
-						<option value="2">경기</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="TRL" class="control-label">장르</label> <select
-						class="form-control" name="TRL" id="TRL">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-					</select>
-				</div>
-				<button type="submit" class="btn orange btn-default">Search</button>
-			</form>
-		</div>
 
-		<!-- 검색 api -->
-		<div class="col-md-12">
-			<h1>영화 검색</h1>
-			<div class="col-md-4">
-				<form>
-					<div class="form-group">
-						<input type="text" class="form-control" id="keyword"
-							placeholder="검색어를 입력하세요">
-						<button type="button" class="btn btn-primary" id="btn-movies-find">검색</button>
-					</div>
+		<!-- 검색창 -->
+		<form class="form-inline search-form">
+			<div class="form-group">
+				<label for="Date" class="control-label">검색</label> <input
+					type="text" class="form-control" id="keyword"
+					placeholder="검색어를 입력하세요.">
 			</div>
-		</div>
+			<button type="submit" class="btn orange btn-default" id="search-btn">검색</button>
+		</form>
+	</div>
 
 
+	<!-- 영화정보진흥원 api -->
+	<div id="movie-container">
 		<div class="py-5">
 			<div class="container">
 				<div class="row hidden-md-up">
-					<div class="col-md-4">
-						<div class="card">
-							<div class="card-block">
-								<h4 class="card-title">[BTS X Futura] HUMBLE SOULS</h4>
-								<p class="card-text p-y-1">HYBE INSIGHT</p>
-								<p class="card-text p-y-1">서울</p>
-								<p class="card-text p-y-1">전시회장</p>
-								<p class="card-text p-y-1">미술</p>
-								<h6 class="card-subtitle text-muted">2021-11-30 ~
-									2022-05-29</h6>
-								<!--  <img class="content-img" src="http://www.culture.go.kr/upload/rdf/21/11/rdf_2021111913292645184.jpg" class="rounded" alt="Cinque Terre" /> -->
-							</div>
 
-						</div>
-					</div>
-					<table id=movie-container>
-					<c:forEach var="i" begin="1" end="10"> 
-
-						<div class="col-md-4">
-							<div class="card">
-								<div class="card-block">
-			
-									<h4 class="card-title">${movieCd}</h4>								
-									<p class="card-text p-y-1" >${movieNm}</p>							
-									<h6 class="card-subtitle text-muted">${prdYear}</h6>									
-									<p class="card-text p-y-1">${openDt}</p>
-									<p class="card-text p-y-1">${typeNm}</p>
-									<p class="card-text p-y-1">${nationAlt}</p>
-									<p class="card-text p-y-1">${genreAlt}</p>
-									<p class="card-trfext p-y-1">${peopleNm}</p>
-									<h6 class="card-subtitle text-muted">
-										<a href="#" class="card-link">Second link</a> <a href="#"
-											class="card-link"><img class="thumnail"
-											src="${movie.imgUrl}" alt="" /></a>
-										<fmt:formatDate value="${movie.pubDate}" pattern="yyyy/MM/dd" />
-								</tr>
-								</div>
+					<c:forEach var="movie" items="${list}">
+						<form action="${pageContext.request.contextPath}/movieDetail?movieCd={movieCode}" method="get" id="movieFrm"> 
+							<div class="col-md-4">
+								
+									<div class="card-block">
+										<h4 class="card-title">${movie.movieCd}</h4>
+										<p class="card-text p-y-1">${movie.movieNm}</p>
+										<h6 class="card-subtitle text-muted">${movie.prdtYear}</h6>
+										<p class="card-text p-y-1">${movie.typeNm}</p>
+										<p class="card-text p-y-1">${movie.nationAlt}</p>
+										<p class="card-trfext p-y-1">${movie.genreAlt}</p>
+										<p class="card-trfext p-y-1">${movie.peopleNm}</p>
+										<h6 class="card-subtitle text-muted" />
+										<a href="#" class="card-link"><input type="hidden"
+											name="movieCd" value="${movie.movieCd}" />Second link</a> <a
+											href="#" class="card-link"> <img class="thumnail"
+											src="${movie.imgUrl}" alt="영화사진" />
+										</a>
+										<button type="submit" class="btn btn-sm btn-outline-secondary"
+											id="goDetail" name="">+More</button>
+										<input type="hidden" id="moviecd" value="${movie.movieCd}"/>
+									</div>
+								
 							</div>
-						</div>
-					 </c:forEach>
-		</table>
-					
-					
-	
-					<table id=movie-container>
-					<c:forEach items="${list}" var="movie">
-
-						<div class="col-md-4">
-							<div class="card">
-								<div class="card-block">
-			
-									<p class="card-text p-y-1" >${movie.code}</p>							
-									<h4 class="card-title">${movie.title}</h4>								
-									<h6 class="card-subtitle text-muted">${movie.director}</h6>									
-									<p class="card-text p-y-1">${movie.actor}</p>
-									<h6 class="card-subtitle text-muted">
-										<a href="#" class="card-link">Second link</a> <a href="#"
-											class="card-link"><img class="thumnail"
-											src="${movie.imgUrl}" alt="" /></a>
-										<fmt:formatDate value="${movie.pubDate}" pattern="yyyy/MM/dd" />
-								</tr>
-								</div>
-							</div>
-						</div>
+						</form>
 					</c:forEach>
-					</table>
-					
+
 				</div>
+
 			</div>
 		</div>
 	</div>
 
+
+	
+
+	<!-- themovie fav movie -->
+	<h1 class="title">Movies</h1>
+	<ul id="top_rated">
+	</ul>
+
 </body>
 <script>
-	/* 검색api 버튼 누를 시  */
-	var main = {
-		init : function() {
-			var _this = this;
-			$('#btn-movies-find').on('click', function() {
-				_this.find();
-			});
-		},
-		find : function() {
-			var keyword = $('#keyword').val();
-			$.ajax({
-				type : 'GET',
-				url : '/movie/moviesearch.do/' + keyword,
-				dataType : 'json',
-				contentType : 'application/json; charset=utf-8',
-			}).done(function(res) {
-				alert(JSON.stringify(res));
-			}).fail(function(error) {
-				alert(JSON.stringify(error));
-			});
-		}
-	};
-	
-	/* 영화불러오기 */
-	
-/* 클릭시 상세보기 */
+/* the movie api 에서 top_rated  불러오기*/
 
-$(() => {
-	$("p[data-code]").click((e) => {
-		// console.log(e.target); // td
-		const code = $tr.data("code");
-		location.href = `${pageContext.request.contextPath}/movie/movieDetail.do?code=\${code}`;
-	});
-});
 
-$()
+/* 페이지 로딩 될때 영화 */
+
+ 
+ /*  버튼 누를 시 영화 상세보기로 이동 */
+ /* $("#goDetail").click((e) => {
+	 const movieCode = $("#moviecd").val();
+	console.log(movieCode);
+	
+ }); */
+ 
+ 	
+ 
+ 	
 </script>
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <script

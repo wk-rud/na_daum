@@ -3,6 +3,8 @@ package com.project.nadaum.culture.movie.model.vo;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.json.JSONObject;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,5 +29,15 @@ public class Movie implements Serializable{/**
 	private Double userRating;
 	private String imgUrl;
 	
+	public Movie(JSONObject itemJson) {
+		this.title = itemJson.getString("title");
+//		this.pubDate = itemJson.getDate("pubDate");
+		this.director = itemJson.getString("director");
+		this.actor = itemJson.getString("actor");
+		this.userRating = itemJson.getDouble("userRating");
+		this.imgUrl = itemJson.getString("imgUrl");
+	}
 	
 }
+
+	

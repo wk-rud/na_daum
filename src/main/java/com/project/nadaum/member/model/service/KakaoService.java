@@ -121,7 +121,7 @@ public class KakaoService {
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd");
 			String sysDay = sdf.format(new Date());
-			String nickname = Math.random() * 999 + sysDay + "닉네임";
+			String nickname = Math.random() * 999 + sysDay + "임시닉네임";
 			
 			userInfo.put("id", id);
 			userInfo.put("name", name);

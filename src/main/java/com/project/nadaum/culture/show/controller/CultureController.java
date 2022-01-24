@@ -26,18 +26,18 @@ public class CultureController {
 	@Autowired
 	private CultureService cultureService;
 	
-	@GetMapping("/culture.do")
-	public void culture(Model model) {
-		List<Culture> list = cultureService.selectCultureList();
-		model.addAttribute("list", list);
-	}
+//	@GetMapping("/culture.do")
+//	public void culture(Model model) {
+//		List<Culture> list = cultureService.selectCultureList();
+//		model.addAttribute("list", list);
+//	}
 	
-	@GetMapping("/cultureDetail.do")
-	public void cultureDetail(@RequestParam String code, Model model) {
-		Culture culture = cultureService.selectOneCulture(code);
-		log.debug("culture = {}", culture);
-		model.addAttribute("culture", culture);
-	}
+//	@GetMapping("/cultureDetail.do")
+//	public void cultureDetail(@RequestParam String code, Model model) {
+//		Culture culture = cultureService.selectOneCulture(code);
+//		log.debug("culture = {}", culture);
+//		model.addAttribute("culture", culture);
+//	}
 	
 	
 }

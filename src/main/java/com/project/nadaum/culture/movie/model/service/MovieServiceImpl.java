@@ -22,30 +22,4 @@ public class MovieServiceImpl implements MovieService {
 	
 
 
-	@Override
-	public List<Movie> selectMovieList() {
-		// TODO Auto-generated method stub
-		return movieDao.selectMovieList();
-	}
-
-	@Override
-	public Movie selectOneMovie(String code) {
-		// TODO Auto-generated method stub
-		return movieDao.selectOneMovie(code);
-	}
-
-//	@Override
-//	public List<Movie> selectMovieList(Map<String, Object> param) {
-//		return movieDao.selectMovieList(param);
-//	}
-	
-	@Override
-	public int selectTotalContent() {
-		return movieDao.selectTotalContent();
-	}
-	
-	@Override
-	public Movie selectOneMovieCollection(String code) {		
-		return movieDao.selectOneMovieCollection(code);
-	}
 }

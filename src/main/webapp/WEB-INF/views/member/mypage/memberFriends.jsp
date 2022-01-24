@@ -18,16 +18,21 @@
 		<div class="friends-section">
 			<c:forEach items="${memberList}" var="ml">
 				<c:forEach items="${friends}" var="fr">
-					<c:if test="${ml.nickname eq fr.friendNickname}">
+					<c:if test="${ml.id eq fr.friendId}">
 						<div class="friend-wrap">
-							<c:if test="${ml.loginType eq 'K'}">
-								<div class="kakao_thumbnail" style="border-radius:50%; width:45px; height: 45px; overflow:hidden; padding: 0;">
-									<img src="${ml.profile}" alt="" style="width:45px; height:45px; object-fit:cover;" />
-								</div>
-							</c:if>
-							<c:if test="${ml.loginType eq 'D'}">
-								<div class="friend-profile"></div>
-							</c:if>
+							<div class="thumbnail-wrap" style="border-radius:50%; width:45px; height: 45px; overflow:hidden; padding: 0;">
+								<c:if test="${ml.loginType eq 'K'}">
+									<img src="${ml.profile}" alt="" style="width:45px; height:45px; object-fit:cover;" />								
+								</c:if>
+								<c:if test="${ml.loginType eq 'D'}">									
+									<c:if test="${ml.profileStatus eq 'N'}">							 		
+										<img src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" style="width:45px; height:45px; object-fit:cover;" />
+									</c:if>						
+									<c:if test="${ml.profileStatus eq 'Y'}">		
+										<img src="${pageContext.request.contextPath}/resources/upload/member/profile/${attach.renamedFilename}" alt="" style="width:45px; height:45px; object-fit:cover;" />										 		
+									</c:if>	
+								</c:if>
+							</div>
 							<div class="friend-name">${ml.nickname}</div>							
 						</div>
 					</c:if>
@@ -40,16 +45,21 @@
 		<div class="followers-section">
 			<c:forEach items="${memberList}" var="ml">
 				<c:forEach items="${follower}" var="fo">
-					<c:if test="${ml.nickname eq fo.followerNickname}">
+					<c:if test="${ml.id eq fo.followerId}">
 						<div class="follower-wrap">
-							<c:if test="${ml.loginType eq 'K'}">
-								<div class="kakao_thumbnail" style="border-radius:50%; width:45px; height: 45px; overflow:hidden; padding: 0;">
-									<img src="${ml.profile}" alt="" style="width:45px; height:45px; object-fit:cover;" />
-								</div>
-							</c:if>
-							<c:if test="${ml.loginType eq 'D'}">
-								<div class="follower-profile"></div>
-							</c:if>
+							<div class="thumbnail-wrap" style="border-radius:50%; width:45px; height: 45px; overflow:hidden; padding: 0;">
+								<c:if test="${ml.loginType eq 'K'}">
+									<img src="${ml.profile}" alt="" style="width:45px; height:45px; object-fit:cover;" />								
+								</c:if>
+								<c:if test="${ml.loginType eq 'D'}">									
+									<c:if test="${ml.profileStatus eq 'N'}">							 		
+										<img src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" style="width:45px; height:45px; object-fit:cover;" />
+									</c:if>						
+									<c:if test="${ml.profileStatus eq 'Y'}">		
+										<img src="${pageContext.request.contextPath}/resources/upload/member/profile/${attach.renamedFilename}" alt="" style="width:45px; height:45px; object-fit:cover;" />										 		
+									</c:if>	
+								</c:if>
+							</div>
 							<div class="follower-name">${ml.nickname}</div>							
 						</div>
 					</c:if>
