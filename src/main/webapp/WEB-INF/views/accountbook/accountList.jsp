@@ -11,7 +11,7 @@
 <sec:authentication property="principal" var="loginMember"/>
 
 <h1>test</h1>
-<div id="account_list">
+<div id="accountListAjax">
 		<c:forEach items="${accountList}" var="account">
 			<form 
 				action="${pageContext.request.contextPath}/accountbook/accountDelete.do"

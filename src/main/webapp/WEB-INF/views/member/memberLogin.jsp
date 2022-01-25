@@ -34,6 +34,7 @@ $(() => {
 		.on("hide.bs.modal", (e) => {
 			location.href='${empty header.referer || header.referer.contains('/member/memberLogin.do') ? pageContext.request.contextPath : header.referer}';
 		});
+	
 });
 </script>
 </head>

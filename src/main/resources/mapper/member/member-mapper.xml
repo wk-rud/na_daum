@@ -65,22 +65,17 @@
 	
 	<!-- 공지 끝 -->
 	
-	<!-- 질문 시작 -->
+	<!-- 좋아요 시작 -->
 	
-	<insert id="insertMemberHelp">
-		insert into help(code, id, category, title, content)
-		values(concat('he-',seq_help_no.nextval), #{id}, #{category}, #{title}, #{content})
+	<insert id="insertHelpLike">
+		insert into likes values(seq_likes_no.nextval, #{id}, #{code})
 	</insert>
 	
-	<select id="selectHelpOneCategory" resultMap="helpMap">
-		select * from help where category like '%'||#{category}||'%' order by reg_date desc
-	</select>
+	<delete id="deleteHelpLike">
+		delete from likes where id = #{id} and code = #{code}
+	</delete>
 	
-	<select id="countHelpOneCategoryCount" resultType="int">
-		select count(*) from help where category = #{category}
-	</select>
-	
-	<!-- 질문 끝 -->
+	<!-- 좋아요 끝 -->
 	
 	<!-- 회원정보 찾기 시작 -->
 	
@@ -174,11 +169,45 @@
 		select code code, id id, category category, title title, reg_date regDate, status status from help where title like '%'||#{value}||'%'
 	</select>
 	
-	<select id="selectOneSelectedHelp" resultMap="helpMap">
-		select * from help where code = #{code}
+	<select id="selectOneSelectedHelp" resultMap="helpNicknameMap">
+		select
+			h.*,
+			m.nickname nickname
+		from
+			help h join member m
+				on h.id = m.id
+		where
+			h.code = #{code}
+	</select>
+	
+	<insert id="insertMemberHelp">
+		insert into help(code, id, category, title, content)
+		values(concat('he-',seq_help_no.nextval), #{id}, #{category}, #{title}, #{content})
+	</insert>
+	
+	<select id="selectHelpOneCategory" resultMap="helpMap">
+		select * from help where category like '%'||#{category}||'%' order by reg_date desc
+	</select>
+	
+	<select id="countHelpOneCategoryCount" resultType="int">
+		select count(*) from help where category = #{category}
 	</select>
 	
 	<!-- help 끝 -->
+	
+	<!-- 도움말 시작 -->
+	
+	<select id="selectMostHelp" resultType="map">
+		select
+			*
+		from(
+			select h.code code, count(*) count from help h join likes l on h.code = l.code WHERE h.code like '%he%' GROUP BY h.code ORDER BY count desc
+		)
+		where
+			rownum <![CDATA[<=]]> 5
+	</select>
+	
+	<!-- 도움말 끝 -->
 		
 	<insert id="insertMember">
 		insert into member(id, password, name, email, address, nickname, auth_key)
@@ -227,6 +256,21 @@
 		<result column="a_title" property="aTitle"/>
 		<result column="a_content" property="aContent"/>
 		<result column="a_reg_date" property="aRegDate"/>
+	</resultMap>
+	
+	<resultMap type="map" id="helpNicknameMap">
+		<id column="CODE" property="code"/>
+		<result column="ID" property="id"/>
+		<result column="CATEGORY" property="category"/>
+		<result column="TITLE" property="title"/>
+		<result column="CONTENT" property="content"/>
+		<result column="REG_DATE" property="regDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="A_CODE" property="aCode"/>
+		<result column="A_TITLE" property="aTitle"/>
+		<result column="A_CONTENT" property="aContent"/>
+		<result column="A_REG_DATE" property="aRegDate"/>
+		<result column="NICKNAME" property="nickname"/>
 	</resultMap>
 	
 	<resultMap type="map" id="announcementMap">

@@ -26,3 +26,20 @@
 .alarmContent{
 	padding: 5px;
 }
+
+/* 도움말 */
+#infowrap{
+	position: absolute;
+	z-index: 9;
+	text-align: center;
+}
+#infowrapheader{
+	cursor: move;
+	padding: 10px;
+}
+#infowrapheader iframe{
+	width: 300px;
+	height: 450px;
+	border-radius: 10px;
+	border: 1px solid lavender;
+}

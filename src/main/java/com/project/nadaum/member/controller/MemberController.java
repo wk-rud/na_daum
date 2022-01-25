@@ -3,20 +3,16 @@ package com.project.nadaum.member.controller;
 import java.beans.PropertyEditor;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.google.gson.JsonObject;
 import com.project.nadaum.common.NadaumUtils;
 import com.project.nadaum.common.vo.Attachment;
+import com.project.nadaum.common.vo.CategoryEnum;
 import com.project.nadaum.member.model.service.KakaoService;
 import com.project.nadaum.member.model.service.MailSendService;
 import com.project.nadaum.member.model.service.MemberService;
@@ -89,6 +86,23 @@ public class MemberController {
 	@GetMapping("/memberEnrollAgreement.do")
 	public void memberEnrollAgreement() {}	
 	
+	@GetMapping("/mypage/memberInfo.do")
+	public void memberInfo(Model model) {
+		List<Map<String, Object>> list = memberService.selectMostHelp();
+		List<Map<String, Object>> helps = memberService.selectAllMembersQuestions();
+		log.debug("list = {}", list);
+		List<Map<String, Object>> mostHelps = new ArrayList<>();
+		for(int i = 0; i < helps.size(); i++) {
+			for(int j = 0; j < list.size(); j++) {
+				if(helps.get(i).get("code").equals(list.get(j).get("CODE"))) {
+					mostHelps.add(helps.get(i));
+				}
+			}
+		}
+		log.debug("mostHelps = {}", mostHelps);
+		model.addAttribute("mostHelps", mostHelps);
+	}
+	
 	@GetMapping("/mypage/memberHelpOneCategory.do")
 	public void memberHelpOneCategory(@RequestParam String category, @RequestParam(defaultValue="1") int cPage, Model model, HttpServletRequest request) {
 					
@@ -104,20 +118,8 @@ public class MemberController {
 		log.debug("totalContent = {}", totalContent);
 		String url = request.getRequestURI();
 		String pagebar = NadaumUtils.getPagebar(cPage, limit, totalContent, url);
-		String check = "";
-		if("dy".equals(category)) {
-			check = "다이어리";
-		}else if("ab".equals(category)) {
-			check = "가계부";
-		}else if("me".equals(category)) {
-			check = "메모";
-		}else if("fr".equals(category)) {
-			check = "친구";
-		}else if("mo".equals(category)) {
-			check = "영화";
-		}else if("cu".equals(category)) {
-			check = "문화";
-		}
+		String check = CategoryEnum._valueOf(category).toString();
+		
 		model.addAttribute("check", check);
 		model.addAttribute("pagebar", pagebar);
 		model.addAttribute("help", help);
@@ -129,7 +131,7 @@ public class MemberController {
 		log.debug("map = {}", map);
 		map.put("id", member.getId());
 		int result = memberService.insertMemberHelp(map);
-		return "redirect:/member/mypage/memberHelpEnroll.do";
+		return "redirect:/member/mypage/memberHelp.do";
 	}
 	
 	@RequestMapping(value="/mypage/uploadSummernoteImageFile.do", produces = "application/json; charset=utf8")
@@ -633,6 +635,20 @@ public class MemberController {
 		}		
 		return ResponseEntity.ok(result);
 		
+	}
+	
+	@PostMapping("/memberChangeLike.do")
+	public ResponseEntity<?> memberChangeLike(@RequestParam Map<String, Object> map, @AuthenticationPrincipal Member member){
+		map.put("id", member.getId());
+		log.debug("map = {}", map);
+		int result = 0;
+		if("t".equals(map.get("flag"))) {
+			result = memberService.insertHelpLike(map);
+		}else {
+			result = memberService.deleteHelpLike(map);
+		}
+		map.put("result", result);
+		return ResponseEntity.ok(map);
 	}
 	
 	@InitBinder

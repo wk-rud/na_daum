@@ -82,17 +82,19 @@
 		)
 	</select>
 	
-	<select id="income_expense_filter" resultMap="accountbookMap">
-	select
-   	 *
-	from
-    	account_book
-	where
-    	id = #{id}
-		and 
-		income_expense = #{income_expense}
+	<select id="incomeExpenseFilter" resultMap="accountbookMap">
+		select
+	   	 	*
+		from
+	    	account_book
+		where
+	    	id = #{id}
+			and 
+			income_expense = #{income_expense}
+		order by
+			reg_date desc
 	</select>
-	
+		
 	
 	
 	<resultMap type="Map" id="accountbookMap">
@@ -103,7 +105,7 @@
 		<result column="reg_date" property="regDate"/>
 		<result column="income_expense" property="incomeExpense"/>
 		<result column="payment" property="payment"/>
-		<result column="cateogory" property="category"/>
+		<result column="category" property="category"/>
 		<result column="total" property="total"/>
 	</resultMap>
 

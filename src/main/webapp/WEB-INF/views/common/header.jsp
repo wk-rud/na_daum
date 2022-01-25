@@ -28,7 +28,6 @@
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
 <!-- bootstrap css -->
@@ -184,18 +183,18 @@ input[id="switch"]{
 					<!-- 다크모드 실험 중 -->
 					<!-- <button onclick='changeToDarkMode();' class="btn btn-light">Dark</button> -->
 					
+					<!-- 도움말 버튼 -->
 					<ul class="navbar-nav justify-content-end">
-						<li class="nav-item"><a id="help" class="nav-link" href="#">
-						
-						<svg width="16px" height="16px" viewBox="0 0 16 16"
-								xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-								class="bi bi-question-circle">
-								  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-								  <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
-						</svg>
-						</a>
+						<li class="nav-item">											
+							<a id="help" class="nav-link">					
+								<svg width="16px" height="16px" viewBox="0 0 16 16"	xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-question-circle">
+									<path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+									<path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
+								</svg>
+							</a>
 						</li>
 					</ul>
+					
 					<ul class="navbar-nav justify-content-end">
 						<li class="nav-item">
 						</li>
@@ -222,10 +221,16 @@ input[id="switch"]{
 			</nav>
 
 		</header>
-
+		<div id="infowrap">
+			<div id="infowrapheader">
+				<iframe id="nadaumInfo" title="Nadaum Info" src="${pageContext.request.contextPath}/member/mypage/memberInfo.do" >
+				</iframe>
+			</div>
+		</div>
 		<script>
 			$(() => {
-				countBedge();
+				countBedge();	
+				$("#infowrap").hide();
 			});
 			
 			$("#profile").click(function(){
@@ -342,9 +347,50 @@ input[id="switch"]{
 				});	
 		    };
 		    
-		   
+		    /* iframe보이기 */
+		    $("#help").click((e) => {
+		    	$("#infowrap").show();
+		    });
 		    
-		    
+		    /* iframe 드래그 */
+		    dragElement(document.getElementById("infowrap"));
+		  	
+		  	function dragElement(element) {		  		
+		  	
+		  		var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+		  		if(document.getElementById(element.id + "header")){
+		  			document.getElementById(element.id + "header").onmousedown = dragMouseDown;
+		  		}else{
+		  			element.onmousedown = dragMouseDown;
+		  		}
+		  			  	
+			  	function dragMouseDown(e){
+			  		e = e || window.event;
+			  		e.preventDefault();
+			  		pos3 = e.clientX;
+			  		pos4 = e.clientY;
+			  		document.onmouseup = closeDragElement;
+			  		document.onmousemove = elementDrag;
+			  	};
+			  	
+			  	function elementDrag(e) {
+			  		e = e || window.event;
+			        e.preventDefault();
+			        pos1 = pos3 - e.clientX;
+			        pos2 = pos4 - e.clientY;
+			        pos3 = e.clientX;
+			        pos4 = e.clientY;
+			        element.style.top = (element.offsetTop - pos2) + "px";
+			        element.style.left = (element.offsetLeft - pos1) + "px";
+			  	};
+			  	
+			  	function closeDragElement() {
+			  		document.onmouseup = null;
+			        document.onmousemove = null;
+			  	};
+		  	
+		  	};
+			
 		    
 		    
 		</script>

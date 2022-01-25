@@ -8,6 +8,8 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="가계부" name="title"/>
 </jsp:include>
+<meta id="_csrf" name="_csrf" content="${_csrf.token}" />
+<meta id="_csrf_header" name="_csrf_header" content="${_csrf.headerName}" />
 <sec:authentication property="principal" var="loginMember"/>
 
 <link href='${pageContext.request.contextPath}/resources/css/accountbook/main.css' rel='stylesheet' />
@@ -15,12 +17,14 @@
 
 	<div class="modal-background">
 	<div class="insertAccountModal">
-		<h2>가계부 테스트</h2>
+		<h2>가계부 입력</h2>
 		<form 
 			name="insertFrm" 
 			method="POST"
 			action="${pageContext.request.contextPath}/accountbook/accountInsert.do">
 		<table>
+		<input type="hidden" name="income_expense" id="income" value="I" />
+		<input type="hidden" name="income_expense" id="expense" value="E" />
 			<tr>
 				<td colspan="2">
 					<input type="date" name="reg_date" id="reg_date" />
@@ -28,57 +32,53 @@
 			</tr>
 			<tr>
 				<td>
-					<label for="income_expense">수입</label>
-					<input type="radio" name="income_expense" id="income" value="I" checked/>
+					<label for="payment">
+						<input type="radio" name="payment" id="" value ="cash"/> 현금
+					</label>
 				</td>
 				<td>
-					<label for="income_expense">지출</label>
-					<input type="radio" name="income_expense" id="expense" value="E"/>
+					<label for="payment">
+						<input type="radio" name="payment" id="" value ="card"/> 카드
+					</label>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="">
-					<select name="payment" id="">
-						<option value="cash" name="payment">현금</option>
-						<option value="card" name="payment">카드</option>
+				<td>
+					<select name="income_expense" id="main">
+						<option value="I">수입</option>
+						<option value="E">지출</option>
 					</select>
-					<select name="category" id="income_category">
+					<select name="category" id="sub">
 						<option value="급여">급여</option>
 						<option value="용돈">용돈</option>
-						<option value="기타(i)">기타</option>
+						<option value="기타">기타</option>
 					</select>
-					<!-- <select name="category" id="expense_cateogory">
-						<option value="식비">식비</option>
-						<option value="쇼핑">쇼핑</option>
-						<option value="저축">저축</option>
-						<option value="유흥">유흥</option>
-						<option value="생활비">생활비</option>
-						<option value="자기계발">자기계발</option>
-						<option value="기타(e)">기타</option>
-					</select> -->
-						
 				</td>
 			</tr>
 			<tr>
 				<td colspan="2">
-					<label for="detail">내역</label>
-					<input type="text" name="detail" id="" placeholder="내역을 입력하세요." value="용돈" />
+					<label for="detail">
+						<input type="text" name="detail" id="" placeholder="내역을 입력하세요" />
+					</label>
 				</td>
 			</tr>
 			<tr>
-				<td colspan="2"> 
-					<label for="price">금액</label>
-					<input type="text" name="price" id="" placeholder="금액을 입력하세요" value="300000" />
+				<td colspan="2">
+					<label for="price">
+						<input type="text" name="price" id="insertPrice" placeholder="금액을 입력하세요" onkeyup="numberWithCommas(this.value)" />
+					</label>
 				</td>
 			</tr>
 			<tr>
-				<input type="hidden" name="id" id="id" value="${loginMember.id}" />
-				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+				<td>
+					<input type="hidden" name="id" id="id" value="${loginMember.id}" />
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+				</td>
 			</tr>
 		</table>
-			<input type="submit" value="제출하기" />
+			<input type="submit" value="등록" />
 		</form>
-			<button id="closeBtn">닫기</button>
+			<button id="modalCloseBtn">X</button>
 	</div>
 	</div>
 
@@ -90,43 +90,30 @@
 			<br>목표로 설정한 금액의 50%를 소비하셨어요! 성공을 위해서 남은 기간 절대 존버해
 			<br>아무튼... 이런 랜덤 멘트...
 		</div>
-		<div class="chart box">
-		</div>
+
 	</section>
 	<section class="box2">
 		<div class="search_box">
-			<form action="">
+			<form 
+				action=""
+				id="serchFrm">
 				<h3>검색</h3>
-				<select name="mainCategory" id="mainCategory">
+				<select name="income_expense" id="mainCategory">
 					<option value="" selected>대분류</option>
-					<option value=""></option>
+					<option value="I">수입</option>
+					<option value="E">지출</option>
 				</select>
-				<select name="subCategory" id="subCategory">
+				<select name="category" id="subCategory">
 					<option value="">소분류</option>
 				</select>
-				<input type="text" name="search" id="search">
+				<input type="text" name="detail" id="search">
 				<input type="submit" value="검색">
 			</form>
 		</div>
-		<!-- 화면만 잡고 리스트 싹 불러오기 -->
-		<div class="account_list">
-		<button id="income_filter_btn")>수입</button>
-		<button id="expense_filter_btn">지출</button>
-		<a href="#">전체보기</a>
-			<form 
-				action="${pageContext.request.contextPath}/accountbook/accountDelete.do"
-				method="POST"
-				name="deleteFrm">
-				<table class="account_list_table">
-					<%-- <tr>
-						<td rowspan="2">${account.incomeExpense}</td>
-						<td colspan="2"><fmt:formatDate pattern="yyyy-MM-dd" value="${account.regDate}"/></td>
-						<td>${account.price}</td>
-					</tr>		 --%>			
-				</table>
-						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-			</form>
-
+		<button id="AllListBtn" onclick="AllList();">전체보기</button>
+		<button class="FilterBtn" id="incomeFilterBtn">수입</button>
+		<button class="FilterBtn" id="expenseFilterBtn">지출</button>
+		<div id="account_list">
 		</div>
 	</section>
 	<section class="box3">
@@ -153,8 +140,8 @@
 		</div>
 	</section>
 
-	
-	<script src='${pageContext.request.contextPath}/resources/js/accountbook/main.js'></script>
+<script src='${pageContext.request.contextPath}/resources/js/accountbook/main.js'></script>
+<script>
 
-
-<jsp:include page="/WEB-INF/views/common/footer.jsp" />
+</script>
+<%-- <jsp:include page="/WEB-INF/views/common/footer.jsp" /> --%>

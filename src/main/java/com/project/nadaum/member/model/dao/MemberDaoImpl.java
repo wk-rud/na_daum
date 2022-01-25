@@ -230,6 +230,21 @@ public class MemberDaoImpl implements MemberDao {
 		return session.selectList("member.selectLikesCheck", param);
 	}
 
+	@Override
+	public int insertHelpLike(Map<String, Object> map) {
+		return session.insert("member.insertHelpLike",map);
+	}
+
+	@Override
+	public int deleteHelpLike(Map<String, Object> map) {
+		return session.delete("member.deleteHelpLike", map);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectMostHelp() {
+		return session.selectList("member.selectMostHelp");
+	}
+
 	
 	
 	
