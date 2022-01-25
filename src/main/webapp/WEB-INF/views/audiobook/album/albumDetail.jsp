@@ -82,7 +82,7 @@
 					<td style="vertical-align: middle;"> 1분 미리듣기 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
 					<span style="display: inline-block;text-align:right"><img class="play-icon"
 						style="width:100px;"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"> </span></td>
 				</tr>
 			</tbody>
@@ -145,7 +145,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td style="vertical-align: middle;">베토벤 비창 2악장</td>
 					<td  style="vertical-align: middle;"><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 00:01 ${album.time_stamp[0]}</td>
 		
@@ -157,7 +157,7 @@
 						alt="..." class="img-thumbnail" style=""></td>
 					<td style="vertical-align: middle;">리스트 사랑의 꿈</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="icon2"></td>
 					<td style="vertical-align: middle;"> 05:11 ${album.time_stamp[1]}</td>
 				</tr>
@@ -168,7 +168,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td style="vertical-align: middle;">쇼팽 폴로네이즈 영웅</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="icon3"></td>
 					<td style="vertical-align: middle;"> 09:33 ${album.time_stamp[2]}</td>
 				</tr>
@@ -179,7 +179,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td style="vertical-align: middle;">슈베르트 악흥의 순간 3번</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 16:37  ${album.time_stamp[3]}</td>
 
@@ -191,7 +191,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td style="vertical-align: middle;">라벨 물의 유희</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 18:29 ${album.time_stamp[4]}</td>
 
@@ -203,7 +203,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td style="vertical-align: middle;">쇼팽 스케르초 2번​</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 23:45  ${album.time_stamp[5]}</td>
 
@@ -343,10 +343,12 @@
             seekingVol = false,
             rightClick = false,
             apActive = false,
+            
             // playlist vars
             pl,
             plUl,
             plLi,
+            /* 동적으로 생성됨. */
             tplList =
                 '<li class="pl-list" data-track="{count}">' +
                 '<div class="pl-list__track">' +
@@ -368,8 +370,9 @@
                 '</button>' +
                 '</li>',
             // settings
+            
             settings = {
-                volume: 0.6,
+                volume: 0.6, 
                 changeDocTitle: true,
                 confirmClose: true,
                 autoPlay: false,
@@ -1099,7 +1102,7 @@ document.getElementById('addSongs').addEventListener('click', function (e) {
 		const icon = $('#icon');
 		alert("버튼클릭");
 		const icon = document.getElementById("play-icon");
-		const url_new = url + '/resources/images/pause.png';
+		const url_new = url + '/resources/audiobook/images/pause.png';
 		console.log(url_new)
 	});
 </script>
@@ -1132,10 +1135,10 @@ document.getElementById('addSongs').addEventListener('click', function (e) {
 		console.log(icon);
 		if (mySong.paused) {
 			mySong.play();
-			icon.src = "${pageContext.request.contextPath}/resources/images/pause.png";
+			icon.src = "${pageContext.request.contextPath}/resources/images/audiobook/pause.png";
 		} else {
 			mySong.pause();
-			icon.src = "${pageContext.request.contextPath}/resources/images/play.png";
+			icon.src = "${pageContext.request.contextPath}/resources/images/audiobook/play.png";
 		}
 	}
 </script>

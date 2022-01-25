@@ -97,7 +97,7 @@ input[id="switch"] {
 						aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
-					<a class="navbar-brand" href="${pageContext.request.contextPath}/audiobook/main">Le Café Livres</a>
+					<a class="navbar-brand" href="${pageContext.request.contextPath}/audiobook">Le Café Livres</a>
 					<div class="collapse navbar-collapse" id="navbarTogglerDemo03">
 						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 							<li class="nav-item"><a class="nav-link active"
@@ -108,8 +108,21 @@ input[id="switch"] {
 
 					</div>
 				</div>
-
-
+				<ul class="navbar-nav justify-content-end">
+                   <li class="nav-item dropdown">
+                   	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                   	data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+                       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                       <!-- 각자페이지 링크거시면 됩니다 -->
+                           <a class="dropdown-item" href="https://www.naver.com">메인</a> 
+                           <a class="dropdown-item" href="${pageContext.request.contextPath}/accountbook/accountbook.do">가계부</a> 
+                           <a class="dropdown-item" href="${pageContext.request.contextPath}/culture/cultureBoardList.do">문화생활</a>
+                           <a class="dropdown-item" href="${pageContext.request.contextPath}/movie/movieList.do">영화</a> 
+                           <a class="dropdown-item" href="${pageContext.request.contextPath}/audiobook/">오디오북</a> 
+                           <a class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>
+                           <a class="dropdown-item" href="${pageContext.request.contextPath}/calendar/calendarView.do">캘린더</a>
+                       </div></li>
+               </ul>
 				<ul class="navbar-nav justify-content-end">
 					<li class="nav-item">
 						<div class="form-check pl-0 toggle darkmode">

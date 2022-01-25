@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="album">
+
+	<select id="selectAlbumList" resultType="album">
+		select
+			a.*,
+			(select count(*) from album_attachment where album_code = a.code)
+				attach_count
+		from
+			album a
+		order by
+			code desc
+
+	</select>
+
+
+	<insert id="insertAlbum" parameterType="album">
+		insert into 
+			album(code,title,provider,content,creator,price,kind)
+		values(
+			#{code},
+			#{title},
+			#{provider},
+			#{content},
+			#{creator},
+			#{price},
+			#{kind},
+		)
+	</insert>
+	
+	<insert id ="insertAttachment">
+		insert into
+			album_attachment(no, album_code, original_filename, renamed_filename)
+		values(
+			seq_attachment_no.nextval,
+			#{albumCode},
+			#{originalFilename},
+			#{renamedFilename}
+		)
+	</insert>
+	
+	<select id="selectOneAlbum" resultType="album">
+		select
+			*
+		from
+			album
+		where
+			code=#{code}
+	
+	</select>
+	<select id="selectAttachmentListByAlbumCode" resultType="albumAttachment">
+		select
+			*
+		from
+			album_attachment
+		where 
+			album_code= #{albumCode}
+	</select>
+
+	<select id="selectOneAlbumCollection" resultMap="albumCollectionMap">
+		select
+			a.*,
+			at.*
+			a.code attach_code
+		from
+			album a
+				left join album_attahment at
+					on a.code= at.album_code
+		where
+			a.code=#{code}
+	</select>
+	
+	<select id= "selectOneAttachment" resultType="albumAttachment"></select>
+</mapper>

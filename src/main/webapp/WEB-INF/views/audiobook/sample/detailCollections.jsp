@@ -8,7 +8,7 @@
 	<jsp:param value="Le Café Livres" name="title" />
 </jsp:include>
 <link rel="stylesheet"
-	href="${pageContext.request.contextPath}/resources/css/track.css" />
+	href="${pageContext.request.contextPath}/resources/css/audiobook/track.css" />
 <link rel="script"
 	href="${pageContext.request.contextPath}/resources/js/player.js"/>
 <style>
@@ -81,7 +81,7 @@
 					<td style="vertical-align: middle;"> 1분 미리듣기 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
 					<span style="display: inline-block;text-align:right"><img class="play-icon"
 						style="width:100px;"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"> </span></td>
 				</tr>
 			</tbody>
@@ -144,7 +144,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td class="track-name" style="vertical-align: middle;">Samba Isobel</td>
 					<td  style="vertical-align: middle;"><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td  style="vertical-align: middle;"> 4:33 ${album.time_stamp[0]}</td>
 		
@@ -156,7 +156,7 @@
 						alt="..." class="img-thumbnail" style=""></td>
 					<td style="vertical-align: middle;">Loopster</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="icon2"></td>
 					<td style="vertical-align: middle;"> 3:02 ${album.time_stamp[1]}</td>
 				</tr>
@@ -167,7 +167,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td class="track-name" style="vertical-align: middle;">Bossa Antigua</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="icon3"></td>
 					<td style="vertical-align: middle;"> 4:43 ${album.time_stamp[2]}</td>
 				</tr>
@@ -178,7 +178,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td class="track-name" style="vertical-align: middle;">Arroz Con Pollo</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 2:42  ${album.time_stamp[3]}</td>
 
@@ -190,7 +190,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td class="track-name" style="vertical-align: middle;">Night in Venice</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 3:38 ${album.time_stamp[4]}</td>
 
@@ -202,7 +202,7 @@
 						alt="..." class="img-thumbnail"></td>
 					<td class="track-name" style="vertical-align: middle;">Hard Boiled​</td>
 					<td><img class="play-icon"
-						src="${pageContext.request.contextPath}/resources/images/play.png"
+						src="${pageContext.request.contextPath}/resources/images/audiobook/play.png"
 						id="play"></td>
 					<td style="vertical-align: middle;"> 3:01  ${album.time_stamp[5]}</td>
 

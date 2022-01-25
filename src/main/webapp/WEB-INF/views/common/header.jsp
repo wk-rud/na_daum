@@ -131,7 +131,7 @@ input[id="switch"]{
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/accountbook/accountbook.do">가계부</a> 
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/culture/cultureBoardList.do">문화생활</a>
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/movie/movieList.do">영화</a> 
-                                <a class="dropdown-item" href="https://audioclip.naver.com">오디오북</a> 
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/audiobook/">오디오북</a> 
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/calendar/calendarView.do">캘린더</a>
                             </div></li>
