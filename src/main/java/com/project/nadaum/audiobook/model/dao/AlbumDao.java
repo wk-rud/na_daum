@@ -24,4 +24,6 @@ public interface AlbumDao {
 
 	AlbumAttachment selectOneAtttachment(String code);
 
+	List<Album> selectAlbumList();
+
 }

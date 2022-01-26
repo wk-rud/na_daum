@@ -69,4 +69,9 @@ public class AlbumServiceImpl implements AlbumService{
 	public AlbumAttachment selectOneAtttachment(String code) {
 		return albumDao.selectOneAtttachment(code);
 	}
+
+	@Override
+	public List<Album> selectAlbumList() {
+		return albumDao.selectAlbumList();
+	}
 }

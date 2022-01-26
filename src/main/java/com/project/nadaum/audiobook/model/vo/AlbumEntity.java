@@ -24,5 +24,6 @@ public class AlbumEntity implements Serializable{
 	private Date regDate;
 	private String playTime;
 	private String kind;
+	private int playCount;
 	 
 }

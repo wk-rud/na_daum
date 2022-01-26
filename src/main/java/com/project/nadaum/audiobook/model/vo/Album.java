@@ -19,11 +19,14 @@ public class Album extends AlbumEntity implements Serializable{
 	
 	private static final long serialVersionUID = 6498154507783817520L;
 
+	private int attachCount;
+	
 	private List<AlbumAttachment> attachments;
 	
-	public Album(String code, String title, String provider,String content,String creator,int price, Date regDate, String playTime, String kind,
+	public Album(String code, String title, String provider,String content,String creator,int price, Date regDate, String playTime, String kind, int playCount,int attachCount,
 			List<AlbumAttachment> attachments) {
-		super(code, title, provider, content, creator, price,regDate,playTime,kind);
+		super(code, title, provider, content, creator, price,regDate,playTime,kind,playCount);
+		this.attachCount= attachCount;
 		this.attachments = attachments;
 	}
 	 

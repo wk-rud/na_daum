@@ -19,18 +19,16 @@ public class AlbumDaoImpl implements AlbumDao {
 	
 	@Override
 	public List<Album> selectAlbumList(Map<String, Object> param) {
-		
 		int offset= (int) param.get("offset");
 		int limit = (int) param.get("limit");
 		RowBounds rowBounds = new RowBounds(offset,limit);
-		
-		
+			
 		return session.selectList("album.selectAlbumList", null, rowBounds);
 	}
 
 	@Override
 	public int selectTotalContent() {
-		return session.selectOne("album.selectTotaContent");
+		return session.selectOne("album.selectTotalContent");
 	}
 
 	@Override
@@ -62,6 +60,11 @@ public class AlbumDaoImpl implements AlbumDao {
 	@Override
 	public AlbumAttachment selectOneAtttachment(String code) {
 		return session.selectOne("album.selectOneAlbum",code);
+	}
+
+	@Override
+	public List<Album> selectAlbumList() {
+		return session.selectList("album.selectAlbumList");
 	}
 
 }

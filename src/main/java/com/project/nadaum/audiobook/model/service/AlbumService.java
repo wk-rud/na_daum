@@ -22,4 +22,6 @@ public interface AlbumService {
 
 	AlbumAttachment selectOneAtttachment(String code);
 
+	List<Album> selectAlbumList();
+
 }

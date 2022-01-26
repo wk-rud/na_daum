@@ -13,9 +13,13 @@
 			album a
 		order by
 			code desc
-
 	</select>
-
+	<select id="selectTotalContent" resultType="_int">
+		select
+			count(*)
+		from
+			album
+	</select>
 
 	<insert id="insertAlbum" parameterType="album">
 		insert into 
@@ -27,7 +31,7 @@
 			#{content},
 			#{creator},
 			#{price},
-			#{kind},
+			#{kind}
 		)
 	</insert>
 	
@@ -51,6 +55,7 @@
 			code=#{code}
 	
 	</select>
+	
 	<select id="selectAttachmentListByAlbumCode" resultType="albumAttachment">
 		select
 			*
@@ -73,5 +78,7 @@
 			a.code=#{code}
 	</select>
 	
-	<select id= "selectOneAttachment" resultType="albumAttachment"></select>
+	<select id= "selectOneAttachment" resultType="albumAttachment">
+	
+	</select>
 </mapper>
