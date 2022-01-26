@@ -74,11 +74,11 @@ $(() => {
 						<span class="text-danger">아이디 또는 비밀번호가 일치하지 않습니다.</span>
 					</c:if>
 					<input
-						type="text" class="form-control" value="honggd" id="input-id"
+						type="text" class="form-control" value="testid" id="input-id"
 						placeholder="아이디" required>					
 					<br /> 
 					<input
-						type="password" class="form-control" value="1234" id="input-password"
+						type="password" class="form-control" value="qwer1234" id="input-password"
 						placeholder="비밀번호" required>
 				</div>
 				<div class="modal-footer">

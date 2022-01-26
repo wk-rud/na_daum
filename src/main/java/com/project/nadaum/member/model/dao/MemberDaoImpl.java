@@ -18,8 +18,8 @@ public class MemberDaoImpl implements MemberDao {
 	private SqlSessionTemplate session;
 
 	@Override
-	public Member selectOneMember(String id) {
-		return session.selectOne("member.selectOneMember", id);
+	public Member selectOneMember(Map<String, Object> idMap) {
+		return session.selectOne("member.selectOneMember", idMap);
 	}
 
 	@Override
@@ -243,6 +243,11 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public List<Map<String, Object>> selectMostHelp() {
 		return session.selectList("member.selectMostHelp");
+	}
+
+	@Override
+	public int updateMemberPhone(Map<String, Object> map) {
+		return session.update("member.updateMemberPhone", map);
 	}
 
 	

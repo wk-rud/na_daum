@@ -48,6 +48,14 @@
 		update member set nickname = #{nickname} where id = #{id}
 	</update>
 	
+	<!-- 전화번호 등록 -->
+	
+	<update id="updateMemberPhone">
+		update member set phone = #{phone} where id = #{id}
+	</update>
+	
+	<!-- 전화번호 등록 -->
+	
 	<!-- 공지 시작 -->
 	
 	<select id="selectLikesCheck" resultMap="likesMap">
@@ -88,7 +96,11 @@
 	</select>
 	
 	<update id="updateMemberPassword">
-		update member set password = #{password} where email = #{email}
+		update member set password = #{password} 
+		<where>
+			<if test="email != null">and email = #{email}</if>
+			<if test="id != null">and id = #{id}</if>
+		</where>
 	</update>
 	
 	<select id="selectOneMemberByPhone" resultType="member">

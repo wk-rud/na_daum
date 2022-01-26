@@ -185,7 +185,7 @@ $("#enroll-btn").click((e) => {
 
 	// 비밀번호	
 	if(! /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,15}$/.test($password.val())){
-        alert("비밀번호는 숫자와 영문이 포함되야 합니다.");
+        alert("비밀번호는 숫자와 영문이 포함된 8~15자리입니다");
         $enrollCarousel.carousel(0);
 		$password.focus();
 		return false;

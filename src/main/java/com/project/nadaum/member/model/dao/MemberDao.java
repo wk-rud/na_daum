@@ -8,7 +8,7 @@ import com.project.nadaum.member.model.vo.Member;
 
 public interface MemberDao {
 
-	Member selectOneMember(String id);
+	Member selectOneMember(Map<String, Object> idMap);
 
 	int insertMember(Member member);
 
@@ -97,6 +97,8 @@ public interface MemberDao {
 	int deleteHelpLike(Map<String, Object> map);
 
 	List<Map<String, Object>> selectMostHelp();
+
+	int updateMemberPhone(Map<String, Object> map);
 
 
 

@@ -28,7 +28,7 @@ public class MessageService {
 	private DefaultMessageService messageService;
 	
 	private Properties prop = new Properties();
-	
+		
 	public MessageService() throws IOException {
 		File filepath = new File(MessageService.class.getResource("/smssource.properties").getPath());
 		try {
@@ -69,7 +69,7 @@ public class MessageService {
 		String text = "[나:다움] 아이디 찾기 문자입니다. 회원님의 아이디는 " + id + "입니다.";
 		
 		map.put("to", member.getPhone());
-		map.put("from", "01099276140");
+		map.put("from", "");
 		map.put("text", text);
 		
 		sendMessage(map);
@@ -82,10 +82,22 @@ public class MessageService {
 		String text = "[나:다움] 비밀번호 찾기 문자입니다. 임시 비밀번호 : " + password;
 		
 		map.put("to", member.getPhone());
-		map.put("from", "01099276140");
+		map.put("from", "");
 		map.put("text", text);
 		
 		sendMessage(map);
 	}
+
+	public void sendAuthenticationNum(Map<String, Object> map) {
+		Map<String, String> sendMap = new HashMap<>();
+		String text = "[나:다움] 인증번호입니다. [" + (String)map.get("num") + "]";
+		String sender = prop.getProperty("from");
+		sendMap.put("to", (String)map.get("phone"));
+		sendMap.put("from", sender);
+		sendMap.put("text", text);
+		
+		sendMessage(sendMap);
+	}
+	
 
 }

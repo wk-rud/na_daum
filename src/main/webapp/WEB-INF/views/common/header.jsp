@@ -89,6 +89,11 @@ input[id="switch"]{
 <c:if test="${not empty msg}">
 	<script>
 		alert("${msg}");
+		<c:if test="${not empty check}">
+			$(() => {
+				document.logoutFrm.submit();				
+			});
+		</c:if>
 	</script>
 </c:if>
 </head>
@@ -202,19 +207,18 @@ input[id="switch"]{
 					<!--로그아웃  -->
 					<ul class="navbar-nav justify-content-end">
 						<li class="nav-item">
-						<form
-				    		name="logoutFrm"
-				    		method="POST"
-				    		action="${pageContext.request.contextPath}/member/memberLogout.do">
-					    	<button id="sign-out" class="nav-link" type="submit">
-								<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-								<path d="M13 12H22M22 12L18.6667 8M22 12L18.6667 16" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								<path d="M14 7V5.1736C14 4.00352 12.9999 3.08334 11.8339 3.18051L3.83391 3.84717C2.79732 3.93356 2 4.80009 2 5.84027V18.1597C2 19.1999 2.79733 20.0664 3.83391 20.1528L11.8339 20.8195C12.9999 20.9167 14 19.9965 14 18.8264V17" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-								</svg>
-							</button>
-							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-				    	</form>
-						
+							<form
+					    		name="logoutFrm"
+					    		method="POST"
+					    		action="${pageContext.request.contextPath}/member/memberLogout.do">
+						    	<button id="sign-out" class="nav-link" type="submit">
+									<svg width="24px" height="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<path d="M13 12H22M22 12L18.6667 8M22 12L18.6667 16" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									<path d="M14 7V5.1736C14 4.00352 12.9999 3.08334 11.8339 3.18051L3.83391 3.84717C2.79732 3.93356 2 4.80009 2 5.84027V18.1597C2 19.1999 2.79733 20.0664 3.83391 20.1528L11.8339 20.8195C12.9999 20.9167 14 19.9965 14 18.8264V17" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								</button>
+								<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+					    	</form>						
 						</li>	
 					</ul>
 				</div>
@@ -228,7 +232,7 @@ input[id="switch"]{
 			</div>
 		</div>
 		<script>
-			$(() => {
+			$(() => {				
 				countBedge();	
 				$("#infowrap").hide();
 			});

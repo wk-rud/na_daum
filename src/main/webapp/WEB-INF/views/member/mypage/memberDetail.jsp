@@ -62,12 +62,38 @@
 						<input type="submit" class="btn btn-outline-success" value="수정" >
 						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 					</form>
+					<button type="button" class="btn btn-secondary" onclick="changePw();">비밀번호 수정</button>
+					<form action="${pageContext.request.contextPath}/member/mypage/enrollPhone.do">
+						<div class="enroll-phone-wrap">
+							<div class="enroll-phone-wrap-title">
+								<span>핸드폰 등록</span>
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<button class="btn btn-outline-secondary" id="enrollPhone" type="submit">등록</button>
+								</div>
+								<input type="tel" name="ePhone" id="ePhone" placeholder="-없이 번호만 입력해주세요" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+							</div>
+						</div>
+					</form>
 				</div>				
 			</div>
 			
 			
 		
 			<script>
+			$("#enrollPhone").click((e) => {
+				if(!/01[016789][^0][0-9]{2,3}[0-9]{3,4}/.test($("#ePhone").val())){
+					alert('유효하지 않은 번호입니다.');
+					return false;
+				}
+				return true;
+			});
+			
+			const changePw = () => {
+				location.href="${pageContext.request.contextPath}/member/mypage/changePassword.do";
+			};
+			
 			$(memberUpdateFrm).submit((e) => {
 				e.preventDefault();
 				

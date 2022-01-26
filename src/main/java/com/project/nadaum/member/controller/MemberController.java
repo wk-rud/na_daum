@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.ResponseEntity;
@@ -85,6 +86,53 @@ public class MemberController {
 	
 	@GetMapping("/memberEnrollAgreement.do")
 	public void memberEnrollAgreement() {}	
+	
+	@GetMapping("/mypage/changePassword.do")
+	public void changePassword() {}
+	
+	@GetMapping("/mypage/enrollPhone.do")
+	public void enrollPhone(@RequestParam String ePhone, Model model) {
+		Map<String, Object> map = new HashMap<>();
+		String num =  RandomStringUtils.randomNumeric(6);
+		map.put("phone", ePhone);
+		map.put("num", num);
+		log.debug("map", map);
+		messageService.sendAuthenticationNum(map);
+		model.addAttribute("map", map);
+	}
+	
+	@PostMapping("/mypage/enrollPhone.do")
+	public String enrollPhone(@RequestParam Map<String, Object> map, @AuthenticationPrincipal Member member, RedirectAttributes redirectAttr) {
+		map.put("id", member.getId());
+		int result = memberService.updateMemberPhone(map);
+		
+		member.setPhone((String)map.get("phone"));
+		Authentication newAuthentication = new UsernamePasswordAuthenticationToken(member, member.getPassword(), member.getAuthorities());		
+		SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+		redirectAttr.addFlashAttribute("msg", "핸드폰 등록 성공");
+		return "redirect:/member/mypage/memberDetail.do?tPage=myPage";
+	}
+	
+	@PostMapping("/mypage/changePassword.do")
+	public String changePassword(@RequestParam Map<String, Object> map, @AuthenticationPrincipal Member member, RedirectAttributes redirectAttr) {
+		Map<String, Object> checkMap = new HashMap<>();
+		Map<String, Object> cpMap = new HashMap<>();
+		String cPassword = (String) map.get("currentPassword");
+		checkMap.put("id", member.getId());		
+		Member checkPassword = memberService.selectOneMember(checkMap);
+	
+		if(checkPassword != null && bcryptPasswordEncoder.matches(cPassword, checkPassword.getPassword())) {	
+			String changePassword = bcryptPasswordEncoder.encode((String)map.get("password"));							
+			cpMap.put("id", member.getId());
+			cpMap.put("password", changePassword);
+			int result = memberService.updateMemberPassword(cpMap);
+			redirectAttr.addFlashAttribute("msg", "비밀번호 변경 성공 다시 로그인하세요");	
+			redirectAttr.addFlashAttribute("check", "1");	
+			return "redirect:/";
+		}
+		redirectAttr.addFlashAttribute("msg", "비밀번호가 틀렸습니다.");
+		return "redirect:/member/mypage/memberDetail.do?tPage=myPage";
+	}
 	
 	@GetMapping("/mypage/memberInfo.do")
 	public void memberInfo(Model model) {
@@ -248,12 +296,10 @@ public class MemberController {
 	}
 	
 	@GetMapping("/checkIdDuplicate.do")
-	public ResponseEntity<Map<String, Object>> checkIdDuplicate(@RequestParam String id){
-		Map<String, Object> map = new HashMap<>();
+	public ResponseEntity<Map<String, Object>> checkIdDuplicate(@RequestParam Map<String, Object> map){
 		try {
-			Member member = memberService.selectOneMember(id);
+			Member member = memberService.selectOneMember(map);
 			boolean available = member == null;		
-			map.put("id", id);
 			map.put("available", available);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -318,19 +364,21 @@ public class MemberController {
 	public String memberKakaoLogin(@RequestParam(value = "code", required = false) String code, RedirectAttributes redirectAttr) {
 
 		try {
+			Map<String, Object> idMap = new HashMap<>();
 			log.debug("code = {}", code);
 			String access_Token = kakaoService.getAccessToken(code);
 			Map<String, Object> map = kakaoService.getUserInfo(access_Token);
 			log.debug("map = {}", map);
 			String id = (String) map.get("id");
-			Member member = memberService.selectOneMember(id);
+			idMap.put("id", id);
+			Member member = memberService.selectOneMember(idMap);
 			if(member == null) {
 				String rawPassword = id;
 				String encodedPassword = bcryptPasswordEncoder.encode(rawPassword);
 				map.put("password", encodedPassword);
 				map.put("loginType", "K");
-				int result = memberService.insertKakaoMember(map);
-				member = memberService.selectOneMember(id);
+				int result = memberService.insertKakaoMember(map);				
+				member = memberService.selectOneMember(idMap);
 				result = memberService.insertRole(member);
 			}
 			// 프사 변경시 동기화

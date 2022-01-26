@@ -30,14 +30,19 @@ public class EchoHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		
-		log.info("#ChattingHandler, afterConnectionEstablished");
-		sessionList.add(session);
-		
-		userMap.put(session.getPrincipal().getName(), session);			
-		
-		log.debug("userMap = {}", userMap);
-		log.debug("session = {}", session.getPrincipal());
-		log.info(session.getPrincipal().getName() + "접속");
+		try {
+			log.info("#ChattingHandler, afterConnectionEstablished");
+			sessionList.add(session);
+			
+			userMap.put(session.getPrincipal().getName(), session);			
+			
+			log.debug("userMap = {}", userMap);
+			log.debug("session = {}", session.getPrincipal());
+			log.info(session.getPrincipal().getName() + "접속");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 	
 	@Override
@@ -67,8 +72,10 @@ public class EchoHandler extends TextWebSocketHandler {
 				
 				
 				if(cmd != null && (cmd.equals("following")) || (cmd.equals("follower")) || (cmd.equals("free")) || (cmd.equals("friend"))) {
+					Map<String, Object> id = new HashMap<>();
+					id.put("id", caller);
 					Member member = memberService.selectOneMemberNickname(receiver);
-					Member senderInfo = memberService.selectOneMember(caller);
+					Member senderInfo = memberService.selectOneMember(id);
 					senderNickname = senderInfo.getNickname();
 					receiverId = member.getId();
 				}					

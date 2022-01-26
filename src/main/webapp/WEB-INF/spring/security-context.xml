@@ -19,6 +19,10 @@
 			<frame-options policy="SAMEORIGIN"/>
 		</headers>
 		
+		<session-management invalid-session-url="/member/memberLogin.do">
+			<concurrency-control expired-url="/member/memberLogin.do"/>
+		</session-management>
+		
 		<intercept-url pattern="/" access="permitAll"/>
 		
 		<intercept-url pattern="/payready/**" access="permitAll"/>
