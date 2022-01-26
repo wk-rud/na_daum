@@ -105,7 +105,7 @@ $("#search-friend-start").click((e) => {
 						<button type="button" class="btn btn-warning btn-sm following">친구신청중</button>`;
 				}
 				$resultDiv.append(searched);
-				alarmSave(resp.check, '${loginMember.id}', resp.nickname);
+				alarmSave('fr', resp.check, '${loginMember.id}', resp.nickname);
 				updateFriend(resp.check, resp.nickname);
 			});
 		},
@@ -182,8 +182,8 @@ $(() => {
 	});
 });
 
-const alarmSave = (flag, senderId, findVal) => {
-	let socketMsg = flag + "," + senderId + "," + findVal;
+const alarmSave = (type, flag, senderId, findVal) => {
+	let socketMsg = type + "," + flag + "," + senderId + "," + findVal;
 	socket.send(socketMsg);		
 };
 

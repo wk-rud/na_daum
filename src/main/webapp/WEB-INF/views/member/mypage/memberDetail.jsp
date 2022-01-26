@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/member/mypage/memberDetail.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="나:다움 회원정보" name="title"/>
 </jsp:include>
@@ -20,6 +20,9 @@
 			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberFriends.do">친구관리</a></li>
 			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberHelp.do">질문모음</a></li>
 			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberAnnouncement.do">공지사항</a></li>
+			<sec:authorize access="hasRole('ROLE_ADMIN')">
+				<li class="list-group-item"><a class="text-danger" href="${pageContext.request.contextPath}/member/admin/adminMain.do">관리자페이지</a></li>
+			</sec:authorize>
 		</ul>
 		<!-- 메뉴리스트 하단 작게 -->
 		<div class="out">

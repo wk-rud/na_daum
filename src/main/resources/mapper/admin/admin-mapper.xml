@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+	<select id="selectAllHelp" resultType="help">
+		select * from help order by reg_date desc
+	</select>
+	
+	<select id="selectHelpLikes" resultType="string">
+		select count(*) count from likes where code = #{code}
+	</select>
+	
+	<select id="selectOneHelp" resultType="help">
+		select * from help where code = #{code}
+	</select>
+	
+	<update id="updateHelpAnswer">
+		update help set a_title = #{aTitle}, a_content = #{aContent} a_reg_date = sysdate where code = #{code}
+	</update>
+	
+	<insert id="insertHelpAnswer">
+		update help set status = 'T' a_code = concat('ah-',seq_help_no.nextval), a_title = #{aTitle}, a_content = #{aContent}, a_reg_date = sysdate where code = #{code}
+	</insert>
+	
+	<select id="countAllHelp" resultType="int">
+		select count(*) from help
+	</select>
+	
+	<resultMap type="map" id="helpMap">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="category" property="category"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="status" property="status"/>
+		<result column="a_code" property="aCode"/>
+		<result column="a_title" property="aTitle"/>
+		<result column="a_content" property="aContent"/>
+		<result column="a_reg_date" property="aRegDate"/>
+	</resultMap>
+
+</mapper>
+

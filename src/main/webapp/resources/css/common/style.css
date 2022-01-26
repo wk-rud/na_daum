@@ -1,10 +1,8 @@
 body {font-family:"휴먼모음T";}
-.head-header{padding:10px; height:65px;}
-.head-header nav{padding:10px;}
+/*.head-header{padding:10px; height:65px;}
+.head-header nav{padding:10px;}*/
 /********** 전체컨테이너 **********/
-div#container {
-	padding: 10px;
-}
+/*div#container {padding: 10px;}*/
 
 /********** header **********/
 .head-header div#header-container {height:80px;}

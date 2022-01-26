@@ -1,0 +1,14 @@
+.section{
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+.absolute-left{
+	width: 200px;
+	
+}
+.main-section{
+	width: 500px;
+	padding: 10px;
+	margin-left: 150px;
+}

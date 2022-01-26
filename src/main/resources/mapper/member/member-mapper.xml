@@ -58,18 +58,7 @@
 	
 	<!-- 공지 시작 -->
 	
-	<select id="selectLikesCheck" resultMap="likesMap">
-		select 
-			* 
-		from 
-			likes 
-		<where>
-			id = #{id}
-			and
-			code = #{code}
-			<if test="aCode != null">or a_code = #{aCode}</if>
-		</where>
-	</select>
+	
 	
 	<!-- 공지 끝 -->
 	
@@ -205,6 +194,19 @@
 		select count(*) from help where category = #{category}
 	</select>
 	
+	<select id="selectLikesCheck" resultMap="likesMap">
+		select 
+			* 
+		from 
+			likes 
+		<where>
+			id = #{id}
+			and
+			code = #{code}
+			<if test="aCode != null">or code = #{aCode}</if>
+		</where>
+	</select>
+	
 	<!-- help 끝 -->
 	
 	<!-- 도움말 시작 -->
@@ -244,7 +246,7 @@
 	</update>
 	
 	<select id="selectAllAlarm" resultMap="alarm">
-		select * from alarm where id = #{id}
+		select * from alarm where id = #{id} order by reg_date desc
 	</select>
 	
 	<resultMap type="map" id="alarm">

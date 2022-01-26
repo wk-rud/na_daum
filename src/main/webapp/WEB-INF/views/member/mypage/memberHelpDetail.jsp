@@ -59,6 +59,9 @@
 </div>
 <div class="help-footer">
 	<button type="button" id="backToList" class="btn btn-warning">전체목록</button>
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		<button type="button" class="btn btn-primary" onclick="location.href='${pageContext.request.contextPath}/member/admin/adminHelpAnswer.do?code=${helpDetail.code}'">답변 수정 및 작성</button>
+	</sec:authorize>
 </div>
 <script>
 const helpCode = '${helpDetail.code}';

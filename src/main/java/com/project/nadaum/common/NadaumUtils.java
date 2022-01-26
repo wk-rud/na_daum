@@ -38,7 +38,7 @@ public class NadaumUtils {
 		if(cPage == 1) {
 			pagebar.append("<li class='page-item disabled'><a class='page-link' href=" + "?cPage=" + (cPage - 1) + ">Previous</a></li>\n");
 		}else {
-			pagebar.append("\"<li class='page-item'><a class='page-link' href=\" + \"javascript:paging(\" + (cPage - 1) + \")\" + \">Previous</a></li>\\n\"");
+			pagebar.append("<li class='page-item'><a class='page-link' href=" + "javascript:paging(" + (cPage - 1) + ")" + ">Previous</a></li>\n");
 		}
 		
 		// pageNo
@@ -59,11 +59,12 @@ public class NadaumUtils {
 			pagebar.append("<li class='page-item'><a class='page-link' href=" + "javascript:paging(" + pageNo + ")" + ">Next</a></li>\n");
 		}
 		
-		pagebar.append("</ul>\r\n"
-					 + "</nav>\n"
-				     + "<script>\n"
-					 + "const paging = (pageNo) => {location.href='" + url + "${pageNo}';};"
-					 + "</script>");
+		pagebar.append(" </ul>\r\n"
+				+ "</nav>"
+				+ "<script>"
+				+ "const paging = (pageNo) => {location.href=`" + url + "${pageNo}`;};"
+				+ "</script>"
+				);
 		
 		return pagebar.toString();
 	}

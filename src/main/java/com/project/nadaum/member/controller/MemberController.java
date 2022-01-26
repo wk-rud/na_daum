@@ -91,14 +91,20 @@ public class MemberController {
 	public void changePassword() {}
 	
 	@GetMapping("/mypage/enrollPhone.do")
-	public void enrollPhone(@RequestParam String ePhone, Model model) {
+	public String enrollPhone(@RequestParam String ePhone, Model model, RedirectAttributes redirectAttr) {
 		Map<String, Object> map = new HashMap<>();
 		String num =  RandomStringUtils.randomNumeric(6);
 		map.put("phone", ePhone);
 		map.put("num", num);
 		log.debug("map", map);
+		Member member = memberService.selectOneMemberByPhone(map);
+		if(member != null) {
+			redirectAttr.addFlashAttribute("msg", "이미 등록된 번호입니다.");
+			return "redirect:/member/mypage/memberDetail.do?tPage=myPage";
+		}
 		messageService.sendAuthenticationNum(map);
-		model.addAttribute("map", map);
+		model.addAttribute("map", map);	
+		return "member/mypage/enrollPhone";			
 	}
 	
 	@PostMapping("/mypage/enrollPhone.do")
