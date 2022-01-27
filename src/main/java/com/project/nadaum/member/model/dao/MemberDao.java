@@ -100,6 +100,8 @@ public interface MemberDao {
 
 	int updateMemberPhone(Map<String, Object> map);
 
+	int deleteMember(Member member);
+
 
 
 

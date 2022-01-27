@@ -253,6 +253,11 @@ public class MemberDaoImpl implements MemberDao {
 		return session.update("member.updateMemberPhone", map);
 	}
 
+	@Override
+	public int deleteMember(Member member) {
+		return session.delete("member.deleteMember", member);
+	}
+
 	
 	
 	

@@ -1,0 +1,25 @@
+body {font-family:"휴먼모음T";}
+.head-header{padding:10px; height:65px;}
+.head-header nav{padding:10px;font-size: 16px;}
+/********** 전체컨테이너 **********/
+div#container {
+	padding: 10px;
+}
+
+/********** header **********/
+.head-header div#header-container {height:80px;}
+.head-header div#header-container h2 	{margin:30px 10px 0px 10px;}
+nav {height:60px;}
+
+#navbarSupportedContent .head-nickname-span{padding: 10px;}
+#navbarSupportedContent #profile{padding: 10px;}
+#navbarSupportedContent #help{padding: 10px;}
+#navbarSupportedContent #sign-out{padding: 10px;}
+
+/********** content **********/
+section#content		{min-height:600px;}
+#sign-out{border:0; background-color:#F8F9Fa; cursor:pointer;}
+
+/********** footer **********/
+.main-footer	{background-color:#f8f9fa; background-clip:content-box; clear:both; height:95px; text-align:center; padding: 5px 0;}
+.main-footer p 	{margin-top:30px;} 

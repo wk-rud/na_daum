@@ -9,24 +9,26 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="나:다움 관리자페이지" name="title"/>
 </jsp:include>
-<div class="answer-wrap">
-	<div class="question-wrap">
-		<div class="question-title">
-			${help.title}
+<div class="admin-body">
+	<div class="answer-wrap">
+		<div class="question-wrap">
+			<div class="question-title">
+				${help.title}
+			</div>
+			<div class="question-content">
+				${help.content}
+			</div>
 		</div>
-		<div class="question-content">
-			${help.content}
+		<div class="answer-body">
+			<form method="POST">
+				<label for="title">제목</label>						
+				<input type="text" class="form-control" name="aTitle" id="title" required>
+				<textarea name="aContent" id="help-answer-summernote" required></textarea>
+				<div><span id="limite_normal"></span><span id="limite_vermelho" style="color:red"></span>/500</div>
+				<button type="submit" id="help-submit-btn" class="btn btn-success">답변등록</button>
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+			</form>	
 		</div>
-	</div>
-	<div class="answer-body">
-		<form method="POST">
-			<label for="title">제목</label>						
-			<input type="text" class="form-control" name="aTitle" id="title" required>
-			<textarea name="aContent" id="help-answer-summernote" required></textarea>
-			<div><span id="limite_normal"></span><span id="limite_vermelho" style="color:red"></span>/500</div>
-			<button type="submit" id="help-submit-btn" class="btn btn-success">답변등록</button>
-			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		</form>	
 	</div>
 </div>
 <script>
@@ -119,7 +121,7 @@ $(document).ready(function() {
 		data = new FormData();
 		data.append("file", file);
 		$.ajax({
-			url: "${pageContext.request.contextPath}/member/mypage/uploadSummernoteImageFile.do",
+			url: "${pageContext.request.contextPath}/member/admin/uploadSummernoteImageFile.do",
 			data: data,
 			type: "POST",
 			headers: headers,
@@ -141,12 +143,13 @@ const deleteImg = (url) => {
 	headers[csrfHeader] = csrfToken;
 	
 	$.ajax({
-		url: '${pageContext.request.contextPath}/member/mypage/deleteSummernoteImageFile.do',
+		url: '${pageContext.request.contextPath}/member/admin/deleteSummernoteImageFile.do',
 		headers: headers,
 		type: "POST",
 		data: {val: url},
 		success(resp){
-			console.log(resp);
+			if(resp > 0)
+				console.log('success');
 		}
 	});
 };

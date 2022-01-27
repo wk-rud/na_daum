@@ -5,140 +5,141 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/member/mypage/memberDetail.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="나:다움 회원정보" name="title"/>
 </jsp:include>
 <sec:authentication property="principal" var="loginMember"/>
-<div class="section">
-	<!-- 왼쪽 메뉴list -->
-	<div class="absolute-left">
-		<ul class="list-group">
-			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=myPage">마이페이지</a></li>
-			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=alarm">알림</a></li>
-			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberMyHelp.do">내가 한 질문</a></li>
-			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberFriends.do">친구관리</a></li>
-			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberHelp.do">질문모음</a></li>
-			<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberAnnouncement.do">공지사항</a></li>
-			<sec:authorize access="hasRole('ROLE_ADMIN')">
-				<li class="list-group-item"><a class="text-danger" href="${pageContext.request.contextPath}/member/admin/adminMain.do">관리자페이지</a></li>
-			</sec:authorize>
-		</ul>
-		<!-- 메뉴리스트 하단 작게 -->
-		<div class="out">
-			<a href="">회원탈퇴</a>
+<div class="member-body">
+	<div class="section">
+		<!-- 왼쪽 메뉴list -->
+		<div class="absolute-left">
+			<ul class="list-group">
+				<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=myPage">마이페이지</a></li>
+				<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=alarm">알림</a></li>
+				<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberMyHelp.do">내가 한 질문</a></li>
+				<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberFriends.do">친구관리</a></li>
+				<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberHelp.do">질문모음</a></li>
+				<li class="list-group-item"><a href="${pageContext.request.contextPath}/member/mypage/memberAnnouncement.do">공지사항</a></li>
+				<sec:authorize access="hasRole('ROLE_SUPER')">
+					<li class="list-group-item"><a class="text-danger" href="${pageContext.request.contextPath}/member/admin/adminMain.do">관리자페이지</a></li>
+				</sec:authorize>
+			</ul>
+			<!-- 메뉴리스트 하단 작게 -->
+			<div class="out">
+				<a href="${pageContext.request.contextPath}/member/mypage/membershipWithdrawal.do">회원탈퇴</a>
+			</div>
 		</div>
-	</div>
-	
-	<!-- 메인 -->
-	<div class="main-section">
-		<c:if test="${param.tPage eq 'myPage'}">
-			<div class="info-profile-wrap">
-				<div class="profile-div-wrap">
-					<div class="profile-div">
-						<c:if test="${loginMember.loginType eq 'K'}">
-							<img src="${loginMember.profile}" alt="" />
-						</c:if>
-						<c:if test="${loginMember.loginType eq 'D'}">
-							<c:if test="${loginMember.profileStatus eq 'N'}">							
-								<img src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" />
+		
+		<!-- 메인 -->
+		<div class="main-section">
+			<c:if test="${param.tPage eq 'myPage'}">
+				<div class="info-profile-wrap">
+					<div class="profile-div-wrap">
+						<div class="profile-div">
+							<c:if test="${loginMember.loginType eq 'K'}">
+								<img src="${loginMember.profile}" alt="" />
 							</c:if>
-							<c:if test="${loginMember.loginType eq 'Y'}">
-								<img src="${pageContext.request.contextPath}/resources/upload/member/profile/${profileImage.originalFilename}" alt="" />
+							<c:if test="${loginMember.loginType eq 'D'}">
+								<c:if test="${loginMember.profileStatus eq 'N'}">							
+									<img src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" />
+								</c:if>
+								<c:if test="${loginMember.loginType eq 'Y'}">
+									<img src="${pageContext.request.contextPath}/resources/upload/member/profile/${profileImage.originalFilename}" alt="" />
+								</c:if>
 							</c:if>
-						</c:if>
-						<div class="nickname-wrap">
-							<span>${loginMember.nickname}</span>
-							<button type="button" id="modify-nickname-modal" class="btn btn-outline-warning">별명 수정</button>
+							<div class="nickname-wrap">
+								<span>${loginMember.nickname}</span>
+								<button type="button" id="modify-nickname-modal" class="btn btn-outline-warning">별명 수정</button>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="info-form">
-					<form id="memberUpdateFrm">
-						<input type="text" class="form-control" name="id" id="id" value="${loginMember.id}" readonly required/>
-						<input type="text" class="form-control" placeholder="이름" name="name" id="name" value="${loginMember.name}" readonly required/>
-						<input type="text" class="form-control" placeholder="이메일" name="email" id="email" value="${loginMember.email}" readonly required/>
-						<input type="text" class="form-control" placeholder="주소" name="address" id="address" value="${loginMember.address}" readonly required/>
-						<input type="text" class="form-control" placeholder="전화번호" name="phone" id="phone" value="${loginMember.phone}" readonly required/>
-											
-						
-						<input type="submit" class="btn btn-outline-success" value="수정" >
-						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-					</form>
-					<button type="button" class="btn btn-secondary" onclick="changePw();">비밀번호 수정</button>
-					<form action="${pageContext.request.contextPath}/member/mypage/enrollPhone.do">
-						<div class="enroll-phone-wrap">
-							<div class="enroll-phone-wrap-title">
-								<span>핸드폰 등록</span>
-							</div>
-							<div class="input-group mb-3">
-								<div class="input-group-prepend">
-									<button class="btn btn-outline-secondary" id="enrollPhone" type="submit">등록</button>
+					<div class="info-form">
+						<form id="memberUpdateFrm">
+							<input type="text" class="form-control" name="id" id="id" value="${loginMember.id}" readonly required/>
+							<input type="text" class="form-control" placeholder="이름" name="name" id="name" value="${loginMember.name}" readonly required/>
+							<input type="text" class="form-control" placeholder="이메일" name="email" id="email" value="${loginMember.email}" readonly required/>
+							<input type="text" class="form-control" placeholder="주소" name="address" id="address" value="${loginMember.address}" readonly required/>
+							<input type="text" class="form-control" placeholder="전화번호" name="phone" id="phone" value="${loginMember.phone}" readonly required/>
+												
+							
+							<input type="submit" class="btn btn-outline-success" value="수정" >
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+						</form>
+						<button type="button" class="btn btn-secondary" onclick="changePw();">비밀번호 수정</button>
+						<form action="${pageContext.request.contextPath}/member/mypage/enrollPhone.do">
+							<div class="enroll-phone-wrap">
+								<div class="enroll-phone-wrap-title">
+									<span>핸드폰 등록</span>
 								</div>
-								<input type="tel" name="ePhone" id="ePhone" placeholder="-없이 번호만 입력해주세요" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+								<div class="input-group mb-3">
+									<div class="input-group-prepend">
+										<button class="btn btn-outline-secondary" id="enrollPhone" type="submit">등록</button>
+									</div>
+									<input type="tel" name="ePhone" id="ePhone" placeholder="-없이 번호만 입력해주세요" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+								</div>
 							</div>
-						</div>
-					</form>
-				</div>				
-			</div>
-			
-			
-		
-			<script>
-			$("#enrollPhone").click((e) => {
-				if(!/01[016789][^0][0-9]{2,3}[0-9]{3,4}/.test($("#ePhone").val())){
-					alert('유효하지 않은 번호입니다.');
-					return false;
-				}
-				return true;
-			});
-			
-			const changePw = () => {
-				location.href="${pageContext.request.contextPath}/member/mypage/changePassword.do";
-			};
-			
-			$(memberUpdateFrm).submit((e) => {
-				e.preventDefault();
+						</form>
+					</div>				
+				</div>
 				
-				const csrfHeader = "${_csrf.headerName}";
-				const csrfToken = "${_csrf.token}";
-				const headers = {};
-				headers[csrfHeader] = csrfToken;
 				
-				$.ajax({
-					url: "${pageContext.request.contextPath}/member/memberUpdate.do",
-					data: $(e.target).serialize(),
-					headers: headers,
-					method: "POST",
-					success(resp){
-						console.log(resp);
-					},
-					error:console.log
+			
+				<script>
+				$("#enrollPhone").click((e) => {
+					if(!/01[016789][^0][0-9]{2,3}[0-9]{3,4}/.test($("#ePhone").val())){
+						alert('유효하지 않은 번호입니다.');
+						return false;
+					}
+					return true;
 				});
-			});
-			
-			$("#modify-nickname-modal").click((e) => {
-				location.href="${pageContext.request.contextPath}/member/mypage/memberModifyNickname.do";
-			});
-			</script>
-		</c:if>
-		<c:if test="${param.tPage eq 'alarm'}">
-			<div class="alarm-wrap">
-				<ul class="list-group">
-					<c:forEach items="${alarmList}" var="al">
-						<c:if test="${al.status eq 'F'}">
-							<li class="list-group-item">${al.content}</li>
-						</c:if>
-						<c:if test="${al.status eq 'T'}">
-							<li class="list-group-item list-group-item-secondary">${al.content}</li>
-						</c:if>
-					</c:forEach>
-				</ul>
-			</div>
-  			
-		</c:if>
+				
+				const changePw = () => {
+					location.href="${pageContext.request.contextPath}/member/mypage/changePassword.do";
+				};
+				
+				$(memberUpdateFrm).submit((e) => {
+					e.preventDefault();
+					
+					const csrfHeader = "${_csrf.headerName}";
+					const csrfToken = "${_csrf.token}";
+					const headers = {};
+					headers[csrfHeader] = csrfToken;
+					
+					$.ajax({
+						url: "${pageContext.request.contextPath}/member/memberUpdate.do",
+						data: $(e.target).serialize(),
+						headers: headers,
+						method: "POST",
+						success(resp){
+							console.log(resp);
+						},
+						error:console.log
+					});
+				});
+				
+				$("#modify-nickname-modal").click((e) => {
+					location.href="${pageContext.request.contextPath}/member/mypage/memberModifyNickname.do";
+				});
+				</script>
+			</c:if>
+			<c:if test="${param.tPage eq 'alarm'}">
+				<div class="alarm-wrap">
+					<ul class="list-group">
+						<c:forEach items="${alarmList}" var="al">
+							<c:if test="${al.status eq 'F'}">
+								<li class="list-group-item">${al.content}</li>
+							</c:if>
+							<c:if test="${al.status eq 'T'}">
+								<li class="list-group-item list-group-item-secondary">${al.content}</li>
+							</c:if>
+						</c:forEach>
+					</ul>
+				</div>
+	  			
+			</c:if>
+		</div>
+		
 	</div>
-	
 </div>
 <script>
 

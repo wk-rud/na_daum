@@ -108,6 +108,7 @@ public class CalendarController {
 	@ResponseBody
 	@PostMapping("/deleteCalendar.do")
 	public Map<String, Object> deleteCalendar(@RequestBody Map<String, Object> deleteCalendar) {
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("no", deleteCalendar.get("no"));	
 		int result = calendarService.deleteCalendar(map);

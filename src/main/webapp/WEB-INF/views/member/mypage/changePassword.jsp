@@ -31,7 +31,7 @@ $(() => {
 	$(changePwModal)
 		.modal()
 		.on("hide.bs.modal", (e) => {
-			location.href='${empty header.referer || header.referer.contains('/member/mypage/changePassword.do') ? pageContext.request.contextPath : header.referer}';
+			location.href='${pageContext.request.contextPath}/member/mypage/memberDetail.do?tPage=myPage';
 		});	
 });
 </script>
@@ -78,12 +78,6 @@ $(() => {
 		</div>
 	</div>
 </div>
-<form
-	id="logoutFrm"
-	method="POST"
-	action="${pageContext.request.contextPath}/member/memberLogout.do">
-	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-</form>	
 <script>
 
 $("#agreement-btn").click((e) => {

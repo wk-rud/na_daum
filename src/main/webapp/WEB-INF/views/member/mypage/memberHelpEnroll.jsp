@@ -9,23 +9,24 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="나:다움 질문 등록" name="title"/>
 </jsp:include>
+<div class="member-body">
 
-
-<form method="POST">
-	<label for="title">제목</label>						
-	<input type="text" class="form-control" name="title" id="title"	placeholder="제목을 입력해주세요" required>
-	<input type="hidden" name="category" />
-	<select id="category-select" class="form-select" aria-label="Default select example">
-		<option selected>카테고리</option>
-		<option value="dy">다이어리</option>
-		<option value="ab">가계부</option>
-		<option value="mo">영화</option>
-	</select>
-	<textarea name="content" id="help-content-summernote" required></textarea>
-	<div><span id="limite_normal"></span><span id="limite_vermelho" style="color:red"></span>/500</div>
-	<button type="submit" id="help-submit-btn" class="btn btn-success">등록</button>
-	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-</form>
+	<form method="POST">
+		<label for="title">제목</label>						
+		<input type="text" class="form-control" name="title" id="title"	placeholder="제목을 입력해주세요" required>
+		<input type="hidden" name="category" />
+		<select id="category-select" class="form-select" aria-label="Default select example">
+			<option selected>카테고리</option>
+			<option value="dy">다이어리</option>
+			<option value="ab">가계부</option>
+			<option value="mo">영화</option>
+		</select>
+		<textarea name="content" id="help-content-summernote" required></textarea>
+		<div><span id="limite_normal"></span><span id="limite_vermelho" style="color:red"></span>/500</div>
+		<button type="submit" id="help-submit-btn" class="btn btn-success">등록</button>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+	</form>
+</div>
 <script>
 $("#category-select").change((e) => {	
 	$("input[name='category']").val($("#category-select").val());	
@@ -148,7 +149,8 @@ const deleteImg = (url) => {
 		type: "POST",
 		data: {val: url},
 		success(resp){
-			console.log(resp);
+			if(resp > 0)
+				console.log('success');
 		}
 	});
 };

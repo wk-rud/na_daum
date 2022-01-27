@@ -28,6 +28,10 @@
 		select count(*) from help
 	</select>
 	
+	<select id="selectAllMember" resultType="member">
+		select * from member order by reg_date desc
+	</select>
+	
 	<resultMap type="map" id="helpMap">
 		<id column="code" property="code"/>
 		<result column="id" property="id"/>

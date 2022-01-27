@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -90,6 +93,35 @@ public class MemberController {
 	@GetMapping("/mypage/changePassword.do")
 	public void changePassword() {}
 	
+	@GetMapping("/mypage/membershipWithdrawal.do")
+	public void membershipWithdrawal(@AuthenticationPrincipal Member member, Model model) {
+		try {
+			Calendar getToday = Calendar.getInstance();
+			getToday.setTime(new Date()); 
+						
+			Calendar cmpDate = Calendar.getInstance();
+			cmpDate.setTime(member.getRegDate()); 
+			
+			long diffSec = (getToday.getTimeInMillis() - cmpDate.getTimeInMillis()) / 1000;
+			long diffDays = diffSec / (24 * 60 * 60); //일자수 차이
+			String msg = member.getNickname() + " 나는 정말 탈퇴한다";
+			model.addAttribute("write", msg);
+			model.addAttribute("date", diffDays);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+	
+	@PostMapping("/mypage/membershipWithdrawal.do")
+	public String membershipWithdrawal(Member member, RedirectAttributes redirectAttr, HttpServletRequest request, HttpServletResponse response) {
+		int result = memberService.deleteMember(member);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		new SecurityContextLogoutHandler().logout(request, response, auth);
+		redirectAttr.addFlashAttribute("msg", "회원 탈퇴 성공");
+		return "redirect:/";
+	}
+	
 	@GetMapping("/mypage/enrollPhone.do")
 	public String enrollPhone(@RequestParam String ePhone, Model model, RedirectAttributes redirectAttr) {
 		Map<String, Object> map = new HashMap<>();
@@ -120,7 +152,7 @@ public class MemberController {
 	}
 	
 	@PostMapping("/mypage/changePassword.do")
-	public String changePassword(@RequestParam Map<String, Object> map, @AuthenticationPrincipal Member member, RedirectAttributes redirectAttr) {
+	public String changePassword(@RequestParam Map<String, Object> map, @AuthenticationPrincipal Member member, RedirectAttributes redirectAttr, HttpServletRequest request, HttpServletResponse response) {
 		Map<String, Object> checkMap = new HashMap<>();
 		Map<String, Object> cpMap = new HashMap<>();
 		String cPassword = (String) map.get("currentPassword");
@@ -132,8 +164,9 @@ public class MemberController {
 			cpMap.put("id", member.getId());
 			cpMap.put("password", changePassword);
 			int result = memberService.updateMemberPassword(cpMap);
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			new SecurityContextLogoutHandler().logout(request, response, auth);
 			redirectAttr.addFlashAttribute("msg", "비밀번호 변경 성공 다시 로그인하세요");	
-			redirectAttr.addFlashAttribute("check", "1");	
 			return "redirect:/";
 		}
 		redirectAttr.addFlashAttribute("msg", "비밀번호가 틀렸습니다.");
@@ -191,39 +224,47 @@ public class MemberController {
 	@RequestMapping(value="/mypage/uploadSummernoteImageFile.do", produces = "application/json; charset=utf8")
 	@ResponseBody
 	public String uploadSummernoteImageFile(@RequestParam("file") MultipartFile file, HttpServletRequest request )  {
-		JsonObject jsonObject = new JsonObject();
-		
-		String fileRoot = application.getRealPath("/resources/upload/member/img/");
-		log.debug("fileRoot = {}", fileRoot);
-		String originalFileName = file.getOriginalFilename();
-		String renamedFileName = NadaumUtils.rename(originalFileName);
-		
-		File targetFile = new File(fileRoot, renamedFileName);	
+		JsonObject jsonObject;
 		try {
-			file.transferTo(targetFile);
-		} catch (IllegalStateException | IOException e) {
+			jsonObject = new JsonObject();
+			
+			String fileRoot = application.getRealPath("/resources/upload/member/img/");
+			log.debug("fileRoot = {}", fileRoot);
+			String originalFileName = file.getOriginalFilename();
+			String renamedFileName = NadaumUtils.rename(originalFileName);
+			
+			File targetFile = new File(fileRoot, renamedFileName);	
+			try {
+				file.transferTo(targetFile);
+			} catch (IllegalStateException | IOException e) {
+				log.error(e.getMessage(), e);
+			}
+			jsonObject.addProperty("url", "/nadaum/resources/upload/member/img/" + renamedFileName);
+			jsonObject.addProperty("responseCode", "success");
+			log.debug("root = {}", jsonObject.toString());
+		} catch (Exception e) {
 			log.error(e.getMessage(), e);
+			throw e;
 		}
-		jsonObject.addProperty("url", "/nadaum/resources/upload/member/img/" + renamedFileName);
-		jsonObject.addProperty("responseCode", "success");
-		log.debug("root = {}", jsonObject.toString());
 		return jsonObject.toString();
 	}
 	
 	@PostMapping(value="/mypage/deleteSummernoteImageFile.do")
 	public ResponseEntity<?> deleteSummernoteImageFile(@RequestParam Map<String, Object> map)  {
-//		log.debug("map = {}", map);
-		String fileRoot = application.getRealPath("/resources/upload/member/img/");
-		String url = (String) map.get("val");
-		String[] strs = url.split("/");
-		String filename = strs[strs.length - 1];
-//		log.debug("filename = {}", filename);
-		String lastDest = url.substring(url.length() - 26, url.length());
-//		log.debug("lastDest = {}", lastDest);
-		String allDest = fileRoot + lastDest;
-//		log.debug("allDest = {}", allDest);
-		File img = new File(allDest);
-		img.delete();
+
+		try {
+			String fileRoot = application.getRealPath("/resources/upload/member/img/");
+			String url = (String) map.get("val");
+			String[] strs = url.split("/");
+			String filename = strs[strs.length - 1];
+			String lastDest = url.substring(url.length() - 26, url.length());
+			String allDest = fileRoot + lastDest;
+			File img = new File(allDest);
+			img.delete();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
 		return ResponseEntity.ok(1);
 	}
 		

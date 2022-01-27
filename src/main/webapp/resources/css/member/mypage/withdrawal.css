@@ -1,0 +1,19 @@
+.withdraw-profile{
+	display: flex;
+	align-items: center;
+}
+.withdraw-profile-img{
+	width: 50px;
+	height: 50px;
+	overflow: hidden;
+	border-radius: 50px;
+	margin-right: 10px;
+}
+.withdraw-profile-img img{
+	object-fit: cover;
+	width: 50px;
+	height: 50px;
+}
+.withdraw-profile-nickname h3{
+	font-size: 1.5rem;
+}

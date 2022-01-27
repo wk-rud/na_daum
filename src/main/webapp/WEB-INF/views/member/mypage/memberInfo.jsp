@@ -29,21 +29,16 @@
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
 	integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
 	crossorigin="anonymous">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/common/profile.css" />
 </head>
 <body>
-	<header class="info-header">
-		<div class="info-title">
-			<h1>도움말</h1>
-			<button type="button" id="closeInfo" class="close" data-dismiss="modal" aria-label="Close">
-	        	<span aria-hidden="true">&times;</span>
-	        </button>
-		</div>
+	<header class="info-header">		
 		<div class="info-search">
-			<div class="info-input-group mb-3">
-				<div class="info-input-group-prepend">
+			<div class="input-group mb-3">
+				<div class="input-group-prepend">
 					<button id="info-search-help-start" class="btn btn-outline-secondary" type="button">검색</button>
-					<input id="infosearchHelp" type="text" name="title" class="form-control" required placeholder="질문을 검색해보세요." aria-label="" aria-describedby="basic-addon1">
 				</div>
+				<input id="infosearchHelp" type="text" name="title" class="form-control" required placeholder="질문을 검색해보세요." aria-label="" aria-describedby="basic-addon1">
 			</div>
 		</div>
 		<div class="info-search-result-list">
@@ -60,15 +55,11 @@
 		</ul>
 	</div>
 	<footer class="info-footer">
-		<button type="button" class="btn btn-outline-primary" onclick="parent.location.href='${pageContext.request.contextPath}/member/mypage/memberHelpEnroll.do'">질문하기</button>
+		<button type="button" class="btn btn-outline-warning" onclick="parent.location.href='${pageContext.request.contextPath}/member/mypage/memberHelpEnroll.do'">질문하기</button>
 	</footer>
 	
 	
 	<script>
-	$("#closeInfo").click((e) => {
-		$("#infowrap", parent.document).hide();
-	});
-	
 	$("#info-search-help-start").click((e) => {
 		if($("#infosearchHelp").val() == ''){
 			alert("질문을 입력해 주세요.");

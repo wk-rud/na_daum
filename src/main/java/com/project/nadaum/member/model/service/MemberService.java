@@ -100,6 +100,8 @@ public interface MemberService {
 
 	int updateMemberPhone(Map<String, Object> map);
 
+	int deleteMember(Member member);
+
 
 
 }

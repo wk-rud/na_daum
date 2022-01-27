@@ -13,10 +13,8 @@
 <sec:authentication property="principal" var="loginMember"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Calendar</title>
-<link rel=" shortcut icon" href="${pageContext.request.contextPath}/resources/images/calendar/favicon.ico">
-
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/vendor/fullcalendar.min.css" />
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/vendor/bootstrap.min.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/vendor/fullcalendar.min.css" />
 <link rel="stylesheet" href='${pageContext.request.contextPath}/resources/css/calendar/vendor/select2.min.css' />
 <link rel="stylesheet" href='${pageContext.request.contextPath}/resources/css/calendar/vendor/bootstrap-datetimepicker.min.css' />
 
@@ -25,6 +23,7 @@
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/calendar/main.css">
 	<input type="hidden" id="id" value="${loginMember.id}" />
+	<input type="hidden" id="nickName" value="${loginMember.nickname}" />
     <div class="container">
         <!-- 일자 클릭시 메뉴오픈 -->
         <div id="contextMenu" class="dropdown clearfix">
@@ -60,7 +59,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <label class="col-xs-4" for="edit-allDay">하루종일</label>
-                                <input class='allDayNewEvent' id="edit-allDay" type="checkbox"></label>
+                                <input class='allDayNewEvent' id="edit-allDay" type="checkbox">
                             </div>
                         </div>
 

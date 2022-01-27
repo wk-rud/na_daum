@@ -2,6 +2,7 @@ var draggedEventIsAllDay;
 var activeInactiveWeekends = true;
 var editTitle = $('#edit-title');
 var id = $('#id').val();
+var nickname = $('#nickname').val();
 
 var calendar = $('#calendar').fullCalendar({
 
@@ -70,7 +71,6 @@ var calendar = $('#calendar').fullCalendar({
                                   }
                                 }
                                },
-
   /* ****************
    *  일정 받아옴 
    * ************** */
@@ -125,37 +125,38 @@ var calendar = $('#calendar').fullCalendar({
   },
 
 // hover 일정 view
-  eventRender: 
-	function (event, element, view) {
+	eventRender:
+		function(event, element, view) {
 
-    //일정에 hover시 요약
-    element.popover({
-      title: $('<div />', {
-        class: 'popoverTitleCalendar',
-        text: event.title
-      }).css({
-        'background': event.backgroundColor,
-        'color': event.textColor
-      }),
-      content: $('<div />', {
-          class: 'popoverInfoCalendar'
-        }).append('<p><strong>등록자:</strong> ' + event.username + '</p>')
-        .append('<p><strong>구분:</strong> ' + event.type + '</p>')
-        .append('<p><strong>시간:</strong> ' + getDisplayEventDate(event) + '</p>')
-        .append('<div class="popoverDescCalendar"><strong>설명:</strong> ' + event.description + '</div>'),
-      delay: {
-        show: "800",
-        hide: "50"
-      },
-      trigger: 'hover',
-      placement: 'top',
-      html: true,
-      container: 'body'
-    });
+			//일정에 hover시 요약
+			element.popover({
+				title: $('<div />', {
+					class: 'popoverTitleCalendar',
+					text: event.title
+				}).css({
+					'background': event.backgroundColor,
+					'color': event.textColor
+				}),
+				content: $('<div />', {
+					class: 'popoverInfoCalendar'
+				})
+				//.append('<p><strong>등록자:</strong> ' + event.username + '</p>')
+					.append('<p><strong>구분:</strong> ' + event.type + '</p>')
+					.append('<p><strong>시간:</strong> ' + getDisplayEventDate(event) + '</p>')
+					.append('<div class="popoverDescCalendar"><strong>설명:</strong> ' + event.description + '</div>'),
+				delay: {
+					show: "800",
+					hide: "50"
+				},
+				trigger: 'hover',
+				placement: 'top',
+				html: true,
+				container: 'body'
+			});
 
-    return filtering(event);
+			return filtering(event);
 
-  },
+		},
 
   //일정 리사이즈
   eventResize: function (event, delta, revertFunc, jsEvent, ui, view) {
@@ -313,7 +314,6 @@ function getDisplayEventDate(event) {
 function filtering(event){
 	var show_type = true;
 	var types = $('#type_filter').val();
-	console.log(types);
 	
 	if(types && types.length > 0){
 		if(types[0] == "all"){

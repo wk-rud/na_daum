@@ -246,6 +246,11 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.updateMemberPhone(map);
 	}
 
+	@Override
+	public int deleteMember(Member member) {
+		return memberDao.deleteMember(member);
+	}
+
 	
 	
 	

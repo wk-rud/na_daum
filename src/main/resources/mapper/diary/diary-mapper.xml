@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="diary">
+	<insert id="insertDiary">
+		INSERT INTO DIARY 
+		values(concat('dy-', seq_diary_no.nextval), #{id}, #{content}, TO_DATE(#{regDate},'YYYY-MM-DD'), #{emotionNo}, #{isPublic})
+	</insert>
+	<select id="emotionNo" resultType="_int">
+		select no from emotion where emotion_filename = #{emotion}	
+	</select>
+<resultMap type="map" id="diaryMap">
+	<id column="code" property="code"/>
+	<result column="id" property="id"/>
+	<result column="content" property="content"/>
+	<result column="reg_date" property="regDate"/>
+	<result column="emotion_no" property="emotionNo"/>
+	<result column="is_public" property="isPublic"/>
+</resultMap>
+
+</mapper>
+

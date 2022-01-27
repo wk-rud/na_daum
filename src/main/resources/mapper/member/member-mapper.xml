@@ -48,6 +48,10 @@
 		update member set nickname = #{nickname} where id = #{id}
 	</update>
 	
+	<delete id="deleteMember">
+		delete from member where id = #{id}
+	</delete>
+	
 	<!-- 전화번호 등록 -->
 	
 	<update id="updateMemberPhone">
