@@ -92,17 +92,44 @@ public class AlbumController {
 	public void albumForm() {
 	}
 
+//	@PostMapping("/albumEnroll")
+//	public String albumEnrollTest(
+//			@RequestParam String code,
+//			@RequestParam String title,
+//			@RequestParam String creator,
+//			@RequestParam String kind,
+//			Model model
+//			
+//			) {
+//		System.out.println(code+title+creator+kind);
+//		model.addAttribute("model",model);
+//		return "/audiobook/main";
+//	}
+	
 	@PostMapping("/albumEnroll")
-	public String albumEnroll(
-			Album album,
-			@RequestParam(required=false) MultipartFile upfile, 
-			RedirectAttributes redirectAttr
-			) {
-		log.debug("album={}",album);
+	public String albumEnroll(Album album,
+							@RequestParam
+							MultipartFile upfile,
+							Model model) {
 		
-		return "/audiobook/albumform";
+		log.info("album={}",album);
+		log.info("upfile={}",upfile.getName());
+		//log.info("upfile={}",upfile.getName());
 		
+		String msg = "정상등록";
+		model.addAttribute("msg",msg);
+		return "/audiobook/main";
 	}
+	/*
+	 * @PostMapping("/albumEnroll") public String albumEnroll( Album album,
+	 * 
+	 * @RequestParam(required=false) MultipartFile upfile, RedirectAttributes
+	 * redirectAttr ) { log.debug("album={}",album);
+	 * 
+	 * return "/audiobook/albumform";
+	 * 
+	 * }
+	 */
 	
 	
 //	@PostMapping("/albumEnroll")

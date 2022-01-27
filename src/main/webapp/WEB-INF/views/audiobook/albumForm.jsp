@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <jsp:include page="/WEB-INF/views/audiobook/common/audioBookHeader.jsp">
-	<jsp:param value="게시글 작성" name="pageTitle"/>
+	<jsp:param value="album 등록" name="pageTitle"/>
 </jsp:include>
 <style>
 div#board-container{width:400px; margin:0 auto; text-align:center;}
@@ -24,6 +24,22 @@ function albumValidate(){
 	return true;
 }
 
+/* const fnValid = function fileNameValid(){
+	$("[id=upFile1]").change((e) => {
+		const file1 = $(e.target).prop('files')[0];
+		console.log(file1.name);
+ 		const fileLen = file1.name.length;
+ 		console.log(fileLen);
+		const lastDot = file1.name.lastIndexOf('.');
+		console.log(lastDot);
+		const fileExt = file1.name.substring(lastDot,fileLen).toLowerCase(); 
+		const fileType = ["jpg","png","jpeg","bmp"];
+		const check = fileType.includes(file1.name);
+		console.log(check); 
+		return check;
+	});
+} */
+
 $(() => {
 	/**
 	 * 파일명 표시하기
@@ -37,14 +53,43 @@ $(() => {
 		else
 			$label.html("파일을 선택하세요.");
 		
+		if($label.html!="파일을 선택하세요."){
+			console.log(file.name);	
+		}
+		
 	});
+	
+	
+	$("[id=upFile1]").change((e) => {
+		const file1 = $(e.target).prop('files')[0];
+		console.log(file1.name);
+ 		const fileLen = file1.name.length;
+ 		 console.log(fileLen); 
+		const lastDot = file1.name.lastIndexOf('.');
+		console.log(lastDot); 
+		const fileExt = file1.name.substring(lastDot,fileLen).toLowerCase(); 
+		console.log(fileExt);
+		const fileType = ["jpg","png","jpeg","bmp"];
+		const check = fileType.includes(file1.name);
+		console.log(check); 
+		return check;
+	});
+	
 });
+
+/* 
+	
+		onsubmit="return albumValidate()&&fnValid();"
+			?${_csrf.parameterName}=${_csrf.token}*/
+
 </script>
 <div id="board-container">
-	<form id ="albumEnrollFrm" method="post" 
-		name="albumFrm"
-		enctype="multipart/form-data">
-		<!-- onsubmit="return albumValidate();" -->
+	<form 
+		name="albumFrm" 
+		action="${pageContext.request.contextPath}/audiobook/albumEnroll" 
+		method="post"
+		enctype="multipart/form-data"
+		>
 		<input type="text" class="form-control" placeholder="코드" name="code" id="code" required>
 		<input type="text" class="form-control" placeholder="제목" name="title" id="title" required>
 		<input type="text" class="form-control" placeholder="제작사" name="provider" id="provider" required>
@@ -57,7 +102,7 @@ $(() => {
 		    <span class="input-group-text">앨범커버</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple>
+		    <input type="file" class="custom-file-input" name="upfile" id="upFile1">
 		    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
 		  </div>
 		</div>
@@ -66,14 +111,14 @@ $(() => {
 		    <span class="input-group-text">음원파일</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" name="upFile" id="upFile2" >
+		    <input type="file" class="custom-file-input" name="upfile" id="upFile2">
 		    <label class="custom-file-label" for="upFile2">파일을 선택하세요</label>
 		  </div>
 		</div>
 		
 	    <textarea class="form-control" name="content" placeholder="내용" required></textarea>
 		<br />
-		<%-- <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> --%>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 		<input type="submit" class="btn btn-outline-success" value="저장" >
 	</form>
 </div>

@@ -13,6 +13,7 @@
 			album a
 		order by
 			code desc
+
 	</select>
 	<select id="selectTotalContent" resultType="_int">
 		select
@@ -72,13 +73,36 @@
 			a.code attach_code
 		from
 			album a
-				left join album_attahment at
+				left join album_attachment at
 					on a.code= at.album_code
 		where
 			a.code=#{code}
 	</select>
+	<resultMap type="album" id="albumCollectionMap">
+		<id column="code" property="code"/>
+		<result column="title" property="title"/>
+		<result column="provider" property="provider"/>
+		<result column="content" property="content"/>
+		<result column="creator" property="creator"/>
+		<result column="read_count" property="readCount"/>
+		<collection property="attachments" ofType="albumAttachment">
+			<id column="no" property="no"/>
+			<result column="album_code" property="albumCode"/>
+			<result column="original_filename" property="originalFilename"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="upload_date" property="uploadDate"/>
+			<result column="play_count" property="playCount"/>
+			<result column="status" property="status"/>
+		</collection>
+	</resultMap>
+	
 	
 	<select id= "selectOneAttachment" resultType="albumAttachment">
-	
+	 	 select
+	 	 	* 
+	 	 from 
+	 	 	album_attachment
+	 	 where
+	 	 	code=#{code}
 	</select>
 </mapper>
