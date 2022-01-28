@@ -60,6 +60,17 @@
 		update announcement set read_count = read_count + 1 where code = #{code}
 	</update>
 	
+	<!--  -->
+	<update id="updateProfile">
+		update member set 
+		<if test="flag == 'yes'">
+			profile = #{profile}, profile_status = 'Y' where id = #{id}		
+		</if>
+		<if test="flag == 'no'">
+			profile = null, profile_status = 'N' where id = #{id}		
+		</if>
+	</update>
+	
 	<!-- 전화번호 등록 -->
 	
 	<update id="updateMemberPhone">

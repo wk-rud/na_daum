@@ -269,6 +269,11 @@ public class MemberDaoImpl implements MemberDao {
 		return session.update("member.updateAnnounceReadCount", board);
 	}
 
+	@Override
+	public int updateProfile(Map<String, Object> map) {
+		return session.update("member.updateProfile", map);
+	}
+
 	
 	
 	

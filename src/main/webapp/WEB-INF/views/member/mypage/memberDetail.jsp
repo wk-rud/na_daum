@@ -43,8 +43,8 @@
 								<c:if test="${loginMember.profileStatus eq 'N'}">							
 									<img class="change-profile" src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" />
 								</c:if>
-								<c:if test="${loginMember.loginType eq 'Y'}">
-									<img class="change-profile" src="${pageContext.request.contextPath}/resources/upload/member/profile/${profileImage.originalFilename}" alt="" />
+								<c:if test="${loginMember.profileStatus eq 'Y'}">
+									<img class="change-profile" src="${pageContext.request.contextPath}/resources/upload/member/profile/${loginMember.profile}" alt="" />
 								</c:if>
 							</c:if>
 						</div>

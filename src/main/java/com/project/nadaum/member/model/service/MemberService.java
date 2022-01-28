@@ -107,6 +107,8 @@ public interface MemberService {
 
 	int updateAnnounceReadCount(String board);
 
+	int updateProfile(Map<String, Object> map);
+
 
 
 }

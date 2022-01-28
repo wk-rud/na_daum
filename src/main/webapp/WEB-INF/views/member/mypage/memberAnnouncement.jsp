@@ -13,9 +13,9 @@
 	<div class="announcement-wrap">
 		<div class="announcement-header">
 			<span>공지사항</span>	
-			<sec:authorize access="hasRole('ADMIN')">
+			<%-- <sec:authorize access="hasRole('ADMIN')">
 				<button type="button" id="announce-write" class="btn btn-light">공지작성</button>
-			</sec:authorize>
+			</sec:authorize> --%>
 		</div>
 		<div class="announcement-body">
 			<div class="list-group">
@@ -29,7 +29,7 @@
 					<tbody>
 						<c:forEach items="${announceList}" var="announce">
 							<tr>
-								<td colspan="5">
+								<td colspan="5" class="announce-title">
 									<a href="${pageContext.request.contextPath}/member/mypage/announcementDetail.do?board=${announce.code}" class="list-group-item list-group-item-action">
 						  				${announce.title}
 						  			</a>
@@ -38,8 +38,7 @@
 							</tr>		
 						</c:forEach>
 					</tbody>
-				</table>
-		  			
+				</table>		  			
 	  		</div>
 	  		<div class="list-controller">
 	  			${pagebar}

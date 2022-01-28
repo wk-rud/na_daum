@@ -110,3 +110,19 @@
 .help-footer{
 	margin-top: 50px;
 }
+
+
+/* 공지사항 */
+.announcement-wrap{
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.announcement-body table tbody .announce-title{
+	width: 500px;
+}
+
+
+
+

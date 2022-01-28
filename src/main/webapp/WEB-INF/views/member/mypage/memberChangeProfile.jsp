@@ -38,31 +38,44 @@ $(() => {
 </script>
 </head>
 <body>
+<sec:authentication property="principal" var="loginMember"/>
 <!-- Modal -->
 <div class="modal fade" id="changeProfileModal" tabindex="-1" role="dialog"
 	aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog" role="document">
-		<div class="modal-content">
+		<div class="modal-content" style="width:300px;">
 			<div class="modal-header">
 				<h5 class="modal-title" id="exampleModalLabel">프사 변경</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">	
-				<div class="member-profile-change-body">
-					<div class="member-profile-image">
-						<img class="change-profile-img"/>
+			<form 
+				method="POST" 
+				action="${pageContext.request.contextPath}/member/mypage/memberChangeProfile.do?${_csrf.parameterName}=${_csrf.token}"
+				enctype="multipart/form-data">
+				<div class="modal-body">	
+					<div class="member-profile-change-body">
+						<div class="member-profile-image">
+							<c:if test="${loginMember.profileStatus eq 'N'}">							
+								<img class="change-profile-img" src="${pageContext.request.contextPath}/resources/upload/member/profile/default_profile_cat.png" alt="" />
+							</c:if>
+							<c:if test="${loginMember.profileStatus eq 'Y'}">
+								<img class="change-profile-img" src="${pageContext.request.contextPath}/resources/upload/member/profile/${loginMember.profile}" alt="" />
+							</c:if>
+						</div>
+						<div class="change-profile-btn">
+							<label for="profile">선택</label>
+							<input type="file" name="profile" id="profile" accept="image/*" onchange="preview();" />
+							<input type="hidden" name="flag" id="flag" />
+						</div>
 					</div>
-					<div class="change-profile-btn">
-						<label for="profile">선택</label>
-						<input type="file" name="profile" id="profile" accept="image/*" onchange="preview();"/>
-					</div>
+	 			</div>
+				<div class="modal-footer">
+					<button type="submit" id="agreement-btn" class="btn btn-primary btn-basic">기본프사</button>
+					<button type="submit" id="agreement-btn" class="btn btn-primary btn-change">변경하기</button>
 				</div>
- 			</div>
-			<div class="modal-footer">
-				<button type="button" id="agreement-btn" class="btn btn-primary">변경하기</button>
-			</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -74,6 +87,19 @@ const preview = () => {
 	}
 	reader.readAsDataURL(event.target.files[0]);
 };
+
+$(".btn-change").click((e) => {
+	if($("#profile").val()){
+		$("#flag").val('yes');
+		return true;
+	}
+	console.log('no');
+	return false;
+});
+$(".btn-basic").click((e) => {
+	$("#flag").val('no');
+	return true;
+});
 </script>
 
 </body>

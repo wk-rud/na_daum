@@ -107,6 +107,8 @@ public interface MemberDao {
 
 	int updateAnnounceReadCount(String board);
 
+	int updateProfile(Map<String, Object> map);
+
 
 
 

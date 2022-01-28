@@ -96,6 +96,52 @@ public class MemberController {
 	@GetMapping("/mypage/changePassword.do")
 	public void changePassword() {}
 	
+	@GetMapping("/mypage/memberChangeProfile.do")
+	public void memberChangeProfile() {}
+	
+	@PostMapping("/mypage/memberChangeProfile.do")
+	public String memberChangeProfile(@RequestParam(name="profile") MultipartFile profile, @RequestParam String flag, @AuthenticationPrincipal Member member) throws Exception {
+//		log.debug("profile = {}", profile);
+//		log.debug("profileO = {}", profile.getOriginalFilename());
+//		log.debug("flag = {}", flag);
+		
+		try {
+			String saveDirectory = application.getRealPath("/resources/upload/member/profile");
+			if(member.getProfile() != null) {
+				File dest = new File(saveDirectory, member.getProfile());
+				boolean bool = dest.delete();
+				log.debug("bool = {}", bool);
+			}
+			String originalFilename = profile.getOriginalFilename();
+			String renamedFilename = "";
+			if(!originalFilename.isEmpty()) {
+				renamedFilename = NadaumUtils.rename(originalFilename);
+				File dest = new File(saveDirectory, renamedFilename);
+				profile.transferTo(dest);				
+			}
+			
+			Map<String, Object> map = new HashMap<>();
+			map.put("id", member.getId());
+			map.put("profile", renamedFilename);
+			map.put("flag", flag);
+			int result = memberService.updateProfile(map);
+			
+			String profileStatus = "";
+			if("yes".equals(flag))
+				profileStatus = "Y";
+			else
+				profileStatus = "N";
+			member.setProfile(renamedFilename);
+			member.setProfileStatus(profileStatus);
+			Authentication newAuthentication = new UsernamePasswordAuthenticationToken(member, member.getPassword(), member.getAuthorities());		
+			SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+		} catch (IllegalStateException | IOException e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+		return "redirect:/member/mypage/memberDetail.do?tPage=myPage";
+	}
+
 	@GetMapping("/mypage/announcementDetail.do")
 	public String announcementDetail(@RequestParam String board, Model model, @CookieValue(value="announceCount", required=false, defaultValue="0") String value, HttpServletRequest request, HttpServletResponse response) {
 		try {
