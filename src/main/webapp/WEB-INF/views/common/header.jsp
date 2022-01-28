@@ -133,7 +133,7 @@ input[id="switch"]{
                             <!-- 각자페이지 링크거시면 됩니다 -->
                                 <a class="dropdown-item" href="https://www.naver.com">메인</a> 
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/accountbook/accountbook.do">가계부</a> 
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/culture/cultureBoardList.do">문화생활</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/culture/board/1">문화생활</a>
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/movie/movieList.do">영화</a> 
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/audiobook/">오디오북</a> 
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/riot/riotheader.do">롤전적</a>

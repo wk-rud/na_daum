@@ -36,7 +36,7 @@ public class GetApi {
 	
 	
 	//문화생활API
-	@GetMapping("/cultureBoardList.do")
+//	@GetMapping("/cultureBoardList.do")
 	public void getCultureApi(Model model) {
 		int page = 1;
 
@@ -120,7 +120,7 @@ public class GetApi {
 				// parsing할 url 지정(API 키 포함해서)
 				String url = "http://www.culture.go.kr/openapi/rest/publicperformancedisplays/d/"
 						+ "?serviceKey=p%2B16HHPYFEvCkanGQCoGc9CAAG7x66tc5u3xrBmJpM8avVLTGiJ%2FjJaIvItRCggk79J9k%2Byn47IjYUHr%2FdzlgA%3D%3D"
-						+ "&seq="+seq;
+						+ "&seq="+ seq;
 				
 				DocumentBuilderFactory dbFactoty = DocumentBuilderFactory.newInstance();
 				DocumentBuilder dBuilder = dbFactoty.newDocumentBuilder();
@@ -129,10 +129,8 @@ public class GetApi {
 				  doc.getDocumentElement().normalize();
 				  
 				  NodeList nList = doc.getElementsByTagName("perforInfo");
-				 System.out.println(nList);
-				  for (int temp = 0; temp < nList.getLength(); temp++) {
-				 
-				     Node nNode = nList.item(temp);
+				
+				     Node nNode = nList.item(0);
 				     if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 				 
 				        Element eElement = (Element) nNode;
@@ -173,7 +171,6 @@ public class GetApi {
 				     }//if end
 				     System.out.println(list);
 				     model.addAttribute("list", list);
-				  }// try end
 				  
 			} catch (Exception e) {
 				  e.printStackTrace();

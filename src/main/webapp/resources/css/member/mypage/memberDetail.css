@@ -15,8 +15,98 @@
 	display: block;
 	color: black;
 }
+.absolute-left .out a{
+	color: lightgray;
+	font-size: .5rem;
+}
 .main-section{
 	width: 500px;
 	padding: 10px;
 	margin-left: 150px;
+}
+
+.info-profile-wrap{
+	display: flex;
+	justify-content: space-between;
+}
+
+/* 프사 관리 */
+.profile-div{
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+.profile-div img{
+	width: 150px;
+	height: 150px;
+}
+.profile-div-wrap .nickname-wrap{
+	padding-top: 10px;
+}
+
+
+/* helpDetail */
+.help-detail-wrap{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.help-title{
+	font-size: 1.5rem;
+	font-weight: bold;
+}
+.question-wrap{
+	margin-top: 20px;
+}
+.q-date-wrap{
+	text-align:right;
+}
+.q-date-wrap span{
+	color: gray;
+}
+.q-content-wrap{
+	display: flex;
+	align-items: baseline;
+}
+.q-content{
+	margin-left: 40px;
+}
+.q-info-wrap{
+	margin-top: 50px;
+	display: flex;
+	justify-content: space-between;
+}
+.q-writer-info{
+	display: flex;
+	align-items: flex-end;
+}
+
+.answer-wrap{
+	margin-top: 50px;
+}
+.a-title-wrap{
+	display:flex;
+	justify-content: space-between;
+}
+.a-title p{
+	font-size: 1.3rem;
+}
+.a-date-wrap span{
+	color: gray;
+}
+.a-content-wrap{
+	display:flex;
+	align-items: baseline;
+}
+.a-content{
+	margin-left: 40px;
+}
+
+.a-info-wrap{
+	text-align:right;
+}
+
+.help-footer{
+	margin-top: 50px;
 }

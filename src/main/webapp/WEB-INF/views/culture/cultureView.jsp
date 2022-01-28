@@ -3,56 +3,151 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<sec:authentication property="principal" var="loginMember"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="게시판 상세보기" name="title"/>
 </jsp:include>
-
-<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/culture/cultureDetail.css" />
-
+<!-- <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/culture/cultureDetail.css" />
+ -->
 <style>
-
+#culture-container{
+padding-top: 100px;
+}
 </style>
 <section class="content">
-<div id="culture-container" class="mx-auto text-center">
-	
-	<!-- 상세내용 -->
-	 <c:forEach var="culture" items="${list}">
-	<div class="culture_detail">
-	<input type="text" class="form-control-" 
-		   placeholder="제목" name="title" id="title" 
-		   value="${culture.title}" readonly>
-	<input type="text" class="form-control-" 
-		   placeholder="시작 날짜" name="startDate" id="startDate" 
-		   value='<fmt:parseDate value="${culture.startDate}" var="startDateParse" pattern="yyyyMMdd"/>
-<fmt:formatDate value="${startDateParse}" pattern="yyyy년 MM월 dd일"/>' readonly>
-	
-	<input type="text" class="form-control-" 
-		   placeholder="시작 날짜" name="startDate" id="startDate" 
-		   value='<fmt:parseDate value="${culture.endDate}" var="endDateParse" pattern="yyyyMMdd"/>
-<fmt:formatDate value="${endDateParse}" pattern="yyyy년 MM월 dd일"/>' readonly>
-
-	<input type="image" class="form-control-" name="imgUrl" title="썸네일" id="imgUrl"
-			style="width: 30%; display:flex;"
-		   src="${culture.imgUrl}" readonly>
-	<input type="text" class="form-control-" name="area" title="지역" id="area"
-		   value="${culture.area}" readonly>
-	<input type="text" class="form-control-" name="place" title="장소" id="place"
-		   value="${culture.place}" readonly>
-	<input type="text" class="form-control-" name="realmName" title="장르" id="genre"
-		   value="${culture.realmName}" readonly>
-	<input type="text" class="form-control-" name="realmName" title="장르" id="genre"
-		   value="${culture.placeAddr}" readonly>
-	<input type="text" class="form-control-" name="realmName" title="장르" id="genre"
-		   value="${culture.price}" readonly>
-	<input type="text" class="form-control-" name="realmName" title="장르" id="genre"
-		   value="${culture.placeUrl}" readonly>
-	
-	</div>
-	</c:forEach>
+	<div id="culture-container" class="mx-auto text-center">
+		
+		<!-- 상세내용 -->
+		 <c:forEach var="culture" items="${list}">
+			<div class="culture_detail">
+			<h1>${culture.title}</h1>
+			
+			<span><fmt:parseDate value="${culture.startDate}" var="startDateParse" pattern="yyyyMMdd"/>
+			<fmt:formatDate value="${startDateParse}" pattern="yyyy년 MM월 dd일"/>
+			<span>~</span>
+			</span><fmt:parseDate value="${culture.endDate}" var="endDateParse" pattern="yyyyMMdd"/>
+			<fmt:formatDate value="${endDateParse}" pattern="yyyy년 MM월 dd일"/>
+			
+			<p><img src="${culture.imgUrl}" alt="" style="width: 20%;"/></p>
+			<span>${culture.area}</span>
+			<span>${culture.realmName}</span>
+			<span>${culture.placeAddr}</span>
+			<br />
+			<span>${culture.price}</span>
+			
+			<span>${culture.placeUrl}</span>
+			</div>
+		</c:forEach>
 	<!-- culture-container 끝 -->
-</div>
+	<hr />
+<h1>댓글</h1>
+	<div class="insert-comment">
+		<form id="insertCommentFrm">
+			<input type="hidden" name="apiCode" value="${apiCode}"/>
+            <input type="hidden" name="id" value="${loginMember.id}" />
+            <input type="hidden" name="commentLevel" value="1" />
+            <input type="hidden" name="commentRef" value="" />    
+            <input type="text" name="star" value="4" />
+			<textarea name="content" cols="60" rows="3"></textarea>
+            <button type="submit" class="btn btn-light">등록</button>
+		</form>
+	</div>
+	
+	<table id="comment-table">
+	<c:forEach var="comment" items="${commentList}">
+			<tr class="level1">
+				<td id="comment">
+					<input type="hidden" name="code" value="${comment.code}"></input>
+					<sub class="comment-writer"></sub>
+					<sub class="comment-date">
+					<fmt:formatDate value="${comment.regDate}" pattern="yyyy/MM/dd"/>
+					</sub>
+					<sub class="star">${comment.star}</sub>
+					<br />
+					${comment.content}
+					<br />
+			    		<input type="submit" value="삭제" >
+				</td>		
+			</tr>
+			</c:forEach>
+			</table>
+	<script>
+			//댓글 등록
+			$(insertCommentFrm).submit((e) => {
+				e.preventDefault();
+				
+				const csrfHeader = "${_csrf.headerName}";
+		        const csrfToken = "${_csrf.token}";
+		        const headers = {};
+		        headers[csrfHeader] = csrfToken;
+				$.ajax({
+					headers : headers,
+					url: `${pageContext.request.contextPath}/culture/board/view/${apiCode}`,
+					method: "POST",
+					data: $(insertCommentFrm).serialize(),
+					success(resp){
+						console.log(resp)
+						location.reload();
+						alert(resp.msg);
+						
+					},
+					error: console.log
+				});
+				
+			});
+			
+			//댓글삭제
+			 $(deleteCommentFrm).submit((e) => {
+				e.preventDefault();
+				const code = $(e.target).find("[name=code]").val();
+				console.log(code);
+				
+				$.ajax({
+					url:`${pageContext.request.contextPath}/culture/board/view/${apiCode}`,
+					method: "DELETE",
+					success(resp){
+						console.log(resp);
+						alert(resp.msp);
+					},
+					error(xhr,statusText){
+						switch(xhr.status){
+						case 404: alert("해당 댓글이 존재하지않습니다."); break;
+						default: console.log(xhr, statusText,err);
+						}				
+					}
+				});
+			}); 
+			
+			//댓글수정
+			$(updateCommentFrm).submit((e) => {
+				
+				e.preventDefault();
 
-<!-- kakao 지도 -->
+				const csrfHeader = "${_csrf.headerName}";
+		        const csrfToken = "${_csrf.token}";
+		        const headers = {};
+		        headers[csrfHeader] = csrfToken;
+		        
+				$.ajax({
+					headers : headers,
+					url: `${pageContext.request.contextPath}/culture/board/view/${apiCode}`,
+					method: "PUT",
+					data: $(updateCommentFrm).serialize(),
+					success(resp){
+						console.log(resp)
+						location.reload();
+						alert(resp.msg);
+					},
+					error: console.log
+				});
+				
+			});
+			</script>
+
+
+<!-- kakao 지도 
 
 	<hr style="border: solid 2px grey;">
 	<div class="kakao-map">
@@ -104,5 +199,5 @@ geocoder.addressSearch('서울특별시 서초구 강남대로39길 15-3 2층 30
         map.setCenter(coords);
     } 
 });    
-</script>
+</script>-->
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

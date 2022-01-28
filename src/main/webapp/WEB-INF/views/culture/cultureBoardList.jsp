@@ -19,6 +19,7 @@ div#culture-container{width:100%; margin:0 auto;text-align:center;}
 }
 .card{
 height: 300px;
+padding: 15px;
 }
 .card-title{
     display: -webkit-box;
@@ -35,8 +36,15 @@ $(() => {
 		 //console.log(e.target); // td
 		const $card = $(e.target).parent().parent();
 		const code = $card.data("code");
-		location.href = `${pageContext.request.contextPath}/culture/cultureView.do?code=\${code}`;
+		location.href = `${pageContext.request.contextPath}/culture/board/view/\${code}`;
 	});
+	//$(function(){
+	//const paramString = window.location.href;
+    //var param = paramString.split("/"); 
+    //param = param[param.length - 1];
+    //console.log(param);
+	//});
+
 });
 
 </script>
@@ -53,7 +61,6 @@ $(() => {
 				    <input type="date" class="form-control" id="startDate">
 				    <input type="date" class="form-control" id="endDate">
 				  </div>
-				  
 				  <div class="form-group">
 				    <label for="TRL" class="control-label">지역</label>
 				      <select class="form-control" name="TRL" id="TRL">
@@ -77,33 +84,36 @@ $(() => {
 				  <button type="submit" class="btn orange btn-default">Search</button>
 			</form>
 		</div>
-<div id="culture-container">
-    <br />
-    
-     <div class="py-5">
-    <div class="container">
-      <div class="row hidden-md-up">
-       
-     <c:forEach var="culture" items="${list}">
-    	<div class="col-md-4">
-          <div class="card" data-code="${culture.seq}">
-            <div class="card-block">
-            	 <p class="card-text p-y-1" id="culture_code">${culture.code}</p>
-              <h4 class="card-title">${culture.title}</h4>
-              <p class="card-text p-y-1">${culture.area}</p>
-              <p class="card-text p-y-1">${culture.place}</p>
-              <p class="card-text p-y-1">${culture.realmName}</p>
-              <img class="thumnail" src="${culture.thumbnail}" alt="" />
-               </div>
-          </div>
-        </div>
-	   </c:forEach>
+	<div id="culture-container">
+	    <br />
+	    
+	     <div class="py-5">
+	    <div class="container">
+	      <div class="row hidden-md-up">
+	       
+	     <c:forEach var="culture" items="${list}">
+	    	<div class="col-md-4" style="padding: 15px;">
+	          <div class="card" data-code="${culture.seq}">
+	            <div class="card-block">
+	              <h4 class="card-title">${culture.title}</h4>
+	              <p class="card-text p-y-1">${culture.area}</p>
+	              <p class="card-text p-y-1">${culture.place}</p>
+	              <p class="card-text p-y-1">${culture.realmName}</p>
+	              <img class="thumnail" src="${culture.thumbnail}" alt="" />
+	               </div>
+	          </div>
+	        </div>
+		   </c:forEach>
 	    			</div>
 	    		</div>
 	    	</div>
+	    	<div class="paging">
+	    		<input type="button" onclick='nextPage'  />
+	    	</div>
+		<!-- culture-container 끝 -->
 		</div>
-		
 	</div>
+	
 </body>
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>

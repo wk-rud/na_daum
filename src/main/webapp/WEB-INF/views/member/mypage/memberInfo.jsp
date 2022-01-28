@@ -34,7 +34,7 @@
 <body>
 	<header class="info-header">		
 		<div class="info-search">
-			<div class="input-group mb-3">
+			<div class="input-group mb-3 info-head-wrap">
 				<div class="input-group-prepend">
 					<button id="info-search-help-start" class="btn btn-outline-secondary" type="button">검색</button>
 				</div>
@@ -46,6 +46,9 @@
 		</div>
 	</header>
 	<div class="info-body">
+		<div class="info-body-title">
+			<span>주요 질문들</span>
+		</div>
 		<ul id="info-search-result-ul" class="list-group list-group-flush">
 			<c:forEach items="${mostHelps}" var="help">
 				<a target="_top" href="${pageContext.request.contextPath}/member/mypage/memberHelpDetail.do?code=${help.code}" class="list-group-item list-group-item-action">
@@ -55,7 +58,7 @@
 		</ul>
 	</div>
 	<footer class="info-footer">
-		<button type="button" class="btn btn-outline-warning" onclick="parent.location.href='${pageContext.request.contextPath}/member/mypage/memberHelpEnroll.do'">질문하기</button>
+		<button type="button" class="btn btn-outline-secondary" onclick="parent.location.href='${pageContext.request.contextPath}/member/mypage/memberHelpEnroll.do'">질문하기</button>
 	</footer>
 	
 	

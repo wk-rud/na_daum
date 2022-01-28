@@ -3,6 +3,7 @@ package com.project.nadaum.member.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.project.nadaum.admin.model.vo.Announcement;
 import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.member.model.vo.Member;
 
@@ -101,6 +102,10 @@ public interface MemberService {
 	int updateMemberPhone(Map<String, Object> map);
 
 	int deleteMember(Member member);
+
+	Announcement selectOneAnnouncement(Map<String, Object> map);
+
+	int updateAnnounceReadCount(String board);
 
 
 

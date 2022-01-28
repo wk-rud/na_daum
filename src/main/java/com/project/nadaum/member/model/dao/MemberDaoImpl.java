@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.project.nadaum.admin.model.vo.Announcement;
 import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.member.model.vo.Member;
 
@@ -256,6 +257,16 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public int deleteMember(Member member) {
 		return session.delete("member.deleteMember", member);
+	}
+
+	@Override
+	public Announcement selectOneAnnouncement(Map<String, Object> map) {
+		return session.selectOne("member.selectOneAnnouncement", map);
+	}
+
+	@Override
+	public int updateAnnounceReadCount(String board) {
+		return session.update("member.updateAnnounceReadCount", board);
 	}
 
 	

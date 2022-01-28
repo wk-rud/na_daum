@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.nadaum.admin.model.vo.Announcement;
 import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.member.model.dao.MemberDao;
 import com.project.nadaum.member.model.vo.Member;
@@ -249,6 +250,16 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int deleteMember(Member member) {
 		return memberDao.deleteMember(member);
+	}
+
+	@Override
+	public Announcement selectOneAnnouncement(Map<String, Object> map) {
+		return memberDao.selectOneAnnouncement(map);
+	}
+
+	@Override
+	public int updateAnnounceReadCount(String board) {
+		return memberDao.updateAnnounceReadCount(board);
 	}
 
 	

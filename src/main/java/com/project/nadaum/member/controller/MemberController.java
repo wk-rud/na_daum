@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.JsonObject;
+import com.project.nadaum.admin.model.vo.Announcement;
 import com.project.nadaum.common.NadaumUtils;
 import com.project.nadaum.common.vo.Attachment;
 import com.project.nadaum.common.vo.CategoryEnum;
@@ -92,6 +95,32 @@ public class MemberController {
 	
 	@GetMapping("/mypage/changePassword.do")
 	public void changePassword() {}
+	
+	@GetMapping("/mypage/announcementDetail.do")
+	public String announcementDetail(@RequestParam String board, Model model, @CookieValue(value="announceCount", required=false, defaultValue="0") String value, HttpServletRequest request, HttpServletResponse response) {
+		try {
+			// 쿠키로 조회수 관리
+			log.debug(value);
+			if("0".equals(value)) {
+				int result = memberService.updateAnnounceReadCount(board);
+				value = board;
+				Cookie cookie = new Cookie("announceCount", value);
+				cookie.setMaxAge(60 * 60 * 24 * 30);
+				cookie.setPath(request.getContextPath() + "/member/mypage/announcementDetail.do");
+				response.addCookie(cookie);
+				log.debug("쿠키 배포 완료 = {}", cookie);			
+			}
+			Map<String, Object> param = new HashMap<>();
+			param.put("code", board);
+			Announcement announce = memberService.selectOneAnnouncement(param);
+			log.debug("announcement = {}", announce);
+			model.addAttribute("announce", announce);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+		return "member/mypage/announcementDetail";
+	}
 	
 	@GetMapping("/mypage/membershipWithdrawal.do")
 	public void membershipWithdrawal(@AuthenticationPrincipal Member member, Model model) {

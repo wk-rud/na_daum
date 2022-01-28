@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.project.nadaum.admin.model.dao.AdminDao;
 import com.project.nadaum.admin.model.vo.Help;
 import com.project.nadaum.member.model.vo.Member;
+import com.project.nadaum.member.model.vo.MemberRole;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,18 +65,61 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public int insertHelpAnswer(Help help) {
-		return adminDao.insertHelpAnswer(help);
-	}
-
-	@Override
 	public int countAllHelp() {
 		return adminDao.countAllHelp();
 	}
 
 	@Override
-	public List<Member> selectAllMember() {
-		return adminDao.selectAllMember();
+	public List<Member> selectAllMember(Map<String, Object> param) {
+		List<Member> list = adminDao.selectAllMember(param);
+		for(Member m : list) {
+			List<MemberRole> role = adminDao.selectAllMemberRole(m);
+			m.setMemberRole(role);
+		}
+		return list;
+	}
+
+	@Override
+	public int insertAnnouncement(Map<String, Object> map) {
+		return adminDao.insertAnnouncement(map);
+	}
+
+	@Override
+	public int updateAnnouncement(Map<String, Object> map) {
+		return adminDao.updateAnnouncement(map);
+	}
+
+	@Override
+	public int deleteHelp(Map<String, Object> map) {
+		int result = 0;
+		result = adminDao.deleteHelp(map);
+		result = adminDao.deleteLikes(map);
+		return result;
+	}
+
+	@Override
+	public int deleteAnnouncement(Map<String, Object> map) {
+		return adminDao.deleteAnnouncement(map);
+	}
+
+	@Override
+	public int updateEnabled(Map<String, Object> map) {
+		return adminDao.updateEnabled(map);
+	}
+
+	@Override
+	public int insertRole(Map<String, Object> map) {
+		return adminDao.insertRole(map);
+	}
+
+	@Override
+	public int deleteRole(Map<String, Object> map) {
+		return adminDao.deleteRole(map);
+	}
+
+	@Override
+	public int countAllMember(Map<String, Object> param) {
+		return adminDao.countAllMember(param);
 	}
 	
 	

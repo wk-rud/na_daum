@@ -17,21 +17,88 @@
 	</select>
 	
 	<update id="updateHelpAnswer">
-		update help set a_title = #{aTitle}, a_content = #{aContent} a_reg_date = sysdate where code = #{code}
+		update
+			help
+		set
+		<if test="aCode != null">
+			a_title = #{aTitle}, a_content = #{aContent} a_reg_date = sysdate
+		</if>
+		<if test="aCode == null">
+			status = 'T', a_code = concat('ah-',seq_help_no.nextval), a_title = #{aTitle}, a_content = #{aContent}, a_reg_date = sysdate
+		</if>			
+		where
+			code = #{code}
 	</update>
-	
-	<insert id="insertHelpAnswer">
-		update help set status = 'T' a_code = concat('ah-',seq_help_no.nextval), a_title = #{aTitle}, a_content = #{aContent}, a_reg_date = sysdate where code = #{code}
-	</insert>
 	
 	<select id="countAllHelp" resultType="int">
 		select count(*) from help
 	</select>
 	
 	<select id="selectAllMember" resultType="member">
-		select * from member order by reg_date desc
+		select * from member where
+			not id = 'admin'
+			and
+			not id = #{id}
 	</select>
 	
+	<select id="countAllMember" resultType="int">
+		select count(*) from member
+		where
+			not id = 'admin'
+			and
+			not id = #{id}
+	</select>
+	
+	<select id="selectAllMemberRole" resultType="memberRole">
+		select * from authority where member_id = #{id} and not authority = 'ROLE_SUPER'
+	</select>
+	
+	<insert id="insertAnnouncement">
+		insert into announcement(code, title, content, id)
+		values(concat('an-',seq_announcement_no.nextval), #{title}, #{content}, #{id})
+	</insert>
+	
+	<update id="updateAnnouncement">
+		update announcement set title = #{title}, content = #{content}, reg_date = sysdate, id = #{id} where code = #{code}
+	</update>
+	
+	<delete id="deleteHelp">
+		delete from help where code = #{code}
+	</delete>
+			
+	<delete id="deleteLikes">
+		delete from likes 
+		where 
+			code = #{code}
+		<if test="aCode != null">
+			or code = #{aCode}
+		</if>
+	</delete>
+	
+	<delete id="deleteAnnouncement">
+		delete from announcement where code = #{code}
+	</delete>
+	
+	<update id="updateEnabled">
+		update member set
+		<if test="enabledVal == 'true'">
+			enabled = 0
+		</if>
+		<if test="enabledVal == 'false'">
+			enabled = 1
+		</if>
+		where
+			id = #{id}
+	</update>
+	
+	<insert id="insertRole">
+		insert into authority values(#{id}, 'ROLE_ADMIN')
+	</insert>
+	
+	<delete id="deleteRole">
+		delete from authority where member_id = #{id} and authority = 'ROLE_ADMIN'
+	</delete>
+		
 	<resultMap type="map" id="helpMap">
 		<id column="code" property="code"/>
 		<result column="id" property="id"/>
@@ -45,6 +112,12 @@
 		<result column="a_content" property="aContent"/>
 		<result column="a_reg_date" property="aRegDate"/>
 	</resultMap>
-
+	
+	<resultMap type="map" id="authorityMap">
+		<id column="member_id" property="id"/>
+		<result column="authority" property="authority"/>
+	</resultMap>
+	
+	
 </mapper>
 

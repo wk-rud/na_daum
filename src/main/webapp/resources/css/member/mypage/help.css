@@ -1,14 +1,56 @@
+.question-list-wrap{
+	display:flex;
+	justify-content: center;
+}
+.question-list-head{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 .question-list-body{
 	display: flex;
-	border: 1px solid black;
-	width: 800px;
+	border: 1px solid ghostwhite;
+	width: 1024px;
 	flex-wrap: wrap;
+	justify-content: center;
+}
+.help-search-btn-wrap{
+	display: flex;
+	justify-content: center;
+}
+.help-search-btn-wrap input{
+	width: 400px;
+}
+.help-btn-wrap{
+	text-align: right;
+}
+.write-btn-wrap{
+	display:flex;
+	width: 700px;
+	justify-content: flex-end;
+}
+.write-help-btn{
+	margin-bottom: 10px; 
 }
 
 .question-list-body > div{
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
 	border: 1px solid black;
 	width: 350px;
 	margin: 10px;
+}
+.question-list-body span{
+	margin: 5px;
+}
+.help-list-footer{
+	margin: 5px;
+	text-align: right;
+}
+.help-list-footer a{
+	color: gray;
+	font-size: 0.8rem;
 }
 
 /* 검색결과 리스트 */

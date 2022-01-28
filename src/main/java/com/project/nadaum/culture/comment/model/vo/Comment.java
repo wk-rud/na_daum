@@ -21,7 +21,7 @@ public class Comment implements Serializable {
 	private String apiCode; //게시글번호
 	private int commentLevel;//default 1 =>댓글1, 대댓글2
 	private int commentRef;//댓글이면 null, 대댓글이면 참조하는 댓글 번호(댓글 고유코드)
-	private String conent;
+	private String content;
 	private Date regDate;
 	private int star; //별점
 	private String id;
