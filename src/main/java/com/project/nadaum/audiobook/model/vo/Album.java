@@ -14,20 +14,19 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString(callSuper=true)
-public class Album extends AlbumEntity implements Serializable{
+public class Album extends AlbumInfo implements Serializable{
 
 	
-	private static final long serialVersionUID = 6498154507783817520L;
+	private static final long serialVersionUID = 1L;
 
-	private int attachCount;
+	private List<AlbumImg> albumImgs;
+	private List<AlbumTrack> albumTracks;
 	
-	private List<AlbumAttachment> attachments;
-	
-	public Album(String code, String title, String provider,String content,String creator,int price, Date regDate, String playTime, String kind, int playCount,int attachCount,
-			List<AlbumAttachment> attachments) {
-		super(code, title, provider, content, creator, price,regDate,playTime,kind,playCount);
-		this.attachCount= attachCount;
-		this.attachments = attachments;
+	public Album(String code,String kind, String title, String provider,String content,String creator, Date regDate, String playTime, int playCount
+			,String status,List<AlbumImg> albumImgs, List<AlbumTrack> albumTracks) {
+		super(code, kind, title, provider, content, creator,regDate,playTime,playCount,status);
+		this.albumImgs=albumImgs;
+		this.albumTracks = albumTracks;
 	}
 	 
 }

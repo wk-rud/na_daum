@@ -59,7 +59,7 @@ $(() => {
 		
 	});
 	
-	
+	//검증
 	$("[id=upFile1]").change((e) => {
 		const file1 = $(e.target).prop('files')[0];
 		console.log(file1.name);
@@ -67,13 +67,29 @@ $(() => {
  		 console.log(fileLen); 
 		const lastDot = file1.name.lastIndexOf('.');
 		console.log(lastDot); 
-		const fileExt = file1.name.substring(lastDot,fileLen).toLowerCase(); 
+		const fileExt = file1.name.substring(lastDot+1,fileLen).toLowerCase(); 
 		console.log(fileExt);
 		const fileType = ["jpg","png","jpeg","bmp"];
-		const check = fileType.includes(file1.name);
-		console.log(check); 
-		return check;
+		const check1 = fileType.includes(fileExt);
+		console.log(check1); 
+		return check1;
 	});
+	
+	$("[id=upFile2]").change((e) => {
+		const file2 = $(e.target).prop('files')[0];
+		console.log(file2.name);
+ 		const fileLen = file2.name.length;
+ 		 console.log(fileLen); 
+		const lastDot = file2.name.lastIndexOf('.');
+		console.log(lastDot); 
+		const fileExt = file2.name.substring(lastDot+1,fileLen).toLowerCase(); 
+		console.log(fileExt);
+		const fileType = 'mp3';
+		const check2 = (fileType==fileExt);
+		console.log(check2); 
+		return check2;
+	});
+
 	
 });
 
@@ -82,11 +98,13 @@ $(() => {
 		onsubmit="return albumValidate()&&fnValid();"
 			?${_csrf.parameterName}=${_csrf.token}*/
 
+/* ${_csrf.parameterName}=${_csrf.token} */
+					
 </script>
 <div id="board-container">
 	<form 
 		name="albumFrm" 
-		action="${pageContext.request.contextPath}/audiobook/albumEnroll" 
+		action="${pageContext.request.contextPath}/audiobook/albumEnroll?${_csrf.parameterName}=${_csrf.token}" 
 		method="post"
 		enctype="multipart/form-data"
 		>
@@ -102,7 +120,7 @@ $(() => {
 		    <span class="input-group-text">앨범커버</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" name="upfile" id="upFile1">
+		    <input type="file" class="custom-file-input" name="upFile" id="upFile1">
 		    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
 		  </div>
 		</div>
@@ -111,15 +129,15 @@ $(() => {
 		    <span class="input-group-text">음원파일</span>
 		  </div>
 		  <div class="custom-file">
-		    <input type="file" class="custom-file-input" name="upfile" id="upFile2">
+		    <input type="file" class="custom-file-input" name="upFile" id="upFile2">
 		    <label class="custom-file-label" for="upFile2">파일을 선택하세요</label>
 		  </div>
 		</div>
 		
 	    <textarea class="form-control" name="content" placeholder="내용" required></textarea>
 		<br />
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-		<input type="submit" class="btn btn-outline-success" value="저장" >
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/> 
+		<input type="submit" class="btn btn-outline-success" value="저장">
 	</form>
 </div>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
