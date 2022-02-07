@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="accountbook">
+
+	<!-- insert -->
+	<insert id = "insertAccount">
+		insert into 
+			account_book
+		values(
+			concat('ab-', seq_account_book_no.nextval),
+			#{id},
+			#{detail},
+			#{price},
+			#{regDate},
+			#{incomeExpense},
+			#{payment},
+			#{category}
+		)	
+	</insert>
+	
+	<!-- delete -->
+	<delete id="deleteAccount">
+		delete
+			account_book
+		where
+			code = #{code}
+	</delete>
+	
+	<!-- 전체리스트 -->
+	<select id="selectAllAccountList" resultType="com.project.nadaum.accountbook.model.vo.AccountBook">
+		select
+    		*
+    	from 
+    		account_book
+    	where
+    		id = #{id}
+    	order by
+    		reg_date desc
+	</select>
+	
+	<!-- 이 달의 수입, 지출 계산  -->
+	<select id="monthlyTotalIncome" resultMap="accountbookMap">
+		select
+        *
+    	from (
+	        select
+	            nvl(income_expense, 0) as income_expense,
+	            sum(price) as total
+	         from (
+	                select
+	                    *
+	                from
+	                    account_book
+	                where
+	                    to_char(reg_date, 'yyyy-mm') = to_char((sysdate), 'yyyy-mm')
+          		)
+	    where
+	        id = #{id}
+	    group by income_expense
+	    )
+	</select>
+	
+	<!--이 달의 총 자산-->
+	<select id="monthlyAccount" resultType="String">
+		select
+	    sum(plus_minus)
+			from (
+				select
+				    case 
+				        when income_expense = 'E' then price * -1
+				        when income_expense ='I' then  price * 1
+				    end as plus_minus
+				from (
+				    select
+				        *
+				    from
+				        account_book
+				    where
+				        to_char(reg_date, 'yyyy-mm') = to_char((sysdate), 'yyyy-mm')
+				        and
+				        id = #{id}
+				    order by
+				        reg_date desc
+			    )
+		)
+	</select>
+	
+	<select id="incomeExpenseFilter" resultMap="accountbookMap">
+		select
+	   	 	*
+		from
+	    	account_book
+		where
+	    	id = #{id}
+			and 
+			income_expense = #{incomeExpense}
+		order by
+			reg_date desc
+	</select>
+	
+	<select id="searchList" resultMap="accountbookMap">
+		select
+	   	 *
+		from
+		    account_book
+		<where>
+		    id = #{id}
+		   	<if test="category != null and category != ''">
+		    and
+		    category=#{category}
+		   	</if>
+		 	<if test="incomeExpense != null and incomeExpense != ''">
+		 	and
+		 	income_expense=#{incomeExpense}
+		 	</if>
+		 	<if test="detail != null and detail !=''">
+		 	and
+	  		detail like '%' || #{detail} || '%'
+		 	</if>
+		</where>
+	  	order by
+	  		reg_date desc
+	</select>
+	
+	<select id="chartValue" resultMap="chartListMap">
+	
+		select
+		    sum(price) as total,
+		    category
+		from
+		    (select
+		        *
+		    from
+		        account_book
+		    where
+		        to_char(reg_date, 'mm') = to_char((sysdate), 'mm')
+		        and
+		        id = #{id}
+		        and
+		        income_expense = #{incomeExpense}
+		    )
+	group by category
+	</select>
+	
+	<select id="countAccountList" resultType="int">
+		select 
+			count(*) 
+		from 
+			account_book 
+		where id=#{id}
+	</select>
+	
+	<select id="detailMonthlyChart" resultMap="monthlyChart">
+		select
+		    monthly,
+		    nvl(sum(case when income_expense='I' then price end), 0) as income,
+		    nvl(sum(case when income_expense='E' then price end), 0) as expense
+		from (
+			select
+			    to_char(reg_date,'yyyy-mm') as monthly,
+			    price,
+			    income_expense
+			from
+			    account_book
+			where
+			    id=#{id}
+			)
+		group by 
+		    monthly
+		order by 
+		    monthly
+		
+	</select>
+	
+	<select id="monthlyCountList" resultMap="monthlyCountList">
+		select
+		    sum(price) as sum,
+		    count(*) as count
+		from (
+			select
+			    *
+			from
+			    account_book
+			where
+			    to_char(reg_date, 'mm') = to_char(add_months(sysdate, #{monthly}), 'mm')
+			    and
+			    id = #{id}
+		)
+	</select>
+	
+	<select id="categoryChart" resultMap="monthlyCountList">
+		select
+		    category,
+		    count(category) as count
+		from
+		    (select
+		        to_char(add_months(sysdate, #{monthly}), 'yyyy-mm') as monthly,
+		        category
+		    from
+		        account_book
+		    where
+		        to_char(reg_date, 'yyyy-mm') = to_char(add_months(sysdate, #{monthly}), 'yyyy-mm')
+		        and
+		        id = #{id}
+		        and
+		        income_expense=#{incomeExpense}
+		    )
+		group by monthly, category
+	</select>
+	
+	
+	<resultMap type="Map" id="monthlyCountList">
+		<result column="sum" property="sum"/>
+		<result column="count" property="count"/>
+		<result column="category" property="category"/>
+	</resultMap>
+		
+	<resultMap type="Map" id="monthlyChart">
+		<result column="monthly" property="monthly"/>
+		<result column="income" property="income"/>
+		<result column="expense" property="expense"/>
+	</resultMap>	
+	
+	<resultMap type="Map" id="chartListMap">
+		<result column="total" property="total"/>
+		<result column="income_expense" property="incomeExpense"/>
+		<result column="category" property="category"/>
+	</resultMap>
+	
+	<resultMap type="Map" id="accountbookMap">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="detail" property="detail"/>
+		<result column="price" property="price"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="income_expense" property="incomeExpense"/>
+		<result column="payment" property="payment"/>
+		<result column="category" property="category"/>
+		<result column="total" property="total"/>
+	</resultMap>
+
+</mapper>
+

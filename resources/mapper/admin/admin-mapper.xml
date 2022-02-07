@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+
+	<select id="selectAllHelp" resultType="help">
+		select * from help order by reg_date desc
+	</select>
+	
+	<select id="selectHelpLikes" resultType="string">
+		select count(*) count from likes where code = #{code}
+	</select>
+	
+	<select id="selectOneHelp" resultType="help">
+		select * from help where code = #{code}
+	</select>
+	
+	<update id="updateHelpAnswer">
+		update
+			help
+		set
+		<if test="aCode != null">
+			a_title = #{aTitle}, a_content = #{aContent} a_reg_date = sysdate
+		</if>
+		<if test="aCode == null">
+			status = 'T', a_code = concat('ah-',seq_help_no.nextval), a_title = #{aTitle}, a_content = #{aContent}, a_reg_date = sysdate
+		</if>			
+		where
+			code = #{code}
+	</update>
+	
+	<select id="countAllHelp" resultType="int">
+		select count(*) from help
+	</select>
+	
+	<select id="selectAllMember" resultType="member">
+		select * from member where
+			not id = 'admin'
+			and
+			not id = #{id}
+	</select>
+	
+	<select id="countAllMember" resultType="int">
+		select count(*) from member
+		where
+			not id = 'admin'
+			and
+			not id = #{id}
+	</select>
+	
+	<select id="selectAllMemberRole" resultType="memberRole">
+		select * from authority where member_id = #{id} and not authority = 'ROLE_SUPER'
+	</select>
+	
+	<insert id="insertAnnouncement">
+		insert into announcement(code, title, content, id)
+		values(concat('an-',seq_announcement_no.nextval), #{title}, #{content}, #{id})
+	</insert>
+	
+	<update id="updateAnnouncement">
+		update announcement set title = #{title}, content = #{content}, reg_date = sysdate, id = #{id} where code = #{code}
+	</update>
+	
+	<delete id="deleteHelp">
+		delete from help where code = #{code}
+	</delete>
+			
+	<delete id="deleteLikes">
+		delete from likes 
+		where 
+			code = #{code}
+		<if test="aCode != null">
+			or code = #{aCode}
+		</if>
+	</delete>
+	
+	<delete id="deleteAnnouncement">
+		delete from announcement where code = #{code}
+	</delete>
+	
+	<update id="updateEnabled">
+		update member set
+		<if test="enabledVal == 'true'">
+			enabled = 0
+		</if>
+		<if test="enabledVal == 'false'">
+			enabled = 1
+		</if>
+		where
+			id = #{id}
+	</update>
+	
+	<insert id="insertRole">
+		insert into authority values(#{id}, 'ROLE_ADMIN')
+	</insert>
+	
+	<delete id="deleteRole">
+		delete from authority where member_id = #{id} and authority = 'ROLE_ADMIN'
+	</delete>
+	
+	<!-- chart -->
+	
+	<select id="selectMonthEnrollCount" resultType="map">
+		SELECT 
+			TO_CHAR(b.dt, 'MM') AS regdate,
+		    NVL(SUM(a.cnt), 0) cnt
+		FROM ( 
+			SELECT 
+				TO_char(reg_date, 'YYYY-MM-DD') AS regdate,
+		        COUNT(*) cnt
+        	FROM 
+        		member
+            WHERE 
+            	reg_date BETWEEN TO_DATE(#{year}||'-01', 'yyyy-mm')
+                             AND TO_DATE(#{year}||'-12', 'yyyy-mm') 
+          	GROUP BY reg_date
+        	) a,
+      		(
+      		SELECT 
+      			TO_DATE(#{year}||'-01-01','YYYY-MM-DD') + LEVEL AS dt
+            FROM 
+            	dual 
+            CONNECT BY LEVEL <![CDATA[<=]]> (TO_DATE(#{year}||'-12-31','YYYY-MM-DD') 
+                            - TO_DATE(#{year}||'-01-01','YYYY-MM-DD'))
+	        ) b
+		WHERE TO_CHAR(b.dt, 'YYYY-MM-DD') = a.regdate(+)
+		GROUP BY TO_CHAR(b.dt, 'MM')
+		ORDER BY TO_CHAR(b.dt, 'MM')
+	</select>
+	
+	<select id="selectAllMemberForHobby" resultType="member">
+		select hobby from member where not id = 'admin'
+	</select>
+	
+	<!-- chart end -->
+		
+	<resultMap type="map" id="helpMap">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="category" property="category"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="status" property="status"/>
+		<result column="a_code" property="aCode"/>
+		<result column="a_title" property="aTitle"/>
+		<result column="a_content" property="aContent"/>
+		<result column="a_reg_date" property="aRegDate"/>
+	</resultMap>
+	
+	<resultMap type="map" id="authorityMap">
+		<id column="member_id" property="id"/>
+		<result column="authority" property="authority"/>
+	</resultMap>
+	
+	
+</mapper>
+

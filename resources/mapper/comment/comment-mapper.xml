@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comment">
+	<select id="selectCultureCommentList" resultType="comment">
+		select
+			*
+		from
+			comments
+		where
+			api_code = #{api_code}
+		order by 
+		    reg_date desc
+	</select>
+	
+	<insert id="insertCultureComment" >
+		insert into
+				comments(code, comment_level, content, reg_date, comment_ref, id, api_code, star)
+			values(
+				concat('co-',seq_comments_no.nextval),
+				#{comment_level},
+				#{content},
+				default,
+				#{comment_ref},
+				#{id},
+				#{apiCode},
+				#{star}
+			)
+	</insert>
+	
+	<delete id="deleteCultureComment">
+		delete 
+		from 
+			comments
+		where 
+		 	code = #{code}
+	</delete>
+	
+	<update id="updateCultureComment">
+		update comments
+		set
+			content = #{content},
+			star = #{star}
+		where
+			code = #{code}
+	</update>
+	
+</mapper>
+

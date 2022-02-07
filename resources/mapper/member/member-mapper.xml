@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	
+	<select id="selectOneMember" resultType="member">
+		select * from member where id = #{id}
+	</select>
+	
+	<select id="selectOneMemberNickname" resultType="member">
+		select * from member where nickname = #{nickname}
+	</select>
+	
+	<select id="selectOneAnnouncement" resultType="announcement">
+		select * from announcement where code = #{code}
+	</select>
+	
+	<select id="selectAllAnnouncement" resultMap="announcementMap">
+		select * from announcement order by reg_date desc
+	</select>
+	
+	<select id="countAllAnnouncementList" resultType="_int">
+		select count(*) from announcement
+	</select>
+	
+	<select id="selectAllNotInMe" resultType="member">
+		select * from member where id not in #{id} and search = 'T'
+	</select>
+	
+	<select id="selectAllFriend" resultMap="friendMap">
+		select * from friend where my_id = #{id}
+	</select>
+	
+	<select id="selectAllRequestFriend" resultMap="requestFriendMap">
+		select * from request_friend where my_id = #{id} and is_friend = 'F'
+	</select>
+	
+	<select id="selectAllRequestFriendByMe" resultMap="requestFriendMap">
+		select * from request_friend where follower_id = #{id} and is_friend = 'F'
+	</select>
+	
+	<update id="updateMemberProfile">
+		update member set profile = #{profile} where id = #{id}
+	</update>
+	
+	<update id="updateMemberNickname">
+		update member set nickname = #{nickname} where id = #{id}
+	</update>
+	
+	<delete id="deleteMember">
+		delete from member where id = #{id}
+	</delete>
+	
+	<update id="updateAnnounceReadCount">
+		update announcement set read_count = read_count + 1 where code = #{code}
+	</update>
+	
+	<!-- 정보수정 -->
+	<update id="updateProfile">
+		update member set 
+		<if test="flag == 'yes'">
+			profile = #{profile}, profile_status = 'Y' where id = #{id}		
+		</if>
+		<if test="flag == 'no'">
+			profile = null, profile_status = 'N' where id = #{id}		
+		</if>
+	</update>
+	
+	<update id="updateMemberHobby">
+		update member set hobby = #{hobby} where id = #{id}
+	</update>
+	
+	<!-- 전화번호 등록 -->
+	
+	<update id="updateMemberPhone">
+		update member set phone = #{phone} where id = #{id}
+	</update>
+	
+	<!-- 전화번호 등록 -->
+	
+	<!-- 공지 시작 -->
+	
+	
+	
+	<!-- 공지 끝 -->
+	
+	<!-- 좋아요 시작 -->
+	
+	<insert id="insertHelpLike">
+		insert into likes values(seq_likes_no.nextval, #{id}, #{code})
+	</insert>
+	
+	<delete id="deleteHelpLike">
+		delete from likes where id = #{id} and code = #{code}
+	</delete>
+	
+	<!-- 좋아요 끝 -->
+	
+	<!-- 회원정보 찾기 시작 -->
+	
+	<select id="selectOneMemberByEmail" resultType="member">
+		select * from member where email = #{email}
+	</select>
+	
+	<select id="selectOneMemberByIdEmail" resultType="member">
+		select * from member where id = #{id} and email = #{email}
+	</select>
+	
+	<update id="updateMemberPassword">
+		update member set password = #{password} 
+		<where>
+			<if test="email != null">and email = #{email}</if>
+			<if test="id != null">and id = #{id}</if>
+		</where>
+	</update>
+	
+	<select id="selectOneMemberByPhone" resultType="member">
+		select * from member where phone = #{phone}
+	</select>
+	
+	<select id="selectOneMemberByIdPhone" resultType="member">
+		select * from member where id = #{id} and phone = #{phone}
+	</select>
+	
+	<!-- 회원정보 찾기 끝 -->
+	
+	<!-- 친구 crud 시작 -->	
+	
+	<select id="selectSearchMemberNickname" resultType="string">
+		select nickname from member where search = 'T' and nickname like '%'||#{value}||'%'
+	</select>
+	
+	<select id="selectOneMemberNicknameNotMe" resultType="member">
+		select * from member where search = 'T' and nickname = #{friendNickname} and not id = #{id}
+	</select>
+	
+	<select id="selectFollower" resultMap="requestFriendMap">
+		select * from request_friend where is_friend = 'F' and my_id = #{id} and follower_id = #{friendId}
+	</select>
+	
+	<select id="selectFollowing" resultMap="requestFriendMap">
+		select * from request_friend where is_friend = 'F' and my_id = #{friendId} and follower_id = #{id}
+	</select>
+	
+	<select id="selectFriend" resultMap="friendMap">
+		select * from friend where my_id = #{id} and friend_id = #{friendId}
+	</select>
+	
+	<update id="updateRequestFriend">
+		update request_friend set is_friend = 'T' where my_id = #{id} and follower_id = #{friendId}
+	</update>
+	
+	<insert id="insertFriend">
+		insert into friend values(concat('fr-',seq_friend_no.nextval), #{id}, #{friendId})
+	</insert>
+	
+	<insert id="insertAlarm">
+		insert into alarm
+		values(seq_alarm_no.nextval,
+		<if test="code != null">
+			#{code},
+		</if>
+		#{id}, default, #{content}, default)
+	</insert>
+	
+	<update id="updateAlarm">
+		update alarm set status = 'F', reg_date = sysdate where code = #{code}
+	</update>
+	
+	<delete id="deleteRequestFriend">
+		delete from request_friend where my_id = #{id} and follower_id = #{friendId}
+	</delete>
+	
+	<delete id="deleteFriend">
+		delete from friend where my_id = #{id} and friend_id = #{friendId}
+	</delete>
+	
+	<insert id="insertRequestFriend">
+		insert into request_friend (code, my_id, follower_id)
+		values(concat('rf-', seq_request_friend_no.nextval), #{friendId}, #{id})
+	</insert>
+	
+	<!-- 친구 crud 끝 -->
+	
+	<!-- help 시작 -->
+	
+	<select id="selectAllMyQuestions" resultMap="helpMap">
+		select * from help where id = #{id}
+	</select>
+	
+	<select id="countAllMyHelp" resultType="int">
+		select count(*) from help where id = #{id}
+	</select>
+	
+	<select id="selectAllMembersQuestions" resultType="help">
+		select
+			*
+		from(
+			select 
+				* 
+			from 
+				help
+			where
+				<if test="category != 'all'">
+					category = #{category}
+					and
+				</if>
+				status = 'T'
+			order by
+				reg_date desc
+		)
+		<if test="category != 'all'">
+		where
+			rownum <![CDATA[<=]]> 4
+		</if>
+	</select>
+	
+	<select id="selectAllHelpTitle" resultType="string">
+		select title from help where title like '%'||#{value}||'%'
+	</select>
+	
+	<select id="selectHelpByInput" resultType="map">
+		select code code, id id, category category, title title, reg_date regDate, status status from help where title like '%'||#{value}||'%'
+	</select>
+	
+	<select id="selectOneSelectedHelp" resultMap="helpNicknameMap">
+		select
+			h.*,
+			m.nickname nickname,
+			m.profile profile,
+			m.login_type logintype,
+			m.profile_status profilestatus
+		from
+			help h join member m
+				on h.id = m.id
+		where
+			h.code = #{code}
+	</select>
+	
+	<insert id="insertMemberHelp">
+		insert into help(code, id, category, title, content)
+		values(concat('he-',seq_help_no.nextval), #{id}, #{category}, #{title}, #{content})
+	</insert>
+	
+	<select id="selectHelpOneCategory" resultMap="helpMap">
+		select * from help where category like '%'||#{category}||'%' order by reg_date desc
+	</select>
+	
+	<select id="countHelpOneCategoryCount" resultType="int">
+		select count(*) from help where category = #{category}
+	</select>
+	
+	<select id="selectLikesCheck" resultMap="likesMap">
+		select 
+			* 
+		from 
+			likes 
+		<where>
+			id = #{id}
+			and
+			code = #{code}
+			<if test="aCode != null">or code = #{aCode}</if>
+		</where>
+	</select>
+	
+	<update id="updateHelpReadCount">
+		update help set read_count = read_count + 1 where code = #{code}
+	</update>
+	
+	<!-- help 끝 -->
+	
+	<!-- 도움말 시작 -->
+	
+	<select id="selectMostHelp" resultType="map">
+		select
+			*
+		from(
+			select h.code code, count(*) count from help h join likes l on h.code = l.code WHERE h.code like '%he%' GROUP BY h.code ORDER BY count desc
+		)
+		where
+			rownum <![CDATA[<=]]> 5
+	</select>
+	
+	<!-- 도움말 끝 -->
+		
+	<insert id="insertMember">
+		insert into member(id, password, name, email, address, nickname, auth_key)
+		values(#{id}, #{password}, #{name}, #{email}, #{address}, #{nickname}, #{authKey})
+	</insert>
+	
+	<insert id="insertKakaoMember">
+		insert into member(id, password, name, nickname, enabled, profile, login_type)
+		values(#{id}, #{password}, #{name}, #{nickname}, 1, #{profile_image}, #{loginType})
+	</insert>
+	
+	<update id="confirmMember">
+		update member set enabled = 1 where email = #{email} and auth_key = #{authKey}
+	</update>
+	
+	<insert id="insertRole">
+		insert into authority values(#{id}, 'ROLE_USER')
+	</insert>
+	
+	<update id="updateMember">
+		update member set nickname = #{nickname} where id = #{id}
+	</update>
+	
+	<select id="selectAllAlarm" resultMap="alarm">
+		select * from alarm where id = #{id} order by reg_date desc
+	</select>
+	
+	<resultMap type="map" id="alarm">
+		<id column="no" property="no"/>
+		<result column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="status" property="status"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+	</resultMap>
+			
+	<resultMap type="map" id="helpMap">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="category" property="category"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="status" property="status"/>
+		<result column="a_code" property="aCode"/>
+		<result column="a_title" property="aTitle"/>
+		<result column="a_content" property="aContent"/>
+		<result column="a_reg_date" property="aRegDate"/>
+	</resultMap>
+	
+	<resultMap type="map" id="helpNicknameMap">
+		<id column="CODE" property="code"/>
+		<result column="ID" property="id"/>
+		<result column="CATEGORY" property="category"/>
+		<result column="TITLE" property="title"/>
+		<result column="CONTENT" property="content"/>
+		<result column="REG_DATE" property="regDate"/>
+		<result column="STATUS" property="status"/>
+		<result column="A_CODE" property="aCode"/>
+		<result column="A_TITLE" property="aTitle"/>
+		<result column="A_CONTENT" property="aContent"/>
+		<result column="A_REG_DATE" property="aRegDate"/>
+		<result column="READ_COUNT" property="readCount"/>
+		<result column="NICKNAME" property="nickname"/>
+		<result column="PROFILE" property="profile"/>
+		<result column="LOGINTYPE" property="loginType"/>
+		<result column="PROFILESTATUS" property="profileStatus"/>
+	</resultMap>
+	
+	<resultMap type="map" id="announcementMap">
+		<id column="code" property="code"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="read_count" property="readCount"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="id" property="id"/>
+	</resultMap>
+	
+	<resultMap type="map" id="friendMap">
+		<id column="code" property="code"/>
+		<result column="my_id" property="id"/>
+		<result column="friend_id" property="friendId"/>
+	</resultMap>
+	
+	<resultMap type="map" id="requestFriendMap">
+		<id column="code" property="code"/>
+		<result column="my_id" property="id"/>
+		<result column="follower_id" property="followerId"/>
+		<result column="is_friend" property="isFriend"/>
+	</resultMap>
+	
+	<resultMap type="map" id="likesMap">
+		<id column="no" property="no"/>
+		<result column="id" property="id"/>
+		<result column="code" property="code"/>
+	</resultMap>
+	
+	
+</mapper>
+

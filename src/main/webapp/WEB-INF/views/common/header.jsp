@@ -95,7 +95,7 @@
                 <span>피드</span>
               </a>
             </li>
-            <li class="nav-list accept-drag" id="calendar">
+            <li class="nav-list accept-drag">
               <a href="${pageContext.request.contextPath}/calendar/calendarView.do">
                 <i class="far fa-calendar-alt"></i>
                 <span>캘린더</span>

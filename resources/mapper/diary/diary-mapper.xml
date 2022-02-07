@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="diary">
+	<insert id="insertDiary">
+		insert into diary 
+		values(concat('dy-', seq_diary_no.nextval), #{id}, #{content}, to_date(#{regDate},'YYYY-MM-DD'), #{emotionNo}, #{isPublic}, #{title})
+	</insert>
+	
+	<select id="emotionNo" resultType="_int">
+		select no from emotion where emotion_filename = #{emotion}	
+	</select>
+	<select id="recentlyDiary" resultMap="diaryMap">
+		select 
+			* 
+		from 
+			diary 
+		where 
+			id = #{id} 
+		and 
+			reg_date 
+			between to_date(#{date}, 'yyyy-mm-dd') 
+			and last_day(to_date(#{date}, 'yyyy-mm-dd')) 
+		order by 
+		reg_date desc
+	</select>
+	<select id="diaryDetail" resultType="diary">
+		select
+			*
+		from
+			diary
+		where
+			code = #{code}
+	</select>
+	<select id="emotion" resultType="map">
+		select
+			*
+		from
+			emotion
+		where
+			no = #{emotionNo}
+	</select>
+	<update id="updateDiary">
+		update diary set title = #{title}, content = #{content}, is_public = #{isPublic} where code = #{code}
+	</update>
+	<delete id="deleteDiary">
+		delete from diary where code = #{code}
+	</delete>
+	<select id="monthChange" resultMap="diaryMap">
+		select 
+			* 
+		from 
+			diary 
+		where 
+			id = #{id} 
+			and 
+			reg_date 
+				between to_date(#{date}, 'YYYY-MM-DD') 
+				and last_day(to_date(#{date}, 'YYYY-MM-DD')) 
+		order by 
+			reg_date desc
+	</select>
+	<select id="diarySearch" resultMap="diaryMap">
+		select * from diary 
+		<where>
+			id = #{id} and content like '%' || #{content} || '%' or title like '%' || #{content}||'%'
+		</where>
+	</select>
+	
+	<resultMap type="map" id="diaryMap">
+		<id column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="emotion_no" property="emotionNo"/>
+		<result column="is_public" property="isPublic"/>
+		<result column="title" property="title"/>
+	</resultMap>
+</mapper>
+

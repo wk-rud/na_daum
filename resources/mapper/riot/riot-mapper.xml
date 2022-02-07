@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="riot">
+	<!-- 
+		#{lang, typehadler=stringArray2VarcharTypeHandler}
+		@MappedTypes @MappedJdbcType 선언시 생략가능 
+	
+	 -->
+	<insert id="insertSummoner">
+		insert into
+			riot_record(no, account_id, profile_icon_id, revision_date, name, id, puuid, summoner_level)
+		values(
+			seq_riot_record_no.nextval,
+			#{accountId},
+			#{profileIconId},
+			#{revisionDate},
+			#{name},
+			#{id},
+			#{puuid},
+			#{summonerLevel}
+		)
+	</insert>
+	
+	<select id="selectOneSummoner" resultType="summoner">
+		select 
+			*
+		from
+			riot_record
+		where
+			puuid = #{puuid}
+	</select>
+
+</mapper>
+

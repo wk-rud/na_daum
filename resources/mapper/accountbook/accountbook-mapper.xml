@@ -58,7 +58,7 @@
           		)
 	    where
 	        id = #{id}
-	    group by rollup(income_expense)
+	    group by income_expense
 	    )
 	</select>
 	

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ws">
+	<select id="selectAlarmCount" resultMap="alarmMap">
+		select * from alarm where status = 'F' and id = #{id} order by reg_date desc
+	</select>
+	
+	<update id="updateAlarm">
+		update alarm set status = 'T' where id = #{id}
+	</update>
+	
+	<select id="selectAllEmotion" resultMap="emotionMap">
+		select * from emotion
+	</select>
+	
+	<resultMap type="map" id="emotionMap">
+		<id column="no" property="no"/>
+		<result column="emotion_filename" property="emotion"/>
+	</resultMap>
+	
+	<resultMap type="map" id="alarmMap">
+		<id column="no" property="no"/>
+		<result column="code" property="code"/>
+		<result column="id" property="id"/>
+		<result column="status" property="status"/>
+		<result column="content" property="content"/>
+		<result column="reg_date" property="regDate"/>
+	</resultMap>
+</mapper>
+

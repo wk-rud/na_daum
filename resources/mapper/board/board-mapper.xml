@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<!-- 게시글 -->
+	<select id="selectBoardList" resultType="board">
+		select * from board
+		inner join member using (id)
+		order by code desc
+	</select>
+	
+	<select id="selectTotalContent" resultType="_int">
+		select count(*) from board
+	</select>
+	
+	<insert id="insertBoard">
+		insert into 
+			board (code, title, id, content, category)
+		values(
+		concat('bo-',seq_board_no.nextval),
+		#{title}, #{id}, #{content}, #{category}
+		)		
+	</insert>
+	
+	<update id="updateBoard" >
+		update board
+		set
+			title = #{title},
+			content = #{content},
+			category = #{category}
+		where
+			code = #{code}
+	</update>
+	
+	<delete id="deleteBoard">
+		delete from board where	code = #{code}			
+	</delete>
+	
+	<select id="selectOneBoardCollection" resultMap="boardCollectionMap">
+		select
+			b.*,
+			m.*
+		from
+			board b
+				join member m
+					on b.id = m.id				
+		where
+			b.code = #{code}
+	</select>
+
+<!-- 	<insert id="insertAttachment">
+		insert into
+			attachment(no, code, original_filename, renamed_filename, reg_date)
+		values(
+			seq_attachment_no.nextval,
+			#{code},
+			#{orginalFilename},
+			#{renamedFilename}			
+		)
+	</insert> -->
+	
+	<select id="selectOneBoard" resultType="board">
+		select
+			*
+		from
+			board
+		where
+			code = #{code}
+	</select>
+	
+	<!-- <select id="selectAttachmentListByBoardCode" resultType="attachment">
+		select
+			*
+		from
+			attachment
+		where
+			code = #{code}
+	</select> -->
+	
+	<!-- 조회수 -->
+	<update id="updateBoardReadCount">
+		update 
+			board 
+		set 
+			read_count = read_count + 1 
+		where 
+			code = #{code}
+	</update>
+	<!-- 추천 -->
+	<select id="selectCountLikes">
+		select 
+			*
+		from
+			like
+		where
+			code = #{code}
+	</select>
+	
+	<insert id="boardLikeAdd">
+	insert into
+		like
+	values(
+		default, #{id}, #{code}
+	)
+	</insert>
+	
+	<delete id="boardLikeDelete">
+		delete from like where id = #{id} and code = #{code}
+	</delete>
+	
+	<!-- 게시글 댓글조회 -->
+	<select id="selectBoardCommentList" resultMap="boardCommentMap">
+		select
+			 * 
+		from
+			board_comment
+			inner join member using (id)
+		where 
+			code = #{code} 
+			start with 
+				comment_level = 1 
+			connect by prior 
+				comment_code = comment_ref
+			order siblings by comment_code	
+	</select>
+	
+	<insert id="insertBoardComment">
+		insert into
+			board_comment 
+		values(
+			concat('bc-',seq_board_comment_no.nextval),
+			 #{id}, #{code}, #{content}, #{commentLevel}, 
+			 <choose>
+			 	<when test="commentRef == ''">null,</when>
+			 	<when test="commentRef != ''">#{commentRef},</when>
+			 </choose>
+			 
+			 default)
+	</insert>
+	
+	<delete id="boardCommentDelete">
+		delete from board_comment where comment_code = #{commentCode}
+	</delete>
+	
+	<!-- resultMap -->
+	<resultMap type="board" id="boardCollectionMap">
+		<id column="code" property="code"/>
+		<result column="title" property="title"/>
+		<result column="id" property="id"/>
+		<result column="content" property="content"/>
+		<result column="category" property="category"/>
+		<result column="read_count" property="readCount"/>
+		<result column="reg_date" property="regDate"/>
+		<association property="member" javaType="member">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		</association>
+		<collection property="attachments" ofType="attachment">
+			<id column="attach_no" property="no"/>
+			<result column="board_no" property="boardNo"/>
+			<result column="original_filename" property="originalFilename"/>
+			<result column="renamed_filename" property="renamedFilename"/>
+			<result column="upload_date" property="uploadDate"/>
+			<result column="download_count" property="downloadCount"/>
+			<result column="status" property="status"/>
+		</collection>
+	</resultMap>
+	
+	<resultMap type="map" id="likesMap">
+		<id column="no" property="no"/>
+		<result column="id" property="id"/>
+		<result column="code" property="code"/>
+	</resultMap>
+	
+	<resultMap type="boardComment" id="boardCommentMap">
+		<id column="comment_code" property="commentCode"/>
+		<result column="id" property="id"/>
+		<result column="code" property="code"/>
+		<result column="content" property="content"/>
+		<result column="comment_level" property="commentLevel"/>
+		<result column="comment_ref" property="commentRef"/>
+		<result column="reg_date" property="regDate"/>
+	</resultMap>
+</mapper>
+
