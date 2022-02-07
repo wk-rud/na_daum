@@ -26,8 +26,38 @@ public class DiaryDaoImpl implements DiaryDao {
 	}
 
 	@Override
-	public List<Diary> recentlyDiary(String id) {
-		return session.selectList("diary.recentlyDiary", id);
+	public List<Diary> recentlyDiary(Map<String, Object> map) {
+		return session.selectList("diary.recentlyDiary", map);
+	}
+
+	@Override
+	public Diary diaryDetail(String code) {
+		return session.selectOne("diary.diaryDetail", code);
+	}
+
+	@Override
+	public Map<String, Object> emotion(int emotionNo) {
+		return session.selectOne("diary.emotion", emotionNo);
+	}
+
+	@Override
+	public int updateDiary(Map<String, Object> map) {
+		return session.update("diary.updateDiary", map);
+	}
+
+	@Override
+	public int deleteDiary(String code) {
+		return session.delete("diary.deleteDiary", code);
+	}
+
+	@Override
+	public List<Diary> monthChange(Map<String, Object> map) {
+		return session.selectList("diary.monthChange", map);
+	}
+
+	@Override
+	public List<Diary> diarySearch(Map<String, Object> map) {
+		return session.selectList("diary.diarySearch", map);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.project.nadaum.diary.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +41,6 @@ public class DiaryController {
 	
 	@Autowired
 	private ServletContext application;
-	
-//	@GetMapping("/diaryMain.do")
-//	public void diaryMain() {}
 	
 	@GetMapping("/diaryEnroll.do")
 	public void DiaryEnroll() {}
@@ -107,15 +105,68 @@ public class DiaryController {
 	}
 	
 	@GetMapping("/diaryMain.do")
-	public void recentlyDiary(@AuthenticationPrincipal Member member, Model model) {
-		String id = member.getId();
-		log.debug("id = {}", id);
+	public void recentlyDiary(@AuthenticationPrincipal Member member, Model model, @RequestParam Map<String, Object> map, @RequestParam String date) {
+		String id = member.getId();	
+		map.put("date", date);
+		map.put("id", id);	
 		
-		List<Diary> diaryList = diaryService.recentlyDiary(id);
+		List<Diary> diaryList = diaryService.recentlyDiary(map);
 		log.debug("diaryList = {}", diaryList);
 		model.addAttribute("diaryList", diaryList);
 		
 	}
 	
+	@GetMapping("/diaryDetail.do")
+	public void diaryDetail(Model model, @RequestParam String code) {		
+		Diary diary = diaryService.diaryDetail(code);
+		int emotionNo = diary.getEmotionNo();		
+		Map<String, Object> emotion = diaryService.emotionNo(emotionNo);
+
+		log.debug("diary = {}", diary);
+		model.addAttribute("emotion", emotion);
+		model.addAttribute("diary", diary);
+	}
+	
+	@PostMapping("/diaryDetail.do")
+	public String updateDiary(@AuthenticationPrincipal Member member, @RequestParam Map<String, Object> map, @RequestParam String regDate) {
+		map.put("id", member.getId());
+		log.debug("map = {}", map);
+		log.debug("regDate = {}", regDate);
+		
+		int result = diaryService.updateDiary(map);
+		return "redirect:/diary/diaryMain.do?date=" + regDate;
+	}
+	
+	@GetMapping("/deleteDiary.do")
+	public String deleteDiary(@RequestParam String code, @RequestParam String date) {
+		log.debug("date = {}", date);
+		int result = diaryService.deleteDiary(code);
+		return "redirect:/diary/diaryMain.do?date=" + date;
+	}
+	
+	@GetMapping("/monthChange.do")
+	public String monthChange(@AuthenticationPrincipal Member member, Model model, @RequestParam Map<String, Object> map, @RequestParam String date) {
+		log.debug("date = {}", date);
+		String id = member.getId();	
+		map.put("date", date);
+		map.put("id", id);
+		
+		List<Diary> diaryList = diaryService.monthChange(map);
+		log.debug("diaryList = {}", diaryList);
+		model.addAttribute("diaryList", diaryList);
+		
+		return "redirect:/diary/diaryMain.do";
+	}
+	
+	@GetMapping("/diarySearch.do")
+	public void diarySearch(@AuthenticationPrincipal Member member, Model model, @RequestParam Map<String, Object> map, @RequestParam String content) {
+		String id = member.getId();	
+		map.put("content", content);
+		map.put("id", id);	
+		
+		List<Diary> searchList = diaryService.diarySearch(map);
+		log.debug("searchList = {}", searchList);
+		model.addAttribute("searchList", searchList);
+	}
 	
 }

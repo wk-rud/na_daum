@@ -26,8 +26,36 @@ public class DiaryServiceImpl implements DiaryService {
 	}
 
 	@Override
-	public List<Diary> recentlyDiary(String id) {
-		return diaryDao.recentlyDiary(id);
+	public List<Diary> recentlyDiary(Map<String, Object> map) {
+		return diaryDao.recentlyDiary(map);
 	}
 
-}
+	@Override
+	public Diary diaryDetail(String code) {
+		return diaryDao.diaryDetail(code);
+	}
+
+	@Override
+	public Map<String, Object> emotionNo(int emotionNo) {
+		return diaryDao.emotion(emotionNo);
+	}
+
+	@Override
+	public int updateDiary(Map<String, Object> map) {
+		return diaryDao.updateDiary(map);
+	}
+
+	@Override
+	public int deleteDiary(String code) {
+		return diaryDao.deleteDiary(code);
+	}
+
+	@Override
+	public List<Diary> monthChange(Map<String, Object> map) {
+		return diaryDao.monthChange(map);
+	}
+
+	@Override
+	public List<Diary> diarySearch(Map<String, Object> map) {
+		return diaryDao.diarySearch(map);
+	}}
