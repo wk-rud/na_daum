@@ -149,10 +149,10 @@
 									
 								</c:when>
 								<c:when test="${account.incomeExpense eq 'I' }">
-									<span class="income"><fmt:formatNumber value="${account.price}" type="number"/></span>
+									<span class="income">+ <fmt:formatNumber value="${account.price}" type="number"/></span>
 								</c:when>
 								<c:when test="${account.incomeExpense eq 'E' }">
-									<span class="expense"><fmt:formatNumber value="-${account.price}" type="number"/></span>
+									<span class="expense">- <fmt:formatNumber value="-${account.price}" type="number"/></span>
 								</c:when>
 							</c:choose>
 						</td>
