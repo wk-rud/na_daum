@@ -1,10 +1,16 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.util.Date"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%
+    Date now = new Date();
+    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM");
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,7 +120,7 @@
               <div class="personal-sub">
                 <ul>
                   <li class="nav-list" id="diary">
-                  	<a href="${pageContext.request.contextPath}/diary/diaryMain.do" class="accept-drag"><span>일기</span></a>
+                  	<a href="${pageContext.request.contextPath}/diary/diaryMain.do?date=<%= date.format(now) %>-01" class="accept-drag"><span>일기</span></a>
                   </li>
                   <li class="nav-list" id="accountBook">
                   	<a href="${pageContext.request.contextPath}/accountbook/accountbook.do" class="accept-drag"><span>가계부</span></a>

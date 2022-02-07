@@ -43,7 +43,7 @@
 			<div id="diaryPreview">
 				<div id="diarySearch-container">
 					<div class="search-box">
-					    <input type="text" class="input-search" placeholder="Search..." onkeypress="if(event.keyCode=='13'){event.preventDefault(); searchEvt();}">
+					    <input type="text" class="input-search" placeholder="Search...">
 					    <button class="btn-search"><i class="fas fa-search"></i></button>
 					</div> 	
 				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">+</button>
@@ -85,15 +85,15 @@
 			<div class="row">
 			  <div class="col-4">
 			    <div class="list-group" id="list-tab" role="tablist">
-			    <c:forEach items="${diaryList}" var="diary" varStatus="vs">
+			    <c:forEach items="${searchList}" var="diary" varStatus="vs">
 			    	<c:choose>
 			    		<c:when test="${vs.first}">
 					      <a class="list-group-item list-group-item-action active" id="${diary.code}-list" data-toggle="list" href="#${diary.code}" role="tab" aria-controls="${diary.code}">
-					      <h4><fmt:formatDate value="${diary.regDate}" pattern="dd일 E"/>요일</h4><h5>${diary.title}</h5></a>
+					      <h4><fmt:formatDate value="${diary.regDate}" pattern="yy년 mm월 dd일 E"/>요일</h4><h5>${diary.title}</h5></a>
 			    		</c:when>
 			    		<c:otherwise>
 					      <a class="list-group-item list-group-item-action" id="${diary.code}-list" data-toggle="list" href="#${diary.code}" role="tab" aria-controls="${diary.code}">
-					      <h4><fmt:formatDate value="${diary.regDate}" pattern="dd일 E"/>요일</h4><h5>${diary.title}</h5></a>
+					      <h4><fmt:formatDate value="${diary.regDate}" pattern="yy년 mm월 dd일 E"/>요일</h4><h5>${diary.title}</h5></a>
 			    		</c:otherwise>
 			    	</c:choose>
 				   </c:forEach>
@@ -101,12 +101,12 @@
 			  </div>
 			  <div class="col-8">
 			    <div class="tab-content" id="nav-tabContent">
-			    	<c:forEach items="${diaryList}" var="diary" varStatus="vs">
+			    	<c:forEach items="${searchList}" var="diary" varStatus="vs">
 				    	<c:choose>
 				    		<c:when test="${vs.first}">
 						      <div class="tab-pane fade show active" id="${diary.code}" role="tabpanel" aria-labelledby="${diary.code}-list">
 						      	<div class="diaryContentTitle" onclick="location.href=`${pageContext.request.contextPath}/diary/diaryDetail.do?code=${diary.code}`">
-							      	<div><h4><fmt:formatDate value="${diary.regDate}" pattern="dd일 E"/>요일</h4></div>
+							      	<div><h4><fmt:formatDate value="${diary.regDate}" pattern="yy년 mm월 dd일 E"/>요일</h4></div>
 							      	<div>
 							      		<c:choose>
 										    <c:when test="${diary.isPublic eq 'Y'}">공개</c:when>
@@ -121,7 +121,7 @@
 				    		<c:otherwise>
 						      <div class="tab-pane fade show" id="${diary.code}" role="tabpanel" aria-labelledby="${diary.code}-list">
 						      	<div class="diaryContentTitle" onclick="location.href=`${pageContext.request.contextPath}/diary/diaryDetail.do?code=${diary.code}`">
-							      	<div><h4><fmt:formatDate value="${diary.regDate}" pattern="dd일 E"/>요일</h4></div>
+							      	<div><h4><fmt:formatDate value="${diary.regDate}" pattern="yy년 mm월 dd일 E"/>요일</h4></div>
 							      	<div>
 							      		<c:choose>
 										    <c:when test="${diary.isPublic eq 'Y'}">공개</c:when>
@@ -191,18 +191,6 @@ function updateYear(val) {
     var date = val + '-' + month + '-01';
 
 	location.href = `${pageContext.request.contextPath}/diary/diaryMain.do?date=\${date}`;
-}
-
-// 검색 클릭 이벤트
-$(".btn-search").click(() => {
-	var content = $(".input-search").val();
-	location.href = `${pageContext.request.contextPath}/diary/diarySearch.do?content=\${content}`;
-});
-
-// 검색 엔터 이벤트
-function searchEvt(){
-	var content = $(".input-search").val();
-	location.href = `${pageContext.request.contextPath}/diary/diarySearch.do?content=\${content}`;
 }
 </script>
 
